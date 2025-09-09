@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="Khoangcachtren">32dp</dimen>
+    <dimen name="Khoangcachduoi">32dp</dimen>
+    <dimen name="Khoangcachchu">16dp</dimen>
+
+    <!-- Kích thước chữ -->
+    <dimen name="ChuVua">16sp</dimen>
+</resources>
