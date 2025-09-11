@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Angiday">
         <activity
+            android:name=".profile.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.MainActivity"
             android:exported="false" />
         <activity
