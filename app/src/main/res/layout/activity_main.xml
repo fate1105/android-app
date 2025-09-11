@@ -8,9 +8,10 @@
     tools:context=".activity.MainActivity">
 
     <TextView
+        android:id="@+id/ProfileText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="MyProfile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
