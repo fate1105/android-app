@@ -1,3 +1,48 @@
 <resources>
+    <!-- App -->
     <string name="app_name">angiday</string>
+
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">Hủy</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+    <string name="loading">Đang tải...</string>
+    <string name="error">Lỗi</string>
+    <string name="success">Thành công</string>
+
+    <!-- Home Screen -->
+    <string name="welcome">Chào mừng đến với AngiDay!</string>
+    <string name="today_menu">Thực đơn hôm nay</string>
+    <string name="random_suggestion">Gợi ý ngẫu nhiên</string>
+    <string name="search_recipe">Tìm công thức</string>
+    <string name="favorite_recipes">Món yêu thích</string>
+
+    <!-- Login/Register -->
+    <string name="login">Đăng nhập</string>
+    <string name="register">Đăng ký</string>
+    <string name="email">Email</string>
+    <string name="password">Mật khẩu</string>
+    <string name="confirm_password">Xác nhận mật khẩu</string>
+    <string name="logout">Đăng xuất</string>
+
+    <!-- User Preferences -->
+    <string name="taste_preferences">Khẩu vị</string>
+    <string name="diet_preferences">Chế độ ăn</string>
+    <string name="save_changes">Lưu thay đổi</string>
+
+    <!-- Recipe Details -->
+    <string name="ingredients">Nguyên liệu</string>
+    <string name="steps">Cách làm</string>
+    <string name="preparation_time">Thời gian chuẩn bị</string>
+    <string name="cooking_time">Thời gian nấu</string>
+    <string name="servings">Số khẩu phần</string>
+
+    <!-- Buttons / Actions -->
+    <string name="add_to_favorites">Thêm vào yêu thích</string>
+    <string name="remove_from_favorites">Xóa khỏi yêu thích</string>
+    <string name="rate">Đánh giá</string>
+    <string name="share">Chia sẻ</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
