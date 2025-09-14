@@ -1,4 +1,4 @@
-package com.example.angiday.ui.auth
+package com.example.angiday.profile
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,26 +9,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.angiday.R
-import com.example.angiday.profile.ProfileActivity
+import com.example.angiday.activity.LoginActivity
+import com.example.angiday.activity.MainActivity
 
-class SignupActivity : AppCompatActivity() {
+class ProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_signup)
+        setContentView(R.layout.activity_profile)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val loginBtn = findViewById<Button>(R.id.signupBtn)
+        val loginBtn = findViewById<TextView>(R.id.loginText)
 
+        // Khi bấm thì chuyển sang MainActivity
         loginBtn.setOnClickListener {
-            startActivity(Intent(this, loginBtn::class.java))
-        }
-
-        val loginText = findViewById<TextView>(R.id.loginText)
-        loginText.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
         }
     }
