@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#FFEDE7"/> <!-- nền pastel hồng cam nhạt -->
+    <corners android:radius="20dp"/> <!-- bo góc tròn hơn để thành chip -->
+    <stroke
+        android:width="1dp"
+        android:color="#FFCCBC"/> <!-- viền nhạt để chip nổi bật -->
+</shape>

@@ -12,19 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Angiday">
         <activity
-            android:name=".profile.ProfileActivity"
+            android:name=".ui.auth.SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".ui.auth.LoginActivity"
             android:exported="false" />
+        <activity android:name=".ui.main.MainActivity" />
+
         <activity
-            android:name=".activity.SignupActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.IntroActivity"
+            android:name=".ui.intro.IntroActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
