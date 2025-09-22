@@ -44,7 +44,10 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.fragment)
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
+    implementation(libs.androidx.cardview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
 }

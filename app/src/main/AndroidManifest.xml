@@ -18,7 +18,6 @@
             android:name=".ui.auth.LoginActivity"
             android:exported="false" />
         <activity android:name=".ui.main.MainActivity" />
-
         <activity
             android:name=".ui.intro.IntroActivity"
             android:exported="true">

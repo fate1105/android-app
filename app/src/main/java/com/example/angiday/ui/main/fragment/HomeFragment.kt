@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.example.angiday.R
+import com.example.angiday.ui.main.fragment.ListFoodFragment
 import com.example.angiday.ui.main.listener.ClickListener
 
 class HomeFragment : Fragment() {
@@ -26,8 +29,16 @@ class HomeFragment : Fragment() {
         btnExplore.setOnClickListener(
             ClickListener(requireActivity())
         )
+
+        // 👉 thêm xử lý cho TextView "Bữa sáng"
+        val tvBreakfast = view.findViewById<TextView>(R.id.tvBreakfast)
+        tvBreakfast.setOnClickListener {
+            parentFragmentManager.commit {
+                replace(R.id.fragment_container, ListFoodFragment())
+                addToBackStack(null)
+            }
+        }
+
         return view
     }
-
 }
-
