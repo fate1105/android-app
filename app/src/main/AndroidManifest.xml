@@ -12,6 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Angiday">
         <activity
+            android:name=".ui.profile.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.CookingSeriesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.FoodHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.FoodLvActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.Edit_pfActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.auth.SignupActivity"
             android:exported="false" />
         <activity

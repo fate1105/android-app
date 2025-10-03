@@ -1,0 +1,47 @@
+package com.example.angiday.ui.profile
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.angiday.R
+import com.example.angiday.ui.main.adapter.FoodAdapter
+import com.example.angiday.ui.main.model.Food
+import com.google.android.material.appbar.MaterialToolbar
+
+class FoodHistoryActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_food_history)
+
+        // Nút back
+        findViewById<MaterialToolbar>(R.id.topAppBar).setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        val rv = findViewById<RecyclerView>(R.id.rvHistory)
+
+
+        val foods = listOf(
+            Food("Phở bò", "Nước dùng đậm, bò tái.", R.drawable.logo),
+            Food("Bún bò Huế", "Cay nhẹ, thơm sả.", R.drawable.logo),
+            Food("Cơm tấm", "Sườn bì chả.", R.drawable.logo),
+            Food("Bánh mì", "Pate, dưa leo.", R.drawable.logo)
+        )
+
+        rv.layoutManager = LinearLayoutManager(applicationContext)
+        rv.setHasFixedSize(true)
+        rv.adapter = FoodAdapter(foods) { /* handle click nếu cần */ }
+
+
+    }
+}
+
+/** Adapter dùng layout hệ thống simple_list_item_2 (2 dòng) */

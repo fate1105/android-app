@@ -1,60 +1,64 @@
 package com.example.angiday.ui.main.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
+import com.example.angiday.ui.main.adapter.FoodAdapter
+import com.example.angiday.ui.main.model.Food
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [MenuFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MenuFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         return inflater.inflate(R.layout.fragment_menu, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MenuFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MenuFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // Ánh xạ 3 RecyclerView
+        val rvMorning = view.findViewById<RecyclerView>(R.id.rvFood)   // sáng
+        val rvNoon = view.findViewById<RecyclerView>(R.id.rvFood2)     // trưa
+        val rvEvening = view.findViewById<RecyclerView>(R.id.rvFood3)  // tối
+
+        // Món ăn sáng
+        val foodsMorning = listOf(
+            Food("Phở bò", "Nước dùng đậm, bò tái.", R.drawable.logo),
+            Food("Bánh mì", "Pate, dưa leo.", R.drawable.logo),
+            Food("Xôi gà", "Xôi nếp thơm, gà xé.", R.drawable.logo)
+        )
+
+        // Món ăn trưa
+        val foodsNoon = listOf(
+            Food("Cơm tấm", "Sườn bì chả.", R.drawable.logo),
+            Food("Canh chua cá", "Chua ngọt thanh mát.", R.drawable.logo),
+            Food("Thịt kho tàu", "Ngon với cơm trắng.", R.drawable.logo)
+        )
+
+        // Món ăn tối
+        val foodsEvening = listOf(
+            Food("Bún bò Huế", "Cay nhẹ, thơm sả.", R.drawable.logo),
+            Food("Lẩu thái", "Đậm đà, hải sản tươi.", R.drawable.logo),
+            Food("Gỏi cuốn", "Thanh mát, ít dầu mỡ.", R.drawable.logo)
+        )
+
+        // Setup RecyclerView sáng
+        rvMorning.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        rvMorning.setHasFixedSize(true)
+        rvMorning.adapter = FoodAdapter(foodsMorning) { /* handle click */ }
+
+        // Setup RecyclerView trưa
+        rvNoon.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        rvNoon.setHasFixedSize(true)
+        rvNoon.adapter = FoodAdapter(foodsNoon) { /* handle click */ }
+
+        // Setup RecyclerView tối
+        rvEvening.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        rvEvening.setHasFixedSize(true)
+        rvEvening.adapter = FoodAdapter(foodsEvening) { /* handle click */ }
     }
 }
