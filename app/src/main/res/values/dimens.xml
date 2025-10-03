@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Margin & Padding -->
-    <dimen name="margin_top">32dp</dimen>
-    <dimen name="margin_bottom">32dp</dimen>
-    <dimen name="padding_text">16dp</dimen>
+    <!-- Padding -->
+    <dimen name="padding_small">4dp</dimen>
+    <dimen name="padding_normal">8dp</dimen>
+    <dimen name="padding_medium">12dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+    <dimen name="padding_xlarge">24dp</dimen>
+    <dimen name="padding_row">12dp</dimen>
+    <dimen name="padding_text">8dp</dimen>
 
+    <!-- Margin -->
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_normal">12dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_large">20dp</dimen>
+    <dimen name="margin_xlarge">24dp</dimen>
+    <dimen name="margin_top">16dp</dimen>
 
     <!-- Text sizes -->
-    <dimen name="text_listFood">24sp</dimen>
-    <dimen name="text_small">14sp</dimen>
+    <dimen name="text_small">12sp</dimen>
+    <dimen name="text_normal">14sp</dimen>
     <dimen name="text_medium">16sp</dimen>
     <dimen name="text_large">20sp</dimen>
+    <dimen name="text_xlarge">26sp</dimen>
+
+    <!-- Icon sizes -->
+    <dimen name="icon_small">20dp</dimen>
+    <dimen name="icon_normal">24dp</dimen>
+    <dimen name="icon_medium">30dp</dimen>
+    <dimen name="icon_large">40dp</dimen>
+
+    <!-- Avatar -->
+    <dimen name="avatar_width">115dp</dimen>
+    <dimen name="avatar_height">141dp</dimen>
+
+    <!-- Header height -->
+    <dimen name="header_height">160dp</dimen>
+    <dimen name="dropdown_height_3lines">144dp</dimen>
 </resources>

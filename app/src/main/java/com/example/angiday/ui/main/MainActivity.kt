@@ -46,9 +46,6 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    fun onAdd(v: View) {
-        Toast.makeText(this, "Bạn vừa bấm Thêm 2", Toast.LENGTH_SHORT).show()
-    }
     fun setBottomNavSelected(itemId: Int) {
         val bottomNav = findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottom_navigation)
         bottomNav.selectedItemId = itemId

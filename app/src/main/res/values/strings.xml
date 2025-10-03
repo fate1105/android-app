@@ -43,6 +43,11 @@
     <string name="remove_from_favorites">Xóa khỏi yêu thích</string>
     <string name="rate">Đánh giá</string>
     <string name="share">Chia sẻ</string>
+    <string name="skip">Bỏ qua</string>
+    <string name="get_started">Bắt đầu</string>
+    <string name="next">Tiếp</string>
+    <string name="intro_anim">Hoạt ảnh mô tả</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

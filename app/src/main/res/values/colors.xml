@@ -1,17 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Primary theme colors -->
-    <color name="colorPrimary">#FF7043</color>
-    <color name="colorPrimaryDark">#FF5722</color>
-    <color name="colorAccent">#03DAC5</color>
+    <!-- Brand -->
+    <color name="colorPrimary">#FF6F3C</color>
+    <color name="colorPrimaryVariant">#D2552A</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
 
-    <!-- Text colors -->
-    <color name="textPrimary">#333333</color>
-    <color name="textSecondary">#999999</color>
-    <color name="textOnPrimary">#FFFFFF</color>
+    <color name="colorSecondary">#FFCA28</color>
+    <color name="colorSecondaryVariant">#FFB300</color>
+    <color name="colorOnSecondary">#000000</color>
 
-    <!-- Backgrounds -->
-    <color name="backgroundLight">#FFF8F5</color>
-    <color name="red">#FF0000</color>
+    <!-- Accent / Fresh -->
+    <color name="colorAccentGreen">#8BC34A</color>
+    <color name="colorOnAccentGreen">#000000</color>
+
+    <!-- Surfaces & background -->
+    <color name="colorBackground">#FFFFFF</color>
+    <color name="colorSurface">#FFF8F1</color>
+    <color name="colorOnBackground">#212121</color>
+    <color name="colorOnSurface">#212121</color>
+
+    <!-- Text / icons muted -->
+    <color name="colorMuted">#757575</color>
+
+    <!-- Dividers / outlines -->
+    <color name="colorOutline">#E0E0E0</color>
+
+    <!-- Error -->
+    <color name="colorError">#D32F2F</color>
+    <color name="colorOnError">#FFFFFF</color>
+
+    <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="red">#FF0000</color>
 </resources>

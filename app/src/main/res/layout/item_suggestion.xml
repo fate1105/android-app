@@ -1,0 +1,9 @@
+<Button
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvSuggest"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:backgroundTint="@color/colorPrimary"
+    android:textColor="@color/colorOnPrimary"
+    android:textSize="14sp"
+    android:padding="4dp"/>
