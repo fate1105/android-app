@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
+import com.example.angiday.ui.main.adapter.FoodAdapter
+import com.example.angiday.ui.main.model.Food
 import com.google.android.material.appbar.MaterialToolbar
 
 class FoodLvActivity : AppCompatActivity() {
@@ -25,59 +27,18 @@ class FoodLvActivity : AppCompatActivity() {
         }
 
         val rv = findViewById<RecyclerView>(R.id.rvFavorites)
-        val emptyState = findViewById<View>(R.id.emptyState)
 
-        // ======= MẢNG MÓN ĂN (tĩnh) =======
         val foods = listOf(
-            "Cơm gà xối mỡ",
-            "Bún bò Huế",
-            "Phở bò tái chín",
-            "Bánh mì thịt nướng",
-            "Sushi cá hồi",
-            "Pizza hải sản",
-            "Gà rán KFC",
-            "Lẩu Thái chua cay"
+            Food("Phở bò", "Nước dùng đậm, bò tái.", R.drawable.logo),
+            Food("Bún bò Huế", "Cay nhẹ, thơm sả.", R.drawable.logo),
+            Food("Cơm tấm", "Sườn bì chả.", R.drawable.logo),
+            Food("Bánh mì", "Pate, dưa leo.", R.drawable.logo)
         )
 
-        // Hiển thị/ẩn empty state
-        emptyState.visibility = if (foods.isEmpty()) View.VISIBLE else View.GONE
-        rv.visibility = if (foods.isEmpty()) View.GONE else View.VISIBLE
+        rv.layoutManager = LinearLayoutManager(applicationContext)
+        rv.setHasFixedSize(true)
+        rv.adapter = FoodAdapter(foods) { /* handle click nếu cần */ }
 
-        // Gắn RecyclerView
-        rv.layoutManager = LinearLayoutManager(this)
-        rv.adapter = FoodTextAdapter(foods) { name ->
-            Toast.makeText(this, name, Toast.LENGTH_SHORT).show() // click item (tuỳ chọn)
-        }
+
     }
-}
-
-/** Adapter cực gọn: mỗi item chỉ là một TextView */
-private class FoodTextAdapter(
-    private val items: List<String>,
-    private val onClick: (String) -> Unit
-) : RecyclerView.Adapter<FoodTextAdapter.VH>() {
-
-    class VH(val tv: TextView) : RecyclerView.ViewHolder(tv)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val tv = TextView(parent.context).apply {
-            textSize = 18f
-            // padding theo dp
-            val dp = (parent.context.resources.displayMetrics.density)
-            setPadding((16*dp).toInt(), (14*dp).toInt(), (16*dp).toInt(), (14*dp).toInt())
-            layoutParams = RecyclerView.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-        }
-        return VH(tv)
-    }
-
-    override fun onBindViewHolder(holder: VH, position: Int) {
-        val name = items[position]
-        holder.tv.text = name
-        holder.itemView.setOnClickListener { onClick(name) }
-    }
-
-    override fun getItemCount(): Int = items.size
 }

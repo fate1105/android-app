@@ -26,9 +26,11 @@
             android:id="@+id/rvSeries"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="12dp"
-            android:clipToPadding="false"
-            tools:listitem="@android:layout/simple_list_item_2" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Trạng thái rỗng -->
         <LinearLayout
@@ -40,7 +42,7 @@
             android:padding="24dp"
             android:visibility="gone"
             tools:visibility="visible">
-
+           
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
