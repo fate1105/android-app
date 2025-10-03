@@ -92,11 +92,10 @@
                     android:id="@+id/rowNotice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/Khoangcachtren"
-                    android:layout_marginTop="@dimen/Khoangcachchu"
-                    android:layout_marginEnd="@dimen/Khoangcachtren"
-                    android:layout_marginBottom="@dimen/Khoangcachchu">
-
+                    android:layout_marginStart="@dimen/margin_top"
+                    android:layout_marginTop="@dimen/padding_text"
+                    android:layout_marginEnd="@dimen/margin_top"
+                    android:layout_marginBottom="@dimen/padding_text">
                     <ImageView
                         android:id="@+id/ivNotice"
                         android:layout_width="30dp"
@@ -133,11 +132,10 @@
                     android:id="@+id/rowEditProfile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/Khoangcachtren"
-                    android:layout_marginTop="@dimen/Khoangcachchu"
-                    android:layout_marginEnd="@dimen/Khoangcachtren"
-                    android:layout_marginBottom="@dimen/Khoangcachchu">
-
+                    android:layout_marginStart="@dimen/margin_top"
+                    android:layout_marginTop="@dimen/padding_text"
+                    android:layout_marginEnd="@dimen/margin_top"
+                    android:layout_marginBottom="@dimen/padding_text">
                     <ImageView
                         android:id="@+id/ivEditProfile"
                         android:layout_width="30dp"
@@ -174,11 +172,10 @@
                     android:id="@+id/rowFavorite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/Khoangcachtren"
-                    android:layout_marginTop="@dimen/Khoangcachchu"
-                    android:layout_marginEnd="@dimen/Khoangcachtren"
-                    android:layout_marginBottom="@dimen/Khoangcachchu">
-
+                    android:layout_marginStart="@dimen/margin_top"
+                    android:layout_marginTop="@dimen/padding_text"
+                    android:layout_marginEnd="@dimen/margin_top"
+                    android:layout_marginBottom="@dimen/padding_text">
                     <ImageView
                         android:id="@+id/ivFavorite"
                         android:layout_width="30dp"
@@ -215,10 +212,10 @@
                     android:id="@+id/rowHistory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/Khoangcachtren"
-                    android:layout_marginTop="@dimen/Khoangcachchu"
-                    android:layout_marginEnd="@dimen/Khoangcachtren"
-                    android:layout_marginBottom="@dimen/Khoangcachchu">
+                    android:layout_marginStart="@dimen/margin_top"
+                    android:layout_marginTop="@dimen/padding_text"
+                    android:layout_marginEnd="@dimen/margin_top"
+                    android:layout_marginBottom="@dimen/padding_text">
 
                     <ImageView
                         android:id="@+id/ivHistory"
@@ -256,11 +253,10 @@
                     android:id="@+id/rowCooking"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/Khoangcachtren"
-                    android:layout_marginTop="@dimen/Khoangcachchu"
-                    android:layout_marginEnd="@dimen/Khoangcachtren"
-                    android:layout_marginBottom="@dimen/Khoangcachchu">
-
+                    android:layout_marginStart="@dimen/margin_top"
+                    android:layout_marginTop="@dimen/padding_text"
+                    android:layout_marginEnd="@dimen/margin_top"
+                    android:layout_marginBottom="@dimen/padding_text">
                     <ImageView
                         android:id="@+id/ivCooking"
                         android:layout_width="30dp"
@@ -297,11 +293,10 @@
                     android:id="@+id/rowLogout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/Khoangcachtren"
-                    android:layout_marginTop="@dimen/Khoangcachchu"
-                    android:layout_marginEnd="@dimen/Khoangcachtren"
-                    android:layout_marginBottom="@dimen/Khoangcachchu">
-
+                    android:layout_marginStart="@dimen/margin_top"
+                    android:layout_marginTop="@dimen/padding_text"
+                    android:layout_marginEnd="@dimen/margin_top"
+                    android:layout_marginBottom="@dimen/padding_text">
                     <ImageView
                         android:id="@+id/ivExit"
                         android:layout_width="30dp"

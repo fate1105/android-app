@@ -1,60 +1,80 @@
 package com.example.angiday.ui.main.fragment
 
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
 import com.example.angiday.R
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SettingsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SettingsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private val prefs by lazy {
+        requireContext().getSharedPreferences("settings", Context.MODE_PRIVATE)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false)
-    }
+    ): View {
+        val view = inflater.inflate(R.layout.fragment_settings, container, false)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SettingsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SettingsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        // Views
+        val topAppBar = view.findViewById<MaterialToolbar>(R.id.topAppBar)
+        val swNotifications = view.findViewById<MaterialSwitch>(R.id.swNotifications)
+        val swDarkMode = view.findViewById<MaterialSwitch>(R.id.swDarkMode)
+        val edtLanguage = view.findViewById<MaterialAutoCompleteTextView>(R.id.edtLanguage)
+        val btnClearCache = view.findViewById<MaterialButton>(R.id.btnClearCache)
+
+        // Back arrow
+        topAppBar.setNavigationOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
+        // Load saved states
+        swNotifications.isChecked = prefs.getBoolean("notifications", true)
+        swDarkMode.isChecked = prefs.getBoolean("dark_mode", false)
+
+        // Languages
+        val langs = listOf("Tiếng Việt", "English")
+        edtLanguage.setAdapter(
+            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, langs)
+        )
+        val savedLang = prefs.getString("language", langs.first()) ?: langs.first()
+        edtLanguage.setText(savedLang, false)
+
+        // Save listeners
+        swNotifications.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("notifications", isChecked).apply()
+        }
+
+        swDarkMode.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("dark_mode", isChecked).apply()
+            AppCompatDelegate.setDefaultNightMode(
+                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES
+                else AppCompatDelegate.MODE_NIGHT_NO
+            )
+        }
+
+        edtLanguage.setOnItemClickListener { _, _, position, _ ->
+            val v = langs[position]
+            prefs.edit().putString("language", v).apply()
+            Toast.makeText(requireContext(), "Đã chọn: $v", Toast.LENGTH_SHORT).show()
+            // TODO: đổi Locale runtime nếu muốn
+        }
+
+        btnClearCache.setOnClickListener {
+            Toast.makeText(requireContext(), "Đã xoá bộ nhớ đệm (demo)", Toast.LENGTH_SHORT).show()
+        }
+
+        return view
     }
 }
