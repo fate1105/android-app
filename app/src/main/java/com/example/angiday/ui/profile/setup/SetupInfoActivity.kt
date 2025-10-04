@@ -1,4 +1,4 @@
-package com.example.angiday.ui.setup
+package com.example.angiday.ui.profile.setup
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.angiday.R
 import android.widget.*
 import com.example.angiday.ui.main.MainActivity
+import kotlin.apply
+import kotlin.toString
 
 class SetupInfoActivity : AppCompatActivity() {
 

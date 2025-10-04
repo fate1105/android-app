@@ -1,6 +1,5 @@
 package com.example.angiday.ui.main.adapter
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +7,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
-import com.example.angiday.ui.main.model.Food
+import com.example.angiday.model.relations.FoodWithRelations
 
 class FoodAdapter(
-    private val items: List<Food>,
-    private val onClick: (Food) -> Unit = {}
+    private var items: List<FoodWithRelations> = emptyList(),
+    private val onClick: (Long) -> Unit = {}   // truyền foodId
 ) : RecyclerView.Adapter<FoodAdapter.VH>() {
 
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -27,12 +26,24 @@ class FoodAdapter(
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        val item = items[position]
+        val item = items[position].food
         holder.title.text = item.title
         holder.desc.text = item.desc
-        holder.img.setImageResource(item.imageRes)
-        holder.itemView.setOnClickListener { onClick(item) }
+
+        if (item.imageRes != null) {
+            holder.img.setImageResource(item.imageRes)
+        } else {
+            holder.img.setImageResource(R.drawable.ic_launcher_foreground)
+        }
+
+        // click vào toàn bộ item (chứ không chỉ ảnh)
+        holder.itemView.setOnClickListener { onClick(item.id) }
     }
 
     override fun getItemCount() = items.size
+
+    fun submitList(newItems: List<FoodWithRelations>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
 }

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
 import com.example.angiday.ui.main.adapter.FoodAdapter
-import com.example.angiday.ui.main.model.Food
+//import com.example.angiday.model.Food
 
 class ListFoodFragment : Fragment() {
 
@@ -20,15 +20,15 @@ class ListFoodFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val rv = view.findViewById<RecyclerView>(R.id.rvFood)
 
-        val foods = listOf(
-            Food("Phở bò", "Nước dùng đậm, bò tái.", R.drawable.logo),
-            Food("Bún bò Huế", "Cay nhẹ, thơm sả.", R.drawable.logo),
-            Food("Cơm tấm", "Sườn bì chả.", R.drawable.logo),
-            Food("Bánh mì", "Pate, dưa leo.", R.drawable.logo)
-        )
+//        val foods = listOf(
+//            Food("Phở bò", "Nước dùng đậm, bò tái.", R.drawable.logo),
+//            Food("Bún bò Huế", "Cay nhẹ, thơm sả.", R.drawable.logo),
+//            Food("Cơm tấm", "Sườn bì chả.", R.drawable.logo),
+//            Food("Bánh mì", "Pate, dưa leo.", R.drawable.logo)
+//        )
 
         rv.layoutManager = LinearLayoutManager(requireContext())
         rv.setHasFixedSize(true)
-        rv.adapter = FoodAdapter(foods) { /* handle click nếu cần */ }
+//        rv.adapter = FoodAdapter(foods) { /* handle click nếu cần */ }
     }
 }

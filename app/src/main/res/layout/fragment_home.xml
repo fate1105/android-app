@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@color/colorSurface"
+    android:background="@color/white"
     android:fillViewport="true">
 
     <LinearLayout
@@ -13,36 +13,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:padding="16dp"
-            android:layout_marginBottom="12dp">
+            android:orientation="horizontal"
+            android:padding="16dp">
 
             <ImageView
                 android:id="@+id/imgLogo"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/logo"
-                android:contentDescription="Logo"
                 android:adjustViewBounds="true"
-                android:scaleType="fitCenter"/>
+                android:contentDescription="Logo"
+                android:scaleType="fitCenter"
+                android:src="@drawable/logo" />
 
             <TextView
                 android:id="@+id/tvGreeting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:text="Hôm nay ăn gì?"
+                android:textColor="#333333"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorOnBackground"
-                android:layout_marginStart="8dp"/>
+                android:textStyle="bold" />
+
         </LinearLayout>
-
-
         <!-- Ô nhập nguyên liệu -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,7 +54,7 @@
                 android:id="@+id/etSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Tìm món hoặc nguyên liệu..."
+                android:hint="Nhập nguyên liệu..."
                 android:inputType="textCapSentences"
                 android:singleLine="true"
                 android:imeOptions="actionDone"/>
@@ -81,12 +78,14 @@
                 android:paddingBottom="8dp"
                 android:minHeight="48dp"
                 android:scrollHorizontally="false"/>
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btnFindRecipes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Tìm món ăn"
-                style="@style/Widget.MaterialComponents.Button" />
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/colorOnPrimary"/>
+
 
         </LinearLayout>
 
