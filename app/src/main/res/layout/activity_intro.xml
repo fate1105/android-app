@@ -1,41 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorSurface">
 
+    <!-- ViewPager2 hiển thị intro pages -->
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPagerIntro"
-        android:layout_width="match_parent"
+        android:id="@+id/vpIntro"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tabDots"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- TabLayout làm chấm tròn (indicator) -->
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabIndicator"
+        android:id="@+id/tabDots"
+        style="@style/Widget.Material3.TabLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        app:tabIndicatorHeight="0dp"
+        app:tabIndicatorFullWidth="false"
+        app:tabRippleColor="@android:color/transparent"
+        app:tabIndicatorAnimationMode="elastic"
+        app:tabTextColor="@color/colorOutline"
+        app:tabSelectedTextColor="@color/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@id/vpIntro"
+        app:layout_constraintBottom_toTopOf="@id/btnNext"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- Nút Bỏ qua -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSkip"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:text="Bỏ qua"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="16dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnNext"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="16dp"/>
 
-        <TextView
-            android:id="@+id/btnSkip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bỏ qua"
-            android:textSize="16sp"
-            android:layout_marginEnd="32dp"/>
-
-        <Button
-            android:id="@+id/btnNext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tiếp"/>
-    </LinearLayout>
-</LinearLayout>
+    <!-- Nút Tiếp tục / Bắt đầu -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnNext"
+        style="@style/Widget.MaterialComponents.Button"
+        android:text="Tiếp tục"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/colorOnPrimary"
+        app:layout_constraintStart_toEndOf="@id/btnSkip"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="16dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,12 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
+    <!-- res/values/themes.xml -->
+    <style name="CustomBottomSheetTheme" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="android:background">@color/colorSurface</item>
+    </style>
 
     <style name="Theme.Angiday" parent="Base.Theme.Angiday" />
 </resources>

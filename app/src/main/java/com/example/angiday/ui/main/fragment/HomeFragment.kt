@@ -4,16 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.angiday.R
 import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.ui.main.adapter.SuggestionAdapter
-import com.google.android.material.button.MaterialButton
+import com.example.angiday.viewmodel.HomeViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import androidx.lifecycle.ViewModelProvider
+import com.example.angiday.db.AppDatabase
+import com.example.angiday.repository.MetaRepository
+import com.example.angiday.viewmodel.HomeViewModelFactory
+
 
 class HomeFragment : Fragment() {
 
@@ -21,31 +30,45 @@ class HomeFragment : Fragment() {
     private lateinit var chipGroup: ChipGroup
     private lateinit var rvSuggestions: RecyclerView
     private lateinit var adapter: SuggestionAdapter
-    private lateinit var btnFindRecipes: MaterialButton
+    private lateinit var btnFindRecipes: Button
 
-    private val allSuggestions = listOf(
-        "Cơm chiên", "Phở bò", "Mì xào",
-        "Cà chua", "Cải xanh", "Cá hồi", "Cánh gà"
-    )
+    private lateinit var viewModel: HomeViewModel
+    private var allSuggestions: List<String> = emptyList()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+        val dao = AppDatabase.get(requireContext()).metaDao()
+        val repo = MetaRepository(dao)
+        val factory = HomeViewModelFactory(repo)
+
+        viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
+
+        // Khởi tạo ViewModel
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         etSearch = view.findViewById(R.id.etSearch)
         chipGroup = view.findViewById(R.id.chipGroupSelected)
         rvSuggestions = view.findViewById(R.id.rvSuggestions)
         btnFindRecipes = view.findViewById(R.id.btnFindRecipes)
 
-        // RecyclerView setup 3 cột
         rvSuggestions.layoutManager = GridLayoutManager(requireContext(), 3)
         adapter = SuggestionAdapter(allSuggestions.toMutableList()) { addChip(it) }
         rvSuggestions.adapter = adapter
 
         setupSearchFilter()
         setupUnfocus(view)
+
+        // Bắt đầu collect sau khi đã có viewModel
+        lifecycleScope.launch {
+            viewModel.ingredients.collectLatest { ingredients ->
+                allSuggestions = ingredients.map { it.name }
+                adapter.updateData(allSuggestions)
+            }
+        }
 
         btnFindRecipes.setOnClickListener {
             val selectedIngredients = mutableListOf<String>()
@@ -63,13 +86,13 @@ class HomeFragment : Fragment() {
 
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, recipeFragment)
-                .addToBackStack(null) // để có thể bấm back quay lại Home
+                .addToBackStack(null)
                 .commit()
         }
 
-
         return view
     }
+
 
     private fun setupSearchFilter() {
         etSearch.addTextChangedListener { input ->
@@ -105,7 +128,6 @@ class HomeFragment : Fragment() {
                 as? android.view.inputmethod.InputMethodManager
         imm?.hideSoftInputFromWindow(view.windowToken, 0)
     }
-
 
 }
 

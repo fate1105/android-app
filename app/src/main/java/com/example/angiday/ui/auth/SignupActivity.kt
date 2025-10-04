@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.angiday.R
-import com.example.angiday.ui.setup.SetupInfoActivity
+//import com.example.angiday.ui.setup.SetupInfoActivity
 
 class SignupActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,10 +27,10 @@ class SignupActivity : AppCompatActivity() {
         val loginText = findViewById<TextView>(R.id.loginText)
 
         // Khi nhấn Đăng ký → chuyển qua SetupInfoActivity
-        signupBtn.setOnClickListener {
-            startActivity(Intent(this, SetupInfoActivity::class.java))
-            finish() // đóng SignupActivity để không quay lại
-        }
+//        signupBtn.setOnClickListener {
+//            startActivity(Intent(this, SetupInfoActivity::class.java))
+//            finish() // đóng SignupActivity để không quay lại
+//        }
 
         // Khi nhấn "Đã có tài khoản? Đăng nhập"
         loginText.setOnClickListener {

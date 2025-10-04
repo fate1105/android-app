@@ -4,26 +4,26 @@
     <item
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home"
-        android:title="Home" />
+        android:title="Trang chủ" />
 
     <item
         android:id="@+id/nav_menu"
         android:icon="@drawable/ic_menu"
-        android:title="Menu" />
+        android:title="Thực đơn" />
 
     <item
         android:id="@+id/nav_wheel"
         android:icon="@drawable/ic_wheel"
-        android:title="Wheel" />
+        android:title="Vòng quay" />
     
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_profile"
-        android:title="Profile" />
+        android:title="Hồ sơ" />
 
     <item
         android:id="@+id/nav_setting"
         android:icon="@drawable/ic_settings"
-        android:title="Setting" />
+        android:title="Cài đặt" />
 
 </menu>
