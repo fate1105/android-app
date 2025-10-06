@@ -6,6 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +23,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import androidx.lifecycle.ViewModelProvider
 import com.example.angiday.db.AppDatabase
+import com.example.angiday.repository.FoodRepository
 import com.example.angiday.repository.MetaRepository
 import com.example.angiday.viewmodel.HomeViewModelFactory
 
@@ -31,7 +35,10 @@ class HomeFragment : Fragment() {
     private lateinit var rvSuggestions: RecyclerView
     private lateinit var adapter: SuggestionAdapter
     private lateinit var btnFindRecipes: Button
-
+    private lateinit var tvBreakfast: TextView
+    private lateinit var tvLunch: TextView
+    private lateinit var tvDinner: TextView
+    private lateinit var categoryContainer: LinearLayout
     private lateinit var viewModel: HomeViewModel
     private var allSuggestions: List<String> = emptyList()
 
@@ -41,16 +48,24 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        val dao = AppDatabase.get(requireContext()).metaDao()
-        val repo = MetaRepository(dao)
-        val factory = HomeViewModelFactory(repo)
+        // --- Lấy instance database
+        val db = AppDatabase.get(requireContext())
 
+        val metaRepo = MetaRepository(db.metaDao())
+        val foodRepo = FoodRepository(db.foodDao())
+
+        val factory = HomeViewModelFactory(metaRepo, foodRepo)
+
+        // --- Tạo ViewModel
         viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
 
         etSearch = view.findViewById(R.id.etSearch)
         chipGroup = view.findViewById(R.id.chipGroupSelected)
         rvSuggestions = view.findViewById(R.id.rvSuggestions)
         btnFindRecipes = view.findViewById(R.id.btnFindRecipes)
+        tvBreakfast = view.findViewById(R.id.tvBreakfast)
+        tvLunch = view.findViewById(R.id.tvLunch)
+        tvDinner = view.findViewById(R.id.tvDinner)
 
         rvSuggestions.layoutManager = GridLayoutManager(requireContext(), 3)
         adapter = SuggestionAdapter(allSuggestions.toMutableList()) { addChip(it) }
@@ -84,6 +99,44 @@ class HomeFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
+        viewModel.loadRandomMeals()
+
+        lifecycleScope.launch {
+            viewModel.randomMeals.collectLatest { meals ->
+                if (meals.size >= 3) {
+                    tvBreakfast.text = "Bữa sáng:\n${meals[0].food.title}"
+                    tvLunch.text = "Bữa trưa:\n${meals[1].food.title}"
+                    tvDinner.text = "Bữa tối:\n${meals[2].food.title}"
+
+                }
+            }
+        }
+        categoryContainer = view.findViewById(R.id.categoryContainer)
+
+        lifecycleScope.launch {
+            viewModel.categories.collectLatest { categories ->
+                categoryContainer.removeAllViews()
+                for (category in categories) {
+                    val textView = TextView(requireContext()).apply {
+                        text = category.name
+                        setBackgroundResource(R.drawable.bg_chip_simple)
+                        setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+                        setPadding(24, 12, 24, 12)
+
+                        val params = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        ).apply {
+                            setMargins(0, 0, 16, 0)
+                        }
+                        layoutParams = params
+                    }
+
+                    categoryContainer.addView(textView)
+                }
+            }
+        }
+
         return view
     }
 
