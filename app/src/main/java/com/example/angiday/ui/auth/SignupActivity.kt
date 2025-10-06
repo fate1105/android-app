@@ -2,71 +2,92 @@ package com.example.angiday.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.util.Patterns
+import android.widget.*
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.angiday.R
-import com.example.angiday.db.AppDatabase
-import com.example.angiday.model.entity.UserEntity
-import kotlinx.coroutines.Dispatchers
+import com.example.angiday.viewmodel.RegisterViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SignupActivity : AppCompatActivity() {
 
+    private val vm: RegisterViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_signup)
 
-//        val emailEt = findViewById<EditText>(R.id.email)
-//        val passEt = findViewById<EditText>(R.id.pass)
-//        val pass2Et = findViewById<EditText>(R.id.pass2)
-//        val signupBtn = findViewById<TextView>(R.id.signupBtn)
-//        val loginText = findViewById<TextView>(R.id.loginText)
-//
-//        signupBtn.setOnClickListener {
-//            val email = emailEt.text.toString().trim()
-//            val pass = passEt.text.toString().trim()
-//            val pass2 = pass2Et.text.toString().trim()
-//
-//            if (email.isEmpty() || pass.isEmpty() || pass2.isEmpty()) {
-//                Toast.makeText(this, "Vui lòng nhập đủ thông tin!", Toast.LENGTH_SHORT).show()
-//                return@setOnClickListener
-//            }
-//            if (pass != pass2) {
-//                Toast.makeText(this, "Mật khẩu không khớp!", Toast.LENGTH_SHORT).show()
-//                return@setOnClickListener
-//            }
-//
-//            lifecycleScope.launch {
-//                val dao = AppDatabase.get(this@SignupActivity).userDao()
-//
-//                // Kiểm tra email đã tồn tại chưa
-//                val existing = withContext(Dispatchers.IO) {
-//                    dao.getUserByEmail(email)
-//                }
-//                if (existing != null) {
-//                    Toast.makeText(this@SignupActivity, "Email đã được sử dụng!", Toast.LENGTH_SHORT).show()
-//                    return@launch
-//                }
-//
-//                // Lưu người dùng mới
-//                val newUser = UserEntity(name = "Người dùng", email = email, password = pass)
-//                withContext(Dispatchers.IO) {
-//                    dao.insertUser(newUser)
-//                }
-//
-//                Toast.makeText(this@SignupActivity, "Đăng ký thành công!", Toast.LENGTH_SHORT).show()
-//                startActivity(Intent(this@SignupActivity, LoginActivity::class.java))
-//                finish()
-//            }
-//        }
+        val etEmail     = findViewById<EditText>(R.id.email)
+        val etPassword  = findViewById<EditText>(R.id.pass)
+        val etPassword2 = findViewById<EditText>(R.id.pass2)
+        val btnRegister = findViewById<Button>(R.id.signupBtn)
+        val tvLogin     = findViewById<TextView>(R.id.loginText)
 
-//        loginText.setOnClickListener {
-//            startActivity(Intent(this, LoginActivity::class.java))
-//            finish()
-//        }
+        btnRegister.setOnClickListener {
+            val email = etEmail.text.toString().trim()
+            val pass  = etPassword.text.toString()
+            val pass2 = etPassword2.text.toString()
+
+            if (email.isEmpty()) {
+                etEmail.error = "Nhập email"; return@setOnClickListener
+            }
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                etEmail.error = "Email không hợp lệ"; return@setOnClickListener
+            }
+            if (pass.length < 6) {
+                etPassword.error = "Mật khẩu ≥ 6 ký tự"; return@setOnClickListener
+            }
+            if (pass != pass2) {
+                etPassword2.error = "Mật khẩu nhập lại không khớp"; return@setOnClickListener
+            }
+
+            val name = email.substringBefore("@")
+            vm.register(
+                name = name,
+                email = email,
+                password = pass,
+                hashPassword = false
+            )
+        }
+
+        // Điều hướng sang màn hình đăng nhập
+        tvLogin.setOnClickListener {
+            finish() // hoặc startActivity(Intent(this, LoginActivity::class.java))
+        }
+
+        // Quan sát UI state
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vm.ui.collect { state ->
+                    when {
+                        state.loading -> {
+                            btnRegister.isEnabled = false
+                            btnRegister.text = "Đang đăng ký..."
+                        }
+                        state.success -> {
+                            btnRegister.isEnabled = true
+                            btnRegister.text = "Đăng ký"
+                            Toast.makeText(this@SignupActivity, "Đăng ký thành công!", Toast.LENGTH_SHORT).show()
+
+                            // 👉 Sau khi đăng ký xong, chuyển qua LoginActivity
+                            startActivity(Intent(this@SignupActivity, LoginActivity::class.java))
+                            finish()
+                        }
+                        state.error != null -> {
+                            btnRegister.isEnabled = true
+                            btnRegister.text = "Đăng ký"
+                            Toast.makeText(this@SignupActivity, "Lỗi: ${state.error}", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
