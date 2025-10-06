@@ -13,9 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- Ô nhập nguyên liệu -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="84dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="16dp">
@@ -40,7 +41,7 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
-        <!-- Ô nhập nguyên liệu -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -137,6 +138,7 @@
                 android:layout_marginEnd="8dp"/>
 
             <TextView
+                android:id="@+id/tvLunch"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -147,6 +149,7 @@
                 android:layout_marginEnd="8dp"/>
 
             <TextView
+                android:id="@+id/tvDinner"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -167,53 +170,20 @@
             android:layout_marginBottom="8dp"/>
 
         <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none"
             android:layout_marginBottom="24dp">
 
             <LinearLayout
+                android:id="@+id/categoryContainer"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Món cơm"
-                    android:padding="12dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_chip_simple"
-                    android:textColor="@color/colorPrimary"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Món nước"
-                    android:padding="12dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_chip_simple"
-                    android:textColor="@color/colorPrimary"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ăn chay"
-                    android:padding="12dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_chip_simple"
-                    android:textColor="@color/colorPrimary"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Healthy"
-                    android:padding="12dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_chip_simple"
-                    android:textColor="@color/colorPrimary"/>
-            </LinearLayout>
+                android:layout_height="wrap_content" />
         </HorizontalScrollView>
+
+
 
         <!-- Nút hành động -->
         <Button

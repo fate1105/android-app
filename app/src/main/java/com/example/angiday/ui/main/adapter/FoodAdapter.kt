@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
 import com.example.angiday.model.relations.FoodWithRelations
+import com.example.angiday.util.ImageUtils
 
 class FoodAdapter(
     private var items: List<FoodWithRelations> = emptyList(),
@@ -31,19 +32,9 @@ class FoodAdapter(
         holder.desc.text = item.desc ?: "Không có mô tả"
 
         // 🔹 Load ảnh theo tên trong drawable
-        val resId = if (!item.imageRes.isNullOrEmpty()) {
-            holder.itemView.context.resources.getIdentifier(
-                item.imageRes,                  // ví dụ "buncha"
-                "drawable",
-                holder.itemView.context.packageName
-            )
-        } else 0
+        val resId = ImageUtils.getDrawableId(holder.itemView.context, item.imageRes)
+        holder.img.setImageResource(resId)
 
-        if (resId != 0) {
-            holder.img.setImageResource(resId)
-        } else {
-            holder.img.setImageResource(R.drawable.ic_launcher_foreground)
-        }
 
         // 🔹 Click vào toàn bộ item
         holder.itemView.setOnClickListener { onClick(item.id) }

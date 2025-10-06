@@ -16,7 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- TabLayout làm chấm tròn (indicator) -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabDots"
         style="@style/Widget.Material3.TabLayout"

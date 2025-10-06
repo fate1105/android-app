@@ -1,12 +1,12 @@
 package com.example.angiday.ui.main.fragment
 
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebSettings
-import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -25,17 +25,12 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class FoodDetailFragment : Fragment() {
-
     companion object {
         private const val ARG_FOOD_ID = "arg_food_id"
         fun newInstance(foodId: Long) = FoodDetailFragment().apply {
             arguments = Bundle().apply { putLong(ARG_FOOD_ID, foodId) }
         }
     }
-
-    private var _webView: WebView? = null
-    private val webView get() = _webView!!
-
     private lateinit var img: ImageView
     private lateinit var tvTitle: TextView
     private lateinit var tvDesc: TextView
@@ -61,15 +56,13 @@ class FoodDetailFragment : Fragment() {
         tvTitle = view.findViewById(R.id.tvFoodTitle)
         tvDesc = view.findViewById(R.id.tvFoodDesc)
         chipGroupIngredients = view.findViewById(R.id.chipGroupIngredients)
-        chipGroupTags = view.findViewById(R.id.chipGroupTags) // tạo thêm chip group cho tags
-        tvCategory = view.findViewById(R.id.tvCategory)       // TextView hiển thị category
+        chipGroupTags = view.findViewById(R.id.chipGroupTags)
+        tvCategory = view.findViewById(R.id.tvCategory)
         tvInstructions = view.findViewById(R.id.tvInstructions)
         youtubeContainer = view.findViewById(R.id.youtubeContainer)
-        _webView = view.findViewById(R.id.webYoutube)
 
         val foodId = requireArguments().getLong(ARG_FOOD_ID)
 
-        // Collect dữ liệu từ Flow
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getFood(foodId).collectLatest { foodWithRelations ->
                 foodWithRelations?.let { bindFood(it) }
@@ -83,19 +76,13 @@ class FoodDetailFragment : Fragment() {
         tvTitle.text = foodEntity.title
         tvDesc.text = foodEntity.desc ?: "Không có mô tả"
 
-        // Ảnh (imageRes là tên file trong res/drawable, ví dụ: "buncha")
+        // Ảnh
         val resId = foodEntity.imageRes?.let { name ->
             resources.getIdentifier(name, "drawable", requireContext().packageName)
         } ?: 0
 
-        if (resId != 0) {
-            img.setImageResource(resId)
-            img.contentDescription = foodEntity.title
-        } else {
-            img.setImageResource(R.drawable.ic_launcher_foreground)
-            img.contentDescription = "No image"
-        }
-
+        if (resId != 0) img.setImageResource(resId)
+        else img.setImageResource(R.drawable.ic_launcher_foreground)
 
         // Ingredients
         chipGroupIngredients.removeAllViews()
@@ -125,53 +112,19 @@ class FoodDetailFragment : Fragment() {
         // Instructions
         tvInstructions.text = foodEntity.instructions ?: "Chưa có hướng dẫn nấu chi tiết."
 
-        // Youtube
+        // YouTube
         if (!foodEntity.youtubeId.isNullOrBlank()) {
             youtubeContainer.visibility = View.VISIBLE
-            setupYoutubeWebView(foodEntity.youtubeId)
+            youtubeContainer.setOnClickListener {
+                openYoutubeVideo(foodEntity.youtubeId!!)
+            }
         } else {
             youtubeContainer.visibility = View.GONE
         }
     }
 
-    private fun setupYoutubeWebView(videoId: String) {
-        val settings: WebSettings = webView.settings
-        settings.javaScriptEnabled = true
-        settings.domStorageEnabled = true
-        settings.mediaPlaybackRequiresUserGesture = true
-
-        webView.setBackgroundColor(Color.TRANSPARENT)
-
-        val html = """
-            <html>
-              <head>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                <style>html,body{margin:0;padding:0;background:transparent;}</style>
-              </head>
-              <body>
-                <iframe
-                  width="100%" height="100%"
-                  src="https://www.youtube.com/embed/$videoId?autoplay=0&modestbranding=1&rel=0"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen>
-                </iframe>
-              </body>
-            </html>
-        """.trimIndent()
-
-        webView.loadDataWithBaseURL(null, html, "text/html", "utf-8", null)
-    }
-
-    override fun onDestroyView() {
-        _webView?.apply {
-            loadUrl("about:blank")
-            stopLoading()
-            clearHistory()
-            removeAllViews()
-            destroy()
-        }
-        _webView = null
-        super.onDestroyView()
+    private fun openYoutubeVideo(videoId: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=$videoId"))
+        startActivity(intent)
     }
 }
