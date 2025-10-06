@@ -3,10 +3,8 @@ package com.example.angiday.ui.profile
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
-import com.example.angiday.ui.main.adapter.FoodAdapter
 //import com.example.angiday.model.Food
 import com.google.android.material.appbar.MaterialToolbar
 

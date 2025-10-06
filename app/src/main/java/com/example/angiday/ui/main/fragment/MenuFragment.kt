@@ -5,60 +5,83 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
+import com.example.angiday.db.AppDatabase
+import com.example.angiday.repository.FoodRepository
 import com.example.angiday.ui.main.adapter.FoodAdapter
-//import com.example.angiday.model.Food
-
+import com.example.angiday.viewmodel.MenuViewModel
+import com.example.angiday.viewmodel.factory.MenuViewModelFactory
+import kotlinx.coroutines.launch
 class MenuFragment : Fragment() {
 
+    private lateinit var viewModel: MenuViewModel
+
+    // Thêm đủ 5 adapter
+    private lateinit var adapterMonNuoc: FoodAdapter
+    private lateinit var adapterMonChien: FoodAdapter
+    private lateinit var adapterMonCom: FoodAdapter
+    private lateinit var adapterMonChay: FoodAdapter
+    private lateinit var adapterMonXao: FoodAdapter
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.fragment_menu, container, false)
-    }
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = inflater.inflate(R.layout.fragment_menu, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // Ánh xạ 3 RecyclerView
-        val rvMorning = view.findViewById<RecyclerView>(R.id.rvFood)   // sáng
-        val rvNoon = view.findViewById<RecyclerView>(R.id.rvFood2)     // trưa
-        val rvEvening = view.findViewById<RecyclerView>(R.id.rvFood3)  // tối
+        // 1️⃣ Ánh xạ RecyclerView
+        val rvNuoc = view.findViewById<RecyclerView>(R.id.rvMonNuoc)
+        val rvChien = view.findViewById<RecyclerView>(R.id.rvMonChien)
+        val rvCom = view.findViewById<RecyclerView>(R.id.rvMonCom)
+        val rvChay = view.findViewById<RecyclerView>(R.id.rvMonChay)
+        val rvXao = view.findViewById<RecyclerView>(R.id.rvMonXao)
 
-        // Món ăn sáng
-//        val foodsMorning = listOf(
-//            Food("Phở bò", "Nước dùng đậm, bò tái.", R.drawable.logo),
-//            Food("Bánh mì", "Pate, dưa leo.", R.drawable.logo),
-//            Food("Xôi gà", "Xôi nếp thơm, gà xé.", R.drawable.logo)
-//        )
-//
-//        // Món ăn trưa
-//        val foodsNoon = listOf(
-//            Food("Cơm tấm", "Sườn bì chả.", R.drawable.logo),
-//            Food("Canh chua cá", "Chua ngọt thanh mát.", R.drawable.logo),
-//            Food("Thịt kho tàu", "Ngon với cơm trắng.", R.drawable.logo)
-//        )
-//
-//        // Món ăn tối
-//        val foodsEvening = listOf(
-//            Food("Bún bò Huế", "Cay nhẹ, thơm sả.", R.drawable.logo),
-//            Food("Lẩu thái", "Đậm đà, hải sản tươi.", R.drawable.logo),
-//            Food("Gỏi cuốn", "Thanh mát, ít dầu mỡ.", R.drawable.logo)
-//        )
+        // 2️⃣ Gán LayoutManager cho từng RecyclerView
+        listOf(rvNuoc, rvChien, rvCom, rvChay, rvXao).forEach {
+            it.layoutManager = LinearLayoutManager(requireContext())
+        }
 
-//        // Setup RecyclerView sáng
-//        rvMorning.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
-//        rvMorning.setHasFixedSize(true)
-//        rvMorning.adapter = FoodAdapter(foodsMorning) { /* handle click */ }
-//
-//        // Setup RecyclerView trưa
-//        rvNoon.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
-//        rvNoon.setHasFixedSize(true)
-//        rvNoon.adapter = FoodAdapter(foodsNoon) { /* handle click */ }
-//
-//        // Setup RecyclerView tối
-//        rvEvening.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
-//        rvEvening.setHasFixedSize(true)
-//        rvEvening.adapter = FoodAdapter(foodsEvening) { /* handle click */ }
+        // 3️⃣ Khởi tạo Adapter
+        adapterMonNuoc = FoodAdapter()
+        adapterMonChien = FoodAdapter()
+        adapterMonCom = FoodAdapter()
+        adapterMonChay = FoodAdapter()
+        adapterMonXao = FoodAdapter()
+
+        // 4️⃣ Gán Adapter cho RecyclerView
+        rvNuoc.adapter = adapterMonNuoc
+        rvChien.adapter = adapterMonChien
+        rvCom.adapter = adapterMonCom
+        rvChay.adapter = adapterMonChay
+        rvXao.adapter = adapterMonXao
+
+        // 5️⃣ Khởi tạo Repository + ViewModel đúng chuẩn
+        val dao = AppDatabase.get(requireContext()).foodDao()
+        val repo = FoodRepository(dao)
+        val factory = MenuViewModelFactory(repo)
+        viewModel = ViewModelProvider(this, factory)[MenuViewModel::class.java]
+
+        // 6️⃣ Quan sát dữ liệu từ DB
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.groupedFoods.collect { grouped ->
+                val monNuoc = grouped["Món nước"] ?: emptyList()
+                val monChien = grouped["Món chiên"] ?: emptyList()
+                val monCom = grouped["Món cơm"] ?: emptyList()
+                val monChay = grouped["Món chay"] ?: emptyList()
+                val monXao = grouped["Món xào"] ?: emptyList()
+
+                adapterMonNuoc.submitList(monNuoc)
+                adapterMonChien.submitList(monChien)
+                adapterMonCom.submitList(monCom)
+                adapterMonChay.submitList(monChay)
+                adapterMonXao.submitList(monXao)
+
+                println("DEBUG ➜ nước=${monNuoc.size}, chiên=${monChien.size}, cơm=${monCom.size}, chay=${monChay.size}, xào=${monXao.size}")
+            }
+        }
     }
 }

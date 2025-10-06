@@ -58,4 +58,6 @@ interface FoodDao {
         ORDER BY f.id DESC
     """)
     fun getFoodsByAnyIngredients(ingredientNames: List<String>): Flow<List<FoodWithRelations>>
+
+
 }

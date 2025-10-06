@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- Hình ảnh -->
         <ImageView
             android:id="@+id/imgFoodDetail"
             android:layout_width="match_parent"
@@ -22,6 +23,7 @@
             android:contentDescription="@string/app_name"
             android:background="@color/colorOutline" />
 
+        <!-- Tên món -->
         <TextView
             android:id="@+id/tvFoodTitle"
             android:layout_width="match_parent"
@@ -32,6 +34,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+        <!-- Mô tả -->
         <TextView
             android:id="@+id/tvFoodDesc"
             android:layout_width="match_parent"
@@ -40,6 +43,40 @@
             android:textColor="@color/colorOnSurface"
             android:layout_marginTop="4dp" />
 
+        <!-- Danh mục -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Danh mục: "
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginTop="12dp"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/tvCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="..."
+            android:layout_marginTop="4dp"
+            android:textColor="@color/colorOnSurface"/>
+
+        <!-- Tags -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tags"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginTop="12dp"
+            android:textSize="16sp"/>
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupTags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:chipSpacing="8dp"
+            android:layout_marginTop="6dp" />
+
+        <!-- Nguyên liệu -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,7 +85,6 @@
             android:textColor="@color/colorPrimary"
             android:layout_marginTop="12dp"
             android:textSize="16sp"/>
-
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroupIngredients"
             android:layout_width="match_parent"
@@ -56,6 +92,7 @@
             app:chipSpacing="8dp"
             android:layout_marginTop="6dp" />
 
+        <!-- Cách nấu -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +101,6 @@
             android:textColor="@color/colorPrimary"
             android:layout_marginTop="12dp"
             android:textSize="16sp"/>
-
         <TextView
             android:id="@+id/tvInstructions"
             android:layout_width="match_parent"

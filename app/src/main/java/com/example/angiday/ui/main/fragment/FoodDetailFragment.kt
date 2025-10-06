@@ -13,9 +13,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
 import com.example.angiday.db.AppDatabase
+import com.example.angiday.model.relations.FoodWithRelations
 import com.example.angiday.repository.FoodRepository
 import com.example.angiday.viewmodel.FoodDetailViewModel
 import com.example.angiday.viewmodel.FoodDetailViewModelFactory
@@ -39,7 +39,9 @@ class FoodDetailFragment : Fragment() {
     private lateinit var img: ImageView
     private lateinit var tvTitle: TextView
     private lateinit var tvDesc: TextView
-    private lateinit var chipGroup: ChipGroup
+    private lateinit var chipGroupIngredients: ChipGroup
+    private lateinit var chipGroupTags: ChipGroup
+    private lateinit var tvCategory: TextView
     private lateinit var tvInstructions: TextView
     private lateinit var youtubeContainer: LinearLayout
 
@@ -58,50 +60,75 @@ class FoodDetailFragment : Fragment() {
         img = view.findViewById(R.id.imgFoodDetail)
         tvTitle = view.findViewById(R.id.tvFoodTitle)
         tvDesc = view.findViewById(R.id.tvFoodDesc)
-        chipGroup = view.findViewById(R.id.chipGroupIngredients)
+        chipGroupIngredients = view.findViewById(R.id.chipGroupIngredients)
+        chipGroupTags = view.findViewById(R.id.chipGroupTags) // tạo thêm chip group cho tags
+        tvCategory = view.findViewById(R.id.tvCategory)       // TextView hiển thị category
         tvInstructions = view.findViewById(R.id.tvInstructions)
         youtubeContainer = view.findViewById(R.id.youtubeContainer)
         _webView = view.findViewById(R.id.webYoutube)
 
         val foodId = requireArguments().getLong(ARG_FOOD_ID)
 
-        // Quan sát dữ liệu từ ViewModel (Flow -> collect)
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            viewModel.getFood(foodId).collectLatest { data ->
-//                data?.let { bindFood(it.food.title, it.food.desc, it.food.imageRes, it.food.instructions, it.food.youtubeId, it.ingredients.map { ing -> ing.name }) }
-//            }
-//        }
+        // Collect dữ liệu từ Flow
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getFood(foodId).collectLatest { foodWithRelations ->
+                foodWithRelations?.let { bindFood(it) }
+            }
+        }
     }
 
-    private fun bindFood(
-        title: String,
-        desc: String?,           // cho phép null
-        imageRes: Int?,
-        instructions: String?,   // cho phép null
-        youtubeId: String?,
-        ingredients: List<String>
-    ) {
-        tvTitle.text = title
-        tvDesc.text = desc ?: "Không có mô tả"
+    private fun bindFood(food: FoodWithRelations) {
+        val foodEntity = food.food
 
-        if (imageRes != null) img.setImageResource(imageRes)
-        else img.setImageResource(R.drawable.ic_launcher_foreground)
+        tvTitle.text = foodEntity.title
+        tvDesc.text = foodEntity.desc ?: "Không có mô tả"
 
-        chipGroup.removeAllViews()
-        ingredients.forEach { ing ->
+        // Ảnh (imageRes là tên file trong res/drawable, ví dụ: "buncha")
+        val resId = foodEntity.imageRes?.let { name ->
+            resources.getIdentifier(name, "drawable", requireContext().packageName)
+        } ?: 0
+
+        if (resId != 0) {
+            img.setImageResource(resId)
+            img.contentDescription = foodEntity.title
+        } else {
+            img.setImageResource(R.drawable.ic_launcher_foreground)
+            img.contentDescription = "No image"
+        }
+
+
+        // Ingredients
+        chipGroupIngredients.removeAllViews()
+        food.ingredients.forEach { ing ->
             val chip = Chip(requireContext()).apply {
-                text = ing
+                text = ing.name
                 isCheckable = false
                 isClickable = false
             }
-            chipGroup.addView(chip)
+            chipGroupIngredients.addView(chip)
         }
 
-        tvInstructions.text = instructions ?: "Chưa có hướng dẫn nấu chi tiết."
+        // Tags
+        chipGroupTags.removeAllViews()
+        food.tags.forEach { tag ->
+            val chip = Chip(requireContext()).apply {
+                text = tag.name
+                isCheckable = false
+                isClickable = false
+            }
+            chipGroupTags.addView(chip)
+        }
 
-        if (!youtubeId.isNullOrBlank()) {
+        // Category
+        tvCategory.text = food.category?.name ?: "Không có danh mục"
+
+        // Instructions
+        tvInstructions.text = foodEntity.instructions ?: "Chưa có hướng dẫn nấu chi tiết."
+
+        // Youtube
+        if (!foodEntity.youtubeId.isNullOrBlank()) {
             youtubeContainer.visibility = View.VISIBLE
-            setupYoutubeWebView(youtubeId)
+            setupYoutubeWebView(foodEntity.youtubeId)
         } else {
             youtubeContainer.visibility = View.GONE
         }

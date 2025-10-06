@@ -18,8 +18,7 @@ data class FoodEntity(
     val id: Long = 0,                // NOT NULL, AUTOINCREMENT
     val title: String,               // NOT NULL
     val desc: String?,               // nullable
-    val imageRes: Int?,              // drawable resId
-    val imageUrl: String?,           // online image url
+    val imageRes: String?,              // drawable resId
     val instructions: String?,       // nullable
     val youtubeId: String?,           // nullable
     val categoryId: Int?
