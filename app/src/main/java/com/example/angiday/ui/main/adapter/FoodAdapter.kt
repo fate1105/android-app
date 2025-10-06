@@ -28,17 +28,27 @@ class FoodAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = items[position].food
         holder.title.text = item.title
-        holder.desc.text = item.desc
+        holder.desc.text = item.desc ?: "Không có mô tả"
 
-        if (item.imageRes != null) {
-            holder.img.setImageResource(item.imageRes)
+        // 🔹 Load ảnh theo tên trong drawable
+        val resId = if (!item.imageRes.isNullOrEmpty()) {
+            holder.itemView.context.resources.getIdentifier(
+                item.imageRes,                  // ví dụ "buncha"
+                "drawable",
+                holder.itemView.context.packageName
+            )
+        } else 0
+
+        if (resId != 0) {
+            holder.img.setImageResource(resId)
         } else {
             holder.img.setImageResource(R.drawable.ic_launcher_foreground)
         }
 
-        // click vào toàn bộ item (chứ không chỉ ảnh)
+        // 🔹 Click vào toàn bộ item
         holder.itemView.setOnClickListener { onClick(item.id) }
     }
+
 
     override fun getItemCount() = items.size
 

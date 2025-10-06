@@ -13,7 +13,8 @@ import com.example.angiday.model.entity.*
         FoodIngredientCrossRef::class,
         CategoryEntity::class,
         TagEntity::class,
-        FoodTagCrossRef::class
+        FoodTagCrossRef::class,
+        UserEntity::class
     ],
     version = 1,
     exportSchema = false
@@ -22,7 +23,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun foodDao(): FoodDao
     abstract fun metaDao(): MetaDao
-
+    abstract fun userDao(): UserDao
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
 

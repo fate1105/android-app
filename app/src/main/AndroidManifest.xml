@@ -24,7 +24,7 @@
             android:name=".ui.profile.FoodLvActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.profile.Edit_pfActivity"
+            android:name=".ui.profile.EditActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.SignupActivity"

@@ -47,9 +47,6 @@ class HomeFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
 
-        // Khởi tạo ViewModel
-        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-
         etSearch = view.findViewById(R.id.etSearch)
         chipGroup = view.findViewById(R.id.chipGroupSelected)
         rvSuggestions = view.findViewById(R.id.rvSuggestions)
@@ -76,23 +73,19 @@ class HomeFragment : Fragment() {
                 val chip = chipGroup.getChildAt(i) as Chip
                 selectedIngredients.add(chip.text.toString())
             }
-
             val bundle = Bundle().apply {
                 putStringArray("ingredients", selectedIngredients.toTypedArray())
             }
-
-            val recipeFragment = SuggestFragment()
-            recipeFragment.arguments = bundle
+            val suggestFragment = SuggestFragment()
+            suggestFragment.arguments = bundle
 
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, recipeFragment)
+                .replace(R.id.fragment_container, suggestFragment)
                 .addToBackStack(null)
                 .commit()
         }
-
         return view
     }
-
 
     private fun setupSearchFilter() {
         etSearch.addTextChangedListener { input ->
@@ -101,7 +94,7 @@ class HomeFragment : Fragment() {
             else allSuggestions.filter { it.lowercase().contains(query) }
 
             rvSuggestions.visibility = if (filtered.isEmpty()) View.GONE else View.VISIBLE
-            adapter.updateData(filtered) // chỉ update, không tạo lại adapter
+            adapter.updateData(filtered)
         }
     }
 

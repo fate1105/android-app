@@ -13,5 +13,4 @@ class FoodRepository(private val dao: FoodDao) {
 
     fun getFood(foodId: Long) = dao.getFood(foodId)
 
-
 }

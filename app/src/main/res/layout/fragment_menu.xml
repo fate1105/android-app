@@ -1,126 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".ui.main.fragment.MenuFragment">
 
-    <ScrollView
-        android:id="@+id/scrollview"
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="12dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <!-- ======= MÓN NƯỚC ======= -->
+        <TextView
+            android:id="@+id/textViewMonNuoc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="Món nước"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:paddingVertical="8dp"
+            android:background="#EEEEEE" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMonNuoc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_marginBottom="16dp" />
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <!-- ======= MÓN CHIÊN ======= -->
+        <TextView
+            android:id="@+id/textViewMonChien"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Món chiên"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:paddingVertical="8dp"
+            android:background="#EEEEEE" />
 
-                <TextView
-                    android:id="@+id/textView12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Món ăn sáng"
-                    android:textSize="@dimen/text_listFood"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMonChien"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_marginBottom="16dp" />
 
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+        <!-- ======= MÓN CƠM ======= -->
+        <TextView
+            android:id="@+id/textViewMonCom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Món cơm"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:paddingVertical="8dp"
+            android:background="#EEEEEE" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMonCom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        <!-- ======= MÓN ĂN CHAY ======= -->
+        <TextView
+            android:id="@+id/textViewChay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Món ăn chay"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:paddingVertical="8dp"
+            android:background="#EEEEEE" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMonChay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_marginBottom="16dp" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvFood"
-                    android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+        <!-- ======= MÓN ĂN XÀO ======= -->
+        <TextView
+            android:id="@+id/textViewXao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Món ăn xào"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:paddingVertical="8dp"
+            android:background="#EEEEEE" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMonXao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                <TextView
-                    android:id="@+id/textViewTrua"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Món ăn trưa"
-                    android:textSize="@dimen/text_listFood"
-
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvFood2"
-                    android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/textViewtoi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Món ăn tối"
-                    android:textSize="@dimen/text_listFood"
-
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvFood3"
-                    android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </LinearLayout>
-    </ScrollView>
-
-</FrameLayout>
+    </LinearLayout>
+</ScrollView>

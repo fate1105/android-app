@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.angiday.R
 import com.google.android.material.appbar.MaterialToolbar
 
-class Edit_pfActivity : AppCompatActivity() {
+class EditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

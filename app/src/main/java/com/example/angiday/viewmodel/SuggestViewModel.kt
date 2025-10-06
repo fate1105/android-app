@@ -11,13 +11,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
 class SuggestViewModel(private val repo: FoodRepository) : ViewModel() {
-
-    // toàn bộ món (bạn có thể đổi sang lọc theo ingredients)
+    // toàn bộ món
     val foods: StateFlow<List<FoodWithRelations>> =
         repo.getAllFoods()
             .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    // trong SuggestViewModel:
     fun foodsBy(ingredientNames: List<String>) =
         repo.getFoodsByAnyIngredients(ingredientNames)
             .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())

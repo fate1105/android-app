@@ -1,17 +1,13 @@
 package com.example.angiday.ui.main.fragment
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.example.angiday.R
-import com.example.angiday.ui.profile.Edit_pfActivity
+import com.example.angiday.ui.profile.EditActivity
 import com.example.angiday.ui.profile.FoodLvActivity
 import com.example.angiday.ui.profile.FoodHistoryActivity
 import com.example.angiday.ui.profile.SettingsActivity
@@ -40,7 +36,7 @@ class ProfileFragment : Fragment() {
         }
 
         rowEditProfile.setOnClickListener {
-            val intent = Intent(requireContext(), Edit_pfActivity::class.java)
+            val intent = Intent(requireContext(), EditActivity::class.java)
             startActivity(intent)
         }
 

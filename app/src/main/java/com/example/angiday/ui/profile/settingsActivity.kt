@@ -32,7 +32,7 @@ class SettingsActivity : AppCompatActivity() {
         // Views
         val swNotifications = findViewById<MaterialSwitch>(R.id.swNotifications)
         val swDarkMode = findViewById<MaterialSwitch>(R.id.swDarkMode)
-        val edtLanguage = findViewById<MaterialAutoCompleteTextView>(R.id.edtLanguage)
+        val edtLanguage = this.findViewById<MaterialAutoCompleteTextView>(R.id.edtLanguage)
         val btnClearCache = findViewById<MaterialButton>(R.id.btnClearCache)
 
         // Load saved states
