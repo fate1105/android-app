@@ -59,5 +59,8 @@ interface FoodDao {
     """)
     fun getFoodsByAnyIngredients(ingredientNames: List<String>): Flow<List<FoodWithRelations>>
 
+    @Transaction
+    @Query("SELECT * FROM foods ORDER BY RANDOM() LIMIT :count")
+    suspend fun getRandomFoods(count: Int = 3): List<FoodWithRelations>
 
 }

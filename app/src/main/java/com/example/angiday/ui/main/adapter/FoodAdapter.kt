@@ -8,8 +8,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
 import com.example.angiday.model.relations.FoodWithRelations
+
 import android.content.Intent
 import android.widget.Button
+
+import com.example.angiday.util.ImageUtils
+
 class FoodAdapter(
     private var items: List<FoodWithRelations> = emptyList(),
     private val onClick: (Long) -> Unit = {}   // truyền foodId
@@ -45,6 +49,10 @@ class FoodAdapter(
         } else {
             holder.img.setImageResource(R.drawable.ic_launcher_foreground)
         }
+
+        val resId = ImageUtils.getDrawableId(holder.itemView.context, item.imageRes)
+        holder.img.setImageResource(resId)
+
 
         // 🔹 Click vào toàn bộ item (điều hướng sang chi tiết)
         holder.itemView.setOnClickListener { onClick(item.id) }

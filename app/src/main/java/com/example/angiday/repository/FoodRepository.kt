@@ -13,6 +13,8 @@ class FoodRepository(private val dao: FoodDao) {
 
     fun getFood(foodId: Long) = dao.getFood(foodId)
 
+    suspend fun getRandomFoods(count: Int = 3) = dao.getRandomFoods(count)
+
     fun breakfastFoods() = dao.getFoodsByTag("Bữa sáng")
     fun lunchFoods()     = dao.getFoodsByTag("Bữa trưa")   // hoặc getFoodsByCategory("Món cơm")
     fun dinnerFoods()    = dao.getFoodsByTag("Bữa tối")

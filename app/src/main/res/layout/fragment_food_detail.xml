@@ -114,16 +114,29 @@
         <LinearLayout
             android:id="@+id/youtubeContainer"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical"
-            android:background="@color/colorOutline">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:background="@drawable/bg_card_simple"
+            android:visibility="gone">
 
-            <WebView
-                android:id="@+id/webYoutube"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_youtube"
+                android:contentDescription="@string/watch_video" />
+
+            <TextView
+                android:id="@+id/tvWatchYoutube"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Xem video hướng dẫn"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
         </LinearLayout>
+
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

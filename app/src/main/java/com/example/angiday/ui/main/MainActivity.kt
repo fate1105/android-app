@@ -44,9 +44,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setBottomNavSelected(itemId: Int) {
-        val bottomNav = findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottom_navigation)
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNav.selectedItemId = itemId
     }
-
-
 }
