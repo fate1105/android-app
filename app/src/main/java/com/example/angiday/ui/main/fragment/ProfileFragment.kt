@@ -1,4 +1,5 @@
 package com.example.angiday.ui.main.fragment
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,9 +11,9 @@ import com.example.angiday.R
 import com.example.angiday.ui.profile.EditActivity
 import com.example.angiday.ui.profile.FoodLvActivity
 import com.example.angiday.ui.profile.FoodHistoryActivity
-import com.example.angiday.ui.profile.SettingsActivity
+import com.example.angiday.ui.share.ShareActivity
 import com.example.angiday.ui.profile.CookingSeriesActivity
-
+import com.example.angiday.ui.auth.LoginActivity
 class ProfileFragment : Fragment() {
 
     override fun onCreateView(
@@ -30,8 +31,9 @@ class ProfileFragment : Fragment() {
         val rowLogout = view.findViewById<ConstraintLayout>(R.id.rowLogout)
 
         // Gắn sự kiện click
+        // 👉 Khi người dùng bấm vào “Chia sẻ món ăn”
         rowNotice.setOnClickListener {
-            val intent = Intent(requireContext(), SettingsActivity::class.java)
+            val intent = Intent(requireContext(), ShareActivity::class.java)
             startActivity(intent)
         }
 
@@ -54,7 +56,16 @@ class ProfileFragment : Fragment() {
             val intent = Intent(requireContext(), CookingSeriesActivity::class.java)
             startActivity(intent)
         }
+        // 👉 Đăng xuất
+        rowLogout.setOnClickListener {
+            val sharedPref = requireContext().getSharedPreferences("USER_PREFS", Context.MODE_PRIVATE)
+            sharedPref.edit().clear().apply()  // Xóa thông tin đăng nhập
 
+            // Điều hướng về màn hình đăng nhập
+            val intent = Intent(requireContext(), LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
 
         return view
     }

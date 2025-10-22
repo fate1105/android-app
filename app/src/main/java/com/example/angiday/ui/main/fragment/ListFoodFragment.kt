@@ -30,5 +30,7 @@ class ListFoodFragment : Fragment() {
         rv.layoutManager = LinearLayoutManager(requireContext())
         rv.setHasFixedSize(true)
 //        rv.adapter = FoodAdapter(foods) { /* handle click nếu cần */ }
+
     }
+
 }

@@ -29,6 +29,21 @@
         <activity
             android:name=".ui.auth.SignupActivity"
             android:exported="false" />
+        <service
+            android:name=".service.FoodSuggestionService"
+            android:exported="false" />
+        <activity
+            android:name=".ui.share.ShareActivity"
+            android:exported="true">
+            <intent-filter>
+                <!-- Cho phép nhận dữ liệu khi người dùng chọn “Chia sẻ” -->
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
+
 
         <activity
             android:name=".ui.auth.LoginActivity"
