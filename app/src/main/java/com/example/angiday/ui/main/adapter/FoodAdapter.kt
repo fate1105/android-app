@@ -8,7 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
 import com.example.angiday.model.relations.FoodWithRelations
-
+import android.content.Intent
+import android.widget.Button
 class FoodAdapter(
     private var items: List<FoodWithRelations> = emptyList(),
     private val onClick: (Long) -> Unit = {}   // truyền foodId
@@ -33,7 +34,7 @@ class FoodAdapter(
         // 🔹 Load ảnh theo tên trong drawable
         val resId = if (!item.imageRes.isNullOrEmpty()) {
             holder.itemView.context.resources.getIdentifier(
-                item.imageRes,                  // ví dụ "buncha"
+                item.imageRes,
                 "drawable",
                 holder.itemView.context.packageName
             )
@@ -45,8 +46,26 @@ class FoodAdapter(
             holder.img.setImageResource(R.drawable.ic_launcher_foreground)
         }
 
-        // 🔹 Click vào toàn bộ item
+        // 🔹 Click vào toàn bộ item (điều hướng sang chi tiết)
         holder.itemView.setOnClickListener { onClick(item.id) }
+
+        // 🔹 Nút "Chia sẻ món ăn" (Implicit Intent)
+        // 🔹 Nút "Chia sẻ món ăn" (Implicit Intent)
+        val btnShare = holder.itemView.findViewById<Button>(R.id.btnShare)
+        btnShare.setOnClickListener {
+            val name = holder.title.text.toString()
+            val desc = holder.desc.text.toString()
+
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                this.type = "text/plain"
+                putExtra(Intent.EXTRA_SUBJECT, "Món ăn ngon hôm nay!")
+                putExtra(Intent.EXTRA_TEXT, "Hôm nay bạn nên thử món: $name\n$desc 🍽️")
+            }
+            holder.itemView.context.startActivity(
+                Intent.createChooser(intent, "Chia sẻ món ăn qua...")
+            )
+        }
+
     }
 
 

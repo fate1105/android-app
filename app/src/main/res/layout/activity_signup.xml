@@ -132,7 +132,14 @@
                     android:layout_height="wrap_content"
                     android:text="Bạn là thành viên?"
                     android:textSize="16sp" />
-
+                <TextView
+                    android:id="@+id/btnSupport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Liên hệ hỗ trợ?"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
                 <TextView
                     android:id="@+id/loginText"
                     android:layout_width="wrap_content"
@@ -142,6 +149,9 @@
                     android:textColor="@color/red"
                     android:textStyle="bold"
                     android:textSize="16sp" />
+
+
+
             </LinearLayout>
 
         </LinearLayout>

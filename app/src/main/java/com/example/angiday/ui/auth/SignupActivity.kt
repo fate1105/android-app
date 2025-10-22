@@ -1,6 +1,7 @@
 package com.example.angiday.ui.auth
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.*
@@ -55,6 +56,17 @@ class SignupActivity : AppCompatActivity() {
                 hashPassword = false
             )
         }
+        val btnSupport = findViewById<TextView>(R.id.btnSupport)
+        btnSupport.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, arrayOf("naml75803@gmail.com"))
+                putExtra(Intent.EXTRA_SUBJECT, "Hỗ trợ đăng ký tài khoản")
+                putExtra(Intent.EXTRA_TEXT, "Xin chào, tôi cần giúp đỡ về việc đăng ký...")
+            }
+            startActivity(Intent.createChooser(intent, "Gửi email bằng..."))
+        }
+
 
         // Điều hướng sang màn hình đăng nhập
         tvLogin.setOnClickListener {

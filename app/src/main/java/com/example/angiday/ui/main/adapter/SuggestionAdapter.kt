@@ -31,11 +31,17 @@ class SuggestionAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+    fun addNewSuggestion(food: String) {
+        items.add(0, food)
+        notifyItemInserted(0)
+    }
 
     fun updateData(newItems: List<String>) {
         items.clear()
         items.addAll(newItems)
         notifyDataSetChanged()
     }
+
+
 }
 

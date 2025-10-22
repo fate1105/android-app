@@ -1,29 +1,40 @@
 package com.example.angiday.ui.main.fragment
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.angiday.R
 import androidx.recyclerview.widget.RecyclerView
+import com.example.angiday.R
+import com.example.angiday.db.AppDatabase
+import com.example.angiday.repository.MetaRepository
+import com.example.angiday.service.FoodSuggestionService
 import com.example.angiday.ui.main.adapter.SuggestionAdapter
 import com.example.angiday.viewmodel.HomeViewModel
+import com.example.angiday.viewmodel.HomeViewModelFactory
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import androidx.lifecycle.ViewModelProvider
-import com.example.angiday.db.AppDatabase
-import com.example.angiday.repository.MetaRepository
-import com.example.angiday.viewmodel.HomeViewModelFactory
 
-
+import android.widget.Toast
+import android.widget.TextView
+// Trong class HomeFragment
+private lateinit var tvRandomFood: TextView
+private lateinit var receiver: BroadcastReceiver
 class HomeFragment : Fragment() {
 
     private lateinit var etSearch: EditText
@@ -31,27 +42,31 @@ class HomeFragment : Fragment() {
     private lateinit var rvSuggestions: RecyclerView
     private lateinit var adapter: SuggestionAdapter
     private lateinit var btnFindRecipes: Button
-
     private lateinit var viewModel: HomeViewModel
     private var allSuggestions: List<String> = emptyList()
 
+    // 🔹 BroadcastReceiver nhận món mới từ Service
+    private lateinit var receiver: BroadcastReceiver
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+
+        // --- Khởi tạo ViewModel ---
         val dao = AppDatabase.get(requireContext()).metaDao()
         val repo = MetaRepository(dao)
         val factory = HomeViewModelFactory(repo)
-
         viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
 
+        // --- Ánh xạ View ---
         etSearch = view.findViewById(R.id.etSearch)
         chipGroup = view.findViewById(R.id.chipGroupSelected)
         rvSuggestions = view.findViewById(R.id.rvSuggestions)
         btnFindRecipes = view.findViewById(R.id.btnFindRecipes)
 
+        // --- Thiết lập RecyclerView ---
         rvSuggestions.layoutManager = GridLayoutManager(requireContext(), 3)
         adapter = SuggestionAdapter(allSuggestions.toMutableList()) { addChip(it) }
         rvSuggestions.adapter = adapter
@@ -59,7 +74,7 @@ class HomeFragment : Fragment() {
         setupSearchFilter()
         setupUnfocus(view)
 
-        // Bắt đầu collect sau khi đã có viewModel
+        // --- Lấy dữ liệu từ ViewModel ---
         lifecycleScope.launch {
             viewModel.ingredients.collectLatest { ingredients ->
                 allSuggestions = ingredients.map { it.name }
@@ -67,15 +82,47 @@ class HomeFragment : Fragment() {
             }
         }
 
+        // 👉 Khởi động Service khi mở HomeFragment
+        tvRandomFood = view.findViewById(R.id.tvRandomFood)
+
+// 👉 Khởi động Service
+        requireContext().startService(Intent(requireContext(), FoodSuggestionService::class.java))
+
+// 👉 Nhận dữ liệu từ Broadcast
+        receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val newFood = intent?.getStringExtra("foodName") ?: return
+
+                // Cập nhật TextView hiển thị món ăn ngẫu nhiên
+                tvRandomFood.text = "🥢 Món gợi ý: $newFood"
+
+                // (Tùy chọn) hiện Toast để dễ quay video demo
+                Toast.makeText(requireContext(), "Món mới: $newFood", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+// Đăng ký BroadcastReceiver – dùng requireActivity() để chắc chắn nhận được
+        ContextCompat.registerReceiver(
+            requireActivity(),
+            receiver,
+            IntentFilter("NEW_FOOD_SUGGESTED"),
+            ContextCompat.RECEIVER_EXPORTED // ✅ cho phép nhận khi app đang foreground
+        )
+
+
+
+        // 🔹 Nút "Tìm công thức"
         btnFindRecipes.setOnClickListener {
             val selectedIngredients = mutableListOf<String>()
             for (i in 0 until chipGroup.childCount) {
                 val chip = chipGroup.getChildAt(i) as Chip
                 selectedIngredients.add(chip.text.toString())
             }
+
             val bundle = Bundle().apply {
                 putStringArray("ingredients", selectedIngredients.toTypedArray())
             }
+
             val suggestFragment = SuggestFragment()
             suggestFragment.arguments = bundle
 
@@ -84,8 +131,18 @@ class HomeFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
+
         return view
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // 🧹 Huỷ đăng ký Receiver và dừng Service khi thoát Fragment
+        requireContext().unregisterReceiver(receiver)
+        requireContext().stopService(Intent(requireContext(), FoodSuggestionService::class.java))
+    }
+
+    // ----------------- Các hàm phụ -----------------
 
     private fun setupSearchFilter() {
         etSearch.addTextChangedListener { input ->
@@ -117,10 +174,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun hideKeyboard(view: View) {
-        val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE)
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE)
                 as? android.view.inputmethod.InputMethodManager
         imm?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-}
 
+}
