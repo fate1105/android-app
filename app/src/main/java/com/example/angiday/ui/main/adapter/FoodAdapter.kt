@@ -35,37 +35,25 @@ class FoodAdapter(
         holder.title.text = item.title
         holder.desc.text = item.desc ?: "Không có mô tả"
 
-        // 🔹 Load ảnh theo tên trong drawable
-        val resId = if (!item.imageRes.isNullOrEmpty()) {
-            holder.itemView.context.resources.getIdentifier(
-                item.imageRes,
-                "drawable",
-                holder.itemView.context.packageName
-            )
-        } else 0
-
+        // 🔹 Load ảnh bằng ImageUtils
+        val resId = ImageUtils.getDrawableId(holder.itemView.context, item.imageRes)
         if (resId != 0) {
             holder.img.setImageResource(resId)
         } else {
             holder.img.setImageResource(R.drawable.ic_launcher_foreground)
         }
 
-        val resId = ImageUtils.getDrawableId(holder.itemView.context, item.imageRes)
-        holder.img.setImageResource(resId)
-
-
-        // 🔹 Click vào toàn bộ item (điều hướng sang chi tiết)
+        // 🔹 Click vào item
         holder.itemView.setOnClickListener { onClick(item.id) }
 
-        // 🔹 Nút "Chia sẻ món ăn" (Implicit Intent)
-        // 🔹 Nút "Chia sẻ món ăn" (Implicit Intent)
+        // 🔹 Nút "Chia sẻ món ăn"
         val btnShare = holder.itemView.findViewById<Button>(R.id.btnShare)
         btnShare.setOnClickListener {
             val name = holder.title.text.toString()
             val desc = holder.desc.text.toString()
 
             val intent = Intent(Intent.ACTION_SEND).apply {
-                this.type = "text/plain"
+                type = "text/plain"
                 putExtra(Intent.EXTRA_SUBJECT, "Món ăn ngon hôm nay!")
                 putExtra(Intent.EXTRA_TEXT, "Hôm nay bạn nên thử món: $name\n$desc 🍽️")
             }
@@ -73,7 +61,6 @@ class FoodAdapter(
                 Intent.createChooser(intent, "Chia sẻ món ăn qua...")
             )
         }
-
     }
 
 

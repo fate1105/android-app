@@ -33,19 +33,10 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
-import androidx.lifecycle.ViewModelProvider
-import com.example.angiday.db.AppDatabase
 import com.example.angiday.repository.FoodRepository
-import com.example.angiday.repository.MetaRepository
-import com.example.angiday.viewmodel.HomeViewModelFactory
-
-
 import android.widget.Toast
-import android.widget.TextView
 // Trong class HomeFragment
-private lateinit var tvRandomFood: TextView
-private lateinit var receiver: BroadcastReceiver
+
 class HomeFragment : Fragment() {
 
     private lateinit var etSearch: EditText
@@ -64,6 +55,8 @@ class HomeFragment : Fragment() {
 
     // 🔹 BroadcastReceiver nhận món mới từ Service
     private lateinit var receiver: BroadcastReceiver
+    private lateinit var tvRandomFood: TextView
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,10 +64,12 @@ class HomeFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+
         // --- Khởi tạo ViewModel ---
         val dao = AppDatabase.get(requireContext()).metaDao()
+
         val repo = MetaRepository(dao)
-        val factory = HomeViewModelFactory(repo)
+//        val factory = HomeViewModelFactory(repo)
 
         // --- Lấy instance database
         val db = AppDatabase.get(requireContext())
@@ -200,7 +195,7 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-main
+
 
         return view
     }
