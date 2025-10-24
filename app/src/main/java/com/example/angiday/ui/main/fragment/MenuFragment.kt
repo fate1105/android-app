@@ -1,6 +1,7 @@
 package com.example.angiday.ui.main.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +17,11 @@ import com.example.angiday.ui.main.adapter.FoodAdapter
 import com.example.angiday.viewmodel.MenuViewModel
 import com.example.angiday.viewmodel.factory.MenuViewModelFactory
 import kotlinx.coroutines.launch
+
 class MenuFragment : Fragment() {
 
     private lateinit var viewModel: MenuViewModel
 
-    // Thêm đủ 5 adapter
     private lateinit var adapterMonNuoc: FoodAdapter
     private lateinit var adapterMonChien: FoodAdapter
     private lateinit var adapterMonCom: FoodAdapter
@@ -33,55 +34,55 @@ class MenuFragment : Fragment() {
     ): View = inflater.inflate(R.layout.fragment_menu, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // 1️⃣ Ánh xạ RecyclerView
         val rvNuoc = view.findViewById<RecyclerView>(R.id.rvMonNuoc)
         val rvChien = view.findViewById<RecyclerView>(R.id.rvMonChien)
         val rvCom = view.findViewById<RecyclerView>(R.id.rvMonCom)
         val rvChay = view.findViewById<RecyclerView>(R.id.rvMonChay)
         val rvXao = view.findViewById<RecyclerView>(R.id.rvMonXao)
 
-        // 2️⃣ Gán LayoutManager cho từng RecyclerView
+        // Layout cho danh sách
         listOf(rvNuoc, rvChien, rvCom, rvChay, rvXao).forEach {
             it.layoutManager = LinearLayoutManager(requireContext())
         }
 
-        // 3️⃣ Khởi tạo Adapter
-        adapterMonNuoc = FoodAdapter()
-        adapterMonChien = FoodAdapter()
-        adapterMonCom = FoodAdapter()
-        adapterMonChay = FoodAdapter()
-        adapterMonXao = FoodAdapter()
+        // Adapter có callback click
+        adapterMonNuoc = FoodAdapter { foodId -> openFoodDetail(foodId) }
+        adapterMonChien = FoodAdapter { foodId -> openFoodDetail(foodId) }
+        adapterMonCom = FoodAdapter { foodId -> openFoodDetail(foodId) }
+        adapterMonChay = FoodAdapter { foodId -> openFoodDetail(foodId) }
+        adapterMonXao = FoodAdapter { foodId -> openFoodDetail(foodId) }
 
-        // 4️⃣ Gán Adapter cho RecyclerView
         rvNuoc.adapter = adapterMonNuoc
         rvChien.adapter = adapterMonChien
         rvCom.adapter = adapterMonCom
         rvChay.adapter = adapterMonChay
         rvXao.adapter = adapterMonXao
 
-        // 5️⃣ Khởi tạo Repository + ViewModel đúng chuẩn
         val dao = AppDatabase.get(requireContext()).foodDao()
         val repo = FoodRepository(dao)
         val factory = MenuViewModelFactory(repo)
         viewModel = ViewModelProvider(this, factory)[MenuViewModel::class.java]
 
-        // 6️⃣ Quan sát dữ liệu từ DB
+        // Quan sát dữ liệu DB
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.groupedFoods.collect { grouped ->
-                val monNuoc = grouped["Món nước"] ?: emptyList()
-                val monChien = grouped["Món chiên"] ?: emptyList()
-                val monCom = grouped["Món cơm"] ?: emptyList()
-                val monChay = grouped["Món chay"] ?: emptyList()
-                val monXao = grouped["Món xào"] ?: emptyList()
-
-                adapterMonNuoc.submitList(monNuoc)
-                adapterMonChien.submitList(monChien)
-                adapterMonCom.submitList(monCom)
-                adapterMonChay.submitList(monChay)
-                adapterMonXao.submitList(monXao)
-
-                println("DEBUG ➜ nước=${monNuoc.size}, chiên=${monChien.size}, cơm=${monCom.size}, chay=${monChay.size}, xào=${monXao.size}")
+                adapterMonNuoc.submitList(grouped["Món nước"] ?: emptyList())
+                adapterMonChien.submitList(grouped["Món chiên"] ?: emptyList())
+                adapterMonCom.submitList(grouped["Món cơm"] ?: emptyList())
+                adapterMonChay.submitList(grouped["Món chay"] ?: emptyList())
+                adapterMonXao.submitList(grouped["Món xào"] ?: emptyList())
             }
         }
+    }
+
+    // Khi click vào món → mở chi tiết
+    private fun openFoodDetail(foodId: Long) {
+        Log.d("DEBUG_CLICK", "Clicked food id = $foodId")
+
+        val fragment = FoodDetailFragment.newInstance(foodId)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment) // id trong activity_main.xml
+            .addToBackStack(null)
+            .commit()
     }
 }

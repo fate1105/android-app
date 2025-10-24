@@ -79,7 +79,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:text="chia sẽ món ăn"
+                        android:text="Thông báo"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@id/ivNotice"
@@ -221,7 +221,7 @@
 
                 <!-- Row: Chuỗi nấu ăn -->
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/rowCooking"
+                    android:id="@+id/rowMyProfile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_top"
@@ -243,7 +243,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:text="Chuỗi nấu ăn"
+                        android:text="Chia sẽ món ăn"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@id/ivCooking"

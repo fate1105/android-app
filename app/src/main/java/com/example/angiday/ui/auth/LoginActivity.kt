@@ -43,17 +43,17 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // ✅ Kiểm tra đăng nhập tự động trước khi hiển thị layout
-        val savedLogin = readLoginInfo()
-        if (savedLogin != null) {
-            val (email, password) = savedLogin
-            Toast.makeText(this, "Đăng nhập tự động: $email", Toast.LENGTH_SHORT).show()
-
-            val intent = Intent(this, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
-            startActivity(intent)
-            return
-        }
+//        val savedLogin = readLoginInfo()
+//        if (savedLogin != null) {
+//            val (email, password) = savedLogin
+//            Toast.makeText(this, "Đăng nhập tự động: $email", Toast.LENGTH_SHORT).show()
+//
+//            val intent = Intent(this, MainActivity::class.java).apply {
+//                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//            }
+//            startActivity(intent)
+//            return
+//        }
 
         // Bình thường nếu chưa có file đăng nhập
         enableEdgeToEdge()

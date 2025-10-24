@@ -1,4 +1,3 @@
-// com/example/angiday/session/SessionManager.kt
 package com.example.angiday.session
 
 import android.content.Context
@@ -9,6 +8,7 @@ class SessionManager(context: Context) {
     private val sp: SharedPreferences =
         context.getSharedPreferences("session_prefs", Context.MODE_PRIVATE)
 
+    // 🔹 Lưu thông tin user sau khi đăng nhập hoặc đăng ký
     fun saveUser(user: UserEntity) {
         sp.edit()
             .putLong("user_id", user.id)
@@ -17,7 +17,20 @@ class SessionManager(context: Context) {
             .apply()
     }
 
-    fun isLoggedIn(): Boolean = sp.getLong("user_id", -1L) > 0
+    // 🔹 Lấy ID người dùng hiện tại
+    fun getUserId(): Long = sp.getLong("user_id", -1L)
 
-    fun clear() { sp.edit().clear().apply() }
+    // 🔹 Lấy tên người dùng
+    fun getUserName(): String? = sp.getString("user_name", null)
+
+    // 🔹 Lấy email người dùng
+    fun getUserEmail(): String? = sp.getString("user_email", null)
+
+    // 🔹 Kiểm tra trạng thái đăng nhập
+    fun isLoggedIn(): Boolean = getUserId() > 0
+
+    // 🔹 Xoá phiên đăng nhập
+    fun clear() {
+        sp.edit().clear().apply()
+    }
 }

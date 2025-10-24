@@ -119,13 +119,21 @@ class HomeFragment : Fragment() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 val newFood = intent?.getStringExtra("foodName") ?: return
 
-                // Cập nhật TextView hiển thị món ăn ngẫu nhiên
+                // ✅ Hiển thị gợi ý
                 tvRandomFood.text = "🥢 Món gợi ý: $newFood"
-
-                // (Tùy chọn) hiện Toast để dễ quay video demo
                 Toast.makeText(requireContext(), "Món mới: $newFood", Toast.LENGTH_SHORT).show()
+
+                // ✅ Lưu lại vào SharedPreferences để NotificationActivity đọc được
+                val prefs = requireContext().getSharedPreferences("food_notifications", Context.MODE_PRIVATE)
+                val current = prefs.getStringSet("list", mutableSetOf())?.toMutableSet() ?: mutableSetOf()
+
+                // Thêm món mới (nếu đã có thì bỏ qua)
+                current.add("🥢 $newFood")
+
+                prefs.edit().putStringSet("list", current).apply()
             }
         }
+
 
 // Đăng ký BroadcastReceiver – dùng requireActivity() để chắc chắn nhận được
         ContextCompat.registerReceiver(
