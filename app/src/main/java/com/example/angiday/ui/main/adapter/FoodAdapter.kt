@@ -1,5 +1,6 @@
 package com.example.angiday.ui.main.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
 import com.example.angiday.model.relations.FoodWithRelations
 
-import android.content.Intent
-import android.widget.Button
+
 
 import com.example.angiday.util.ImageUtils
 
@@ -44,23 +44,12 @@ class FoodAdapter(
         }
 
         // 🔹 Click vào item
-        holder.itemView.setOnClickListener { onClick(item.id) }
+        holder.itemView.setOnClickListener {     Log.d("DEBUG_CLICK", "Clicked food: ${item.title}, id=${item.id}")
+            onClick(item.id)
+        }
 
         // 🔹 Nút "Chia sẻ món ăn"
-        val btnShare = holder.itemView.findViewById<Button>(R.id.btnShare)
-        btnShare.setOnClickListener {
-            val name = holder.title.text.toString()
-            val desc = holder.desc.text.toString()
 
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                putExtra(Intent.EXTRA_SUBJECT, "Món ăn ngon hôm nay!")
-                putExtra(Intent.EXTRA_TEXT, "Hôm nay bạn nên thử món: $name\n$desc 🍽️")
-            }
-            holder.itemView.context.startActivity(
-                Intent.createChooser(intent, "Chia sẻ món ăn qua...")
-            )
-        }
     }
 
 

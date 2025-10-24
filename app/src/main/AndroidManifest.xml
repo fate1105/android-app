@@ -15,8 +15,9 @@
             android:name=".ui.profile.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.profile.CookingSeriesActivity"
+            android:name=".ui.profile.MyProfileActivity"
             android:exported="false" />
+
         <activity
             android:name=".ui.profile.FoodHistoryActivity"
             android:exported="false" />
@@ -25,6 +26,8 @@
             android:exported="false" />
         <activity
             android:name=".ui.profile.EditActivity"
+            android:exported="false" />
+        <activity android:name=".ui.profile.NotificationActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.SignupActivity"
@@ -42,6 +45,16 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
 
 
 

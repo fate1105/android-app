@@ -23,6 +23,12 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import com.google.android.material.button.MaterialButton
+import com.example.angiday.model.entity.UserBehaviorEntity
+import com.example.angiday.session.SessionManager
+
 
 class FoodDetailFragment : Fragment() {
     companion object {
@@ -31,6 +37,11 @@ class FoodDetailFragment : Fragment() {
             arguments = Bundle().apply { putLong(ARG_FOOD_ID, foodId) }
         }
     }
+    private lateinit var btnFavorite: ImageView
+    private lateinit var btnCook: com.google.android.material.button.MaterialButton
+    private lateinit var btnShare: ImageView
+    private var isFavorite = false
+
     private lateinit var img: ImageView
     private lateinit var tvTitle: TextView
     private lateinit var tvDesc: TextView
@@ -47,6 +58,8 @@ class FoodDetailFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+
+
     ): View {
         return inflater.inflate(R.layout.fragment_food_detail, container, false)
     }
@@ -68,6 +81,131 @@ class FoodDetailFragment : Fragment() {
                 foodWithRelations?.let { bindFood(it) }
             }
         }
+        btnFavorite = view.findViewById(R.id.btnFavorite)
+        btnCook = view.findViewById(R.id.btnCook)
+        btnShare = view.findViewById(R.id.btnShare)
+
+// Nút yêu thích ❤️
+        // Nút yêu thích ❤️
+        btnFavorite.setOnClickListener {
+            val session = SessionManager(requireContext())
+            val userId = session.getUserId()
+            if (userId == -1L) {
+                Toast.makeText(requireContext(), "Vui lòng đăng nhập trước!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val dao = AppDatabase.get(requireContext()).userBehaviorDao()
+
+            isFavorite = !isFavorite
+            viewLifecycleOwner.lifecycleScope.launch {
+                if (isFavorite) {
+                    btnFavorite.setImageResource(R.drawable.ic_favorite_filled)
+                    btnFavorite.setColorFilter(Color.RED)
+                    dao.insert(
+                        UserBehaviorEntity(
+                            userId = userId.toInt(),
+                            foodId = foodId.toInt(),
+                            behaviorType = "favorite"
+                        )
+                    )
+                } else {
+                    btnFavorite.setImageResource(R.drawable.ic_favorite_border)
+                    btnFavorite.setColorFilter(
+                        ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+                    )
+                    dao.delete(userId.toInt(), foodId.toInt())
+
+                }
+            }
+        }
+
+// Nút “Đã nấu 🍳”
+        btnCook.setOnClickListener {
+            // Đổi màu & chữ
+            btnCook.text = "Đã hoàn thành món ✔"
+            btnCook.setBackgroundColor(
+                androidx.core.content.ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+            )
+            btnCook.setTextColor(android.graphics.Color.WHITE)
+
+            // Ghi lại hành vi "cooked"
+            viewLifecycleOwner.lifecycleScope.launch {
+                val dao = AppDatabase.get(requireContext()).userBehaviorDao()
+                val session = com.example.angiday.session.SessionManager(requireContext())
+                val userId = session.getUserId()
+                val foodId = requireArguments().getLong("arg_food_id")
+
+                dao.insert(
+                    com.example.angiday.model.entity.UserBehaviorEntity(
+                        userId = userId.toInt(),
+                        foodId = foodId.toInt(),
+                        behaviorType = "cooked"
+                    )
+                )
+            }
+        }
+
+// Nút “Chia sẻ 🔗”
+        btnShare.setOnClickListener {
+            val foodTitle = tvTitle.text.toString()
+            val foodDesc = tvDesc.text.toString()
+
+            // Lấy ảnh từ ImageView → convert thành file tạm
+            img.isDrawingCacheEnabled = true
+            val bitmap = android.graphics.Bitmap.createBitmap(img.drawingCache)
+            img.isDrawingCacheEnabled = false
+
+            val uri = androidx.core.content.FileProvider.getUriForFile(
+                requireContext(),
+                "${requireContext().packageName}.fileprovider",
+                java.io.File(requireContext().cacheDir, "shared_food.png").apply {
+                    java.io.FileOutputStream(this).use { out ->
+                        bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out)
+                    }
+                }
+            )
+
+            // Intent chia sẻ đến app khác
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "image/*"
+                putExtra(Intent.EXTRA_STREAM, uri)
+                putExtra(Intent.EXTRA_TEXT, "$foodTitle\n$foodDesc")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+
+            // Intent mở ShareActivity của chính app bạn
+            val myAppIntent = Intent(requireContext(), com.example.angiday.ui.share.ShareActivity::class.java).apply {
+                putExtra(Intent.EXTRA_TEXT, "$foodTitle\n$foodDesc")
+                putExtra(Intent.EXTRA_STREAM, uri.toString())
+                putExtra("food_id", foodId)
+            }
+
+
+            // Mở chooser → người dùng có thể chọn app ngoài hoặc chính app bạn
+            val chooser = Intent.createChooser(shareIntent, "Chia sẻ món ăn qua...")
+            val initialIntents = arrayOf(myAppIntent)
+            chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, initialIntents)
+            startActivity(chooser)
+
+            // Lưu vào DB hành vi "shared"
+            viewLifecycleOwner.lifecycleScope.launch {
+                val dao = AppDatabase.get(requireContext()).userBehaviorDao()
+                val session = com.example.angiday.session.SessionManager(requireContext())
+                val userId = session.getUserId()
+                val foodId = requireArguments().getLong("arg_food_id")
+
+                dao.insert(
+                    com.example.angiday.model.entity.UserBehaviorEntity(
+                        userId = userId.toInt(),
+                        foodId = foodId.toInt(),
+                        behaviorType = "shared"
+                    )
+                )
+            }
+        }
+
+
     }
 
     private fun bindFood(food: FoodWithRelations) {
