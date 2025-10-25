@@ -98,6 +98,19 @@ class HomeFragment : Fragment() {
         rvSuggestions.adapter = adapter
 
         setupSearchFilter()
+        etSearch.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                // Nếu chưa gõ gì thì hiển thị tất cả gợi ý
+                if (etSearch.text.isEmpty()) {
+                    rvSuggestions.visibility = View.VISIBLE
+                    adapter.updateData(allSuggestions)
+                }
+            } else {
+                // Mất focus thì ẩn đi
+                rvSuggestions.visibility = View.GONE
+            }
+        }
+
         setupUnfocus(view)
 
         // --- Lấy dữ liệu từ ViewModel ---

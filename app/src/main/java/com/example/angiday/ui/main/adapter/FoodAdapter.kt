@@ -9,9 +9,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
 import com.example.angiday.model.relations.FoodWithRelations
-
-
-
 import com.example.angiday.util.ImageUtils
 
 class FoodAdapter(
