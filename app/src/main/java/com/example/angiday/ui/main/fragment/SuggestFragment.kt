@@ -37,7 +37,6 @@ class SuggestFragment : Fragment() {
         rvRecipes = view.findViewById(R.id.rvRecipes)
         tvSelectedIngredients = view.findViewById(R.id.tvSelectedIngredients)
 
-        // Header: nguyên liệu đã chọn (nếu có từ Home)
         val ingredients = arguments?.getStringArray("ingredients")?.toList().orEmpty()
         tvSelectedIngredients.text =
             if (ingredients.isNotEmpty())
