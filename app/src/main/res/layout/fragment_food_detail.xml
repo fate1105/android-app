@@ -20,7 +20,6 @@
             android:layout_height="200dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:contentDescription="@string/app_name"
             android:background="@color/colorOutline" />
 
         <!-- Tên món -->
@@ -47,7 +46,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Danh mục: "
+            android:text="Danh mục:"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
             android:layout_marginTop="12dp"
@@ -137,6 +136,50 @@
                 android:textSize="16sp" />
         </LinearLayout>
 
+        <!-- ===== Nút hành động ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- Nút trái tim -->
+            <ImageButton
+                android:id="@+id/btnFavorite"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_favorite_border"
+                android:contentDescription="Yêu thích"
+                android:tint="@color/colorPrimary" />
+
+            <!-- Nút nấu ăn -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCook"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="12dp"
+                android:text="Nấu ăn"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimary"
+                app:cornerRadius="12dp"
+                app:strokeColor="@color/colorPrimary"
+                app:strokeWidth="2dp"
+                app:backgroundTint="@android:color/white" />
+
+            <!-- Nút chia sẻ -->
+            <ImageButton
+                android:id="@+id/btnShare"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_share"
+                android:contentDescription="Chia sẻ"
+                android:tint="@color/colorPrimary" />
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

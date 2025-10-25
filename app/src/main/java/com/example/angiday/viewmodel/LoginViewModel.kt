@@ -26,7 +26,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     fun login(email: String, password: String, hashPassword: Boolean = false) {
         _ui.value = LoginUiState(loading = true)
         viewModelScope.launch {
-            val result = repo.login(email, password, hashPassword)
+            val result = repo.loginUser(email, password, hashPassword)
             _ui.value = result.fold(
                 onSuccess = {
                     session.saveUser(it)

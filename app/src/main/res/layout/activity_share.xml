@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="#FFF8E1">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🍰 Chia sẻ món ăn"
+        android:textColor="#E65100"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:layout_gravity="center" />
+
+    <ImageView
+        android:id="@+id/imgFoodShare"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/tvShare"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📋 Nội dung được chia sẻ:"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnConfirmShare"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="✅ Xác nhận chia sẻ"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        android:padding="10dp" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="❌ Đóng"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorSecondary"
+        android:textColor="@android:color/white"
+        android:padding="10dp" />
+</LinearLayout>

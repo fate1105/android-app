@@ -1,7 +1,9 @@
 package com.example.angiday.ui.auth
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
@@ -11,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.angiday.R
+import com.example.angiday.db.AppDatabase
 import com.example.angiday.viewmodel.RegisterViewModel
 import kotlinx.coroutines.launch
 
@@ -22,6 +25,7 @@ class SignupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_signup)
+
 
         val etEmail     = findViewById<EditText>(R.id.email)
         val etPassword  = findViewById<EditText>(R.id.pass)
@@ -55,6 +59,17 @@ class SignupActivity : AppCompatActivity() {
                 hashPassword = false
             )
         }
+        val btnSupport = findViewById<TextView>(R.id.btnSupport)
+        btnSupport.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, arrayOf("naml75803@gmail.com"))
+                putExtra(Intent.EXTRA_SUBJECT, "Hỗ trợ đăng ký tài khoản")
+                putExtra(Intent.EXTRA_TEXT, "Xin chào, tôi cần giúp đỡ về việc đăng ký...")
+            }
+            startActivity(Intent.createChooser(intent, "Gửi email bằng..."))
+        }
+
 
         // Điều hướng sang màn hình đăng nhập
         tvLogin.setOnClickListener {

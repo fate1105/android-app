@@ -3,10 +3,16 @@ package com.example.angiday.ui.profile
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.angiday.R
-//import com.example.angiday.model.Food
+import com.example.angiday.db.AppDatabase
+import com.example.angiday.session.SessionManager
+import com.example.angiday.ui.main.adapter.FoodAdapter
 import com.google.android.material.appbar.MaterialToolbar
+import kotlinx.coroutines.launch
 
 class FoodHistoryActivity : AppCompatActivity() {
 
@@ -16,26 +22,30 @@ class FoodHistoryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_food_history)
 
         // Nút back
-        findViewById<MaterialToolbar>(R.id.topAppBar).setNavigationOnClickListener {
+        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+        topAppBar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        val rv = findViewById<RecyclerView>(R.id.rvHistory)
 
+        // RecyclerView setup
+        val rv = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rvCookedFoods)
+        rv.layoutManager = LinearLayoutManager(this)
+        val adapter = FoodAdapter()
+        rv.adapter = adapter
 
-//        val foods = listOf(
-//            Food("Phở bò", "Nước dùng đậm, bò tái.", R.drawable.logo),
-//            Food("Bún bò Huế", "Cay nhẹ, thơm sả.", R.drawable.logo),
-//            Food("Cơm tấm", "Sườn bì chả.", R.drawable.logo),
-//            Food("Bánh mì", "Pate, dưa leo.", R.drawable.logo)
-//        )
-//
-//        rv.layoutManager = LinearLayoutManager(applicationContext)
-//        rv.setHasFixedSize(true)
-//        rv.adapter = FoodAdapter(foods) { /* handle click nếu cần */ }
+        // Lấy userId hiện tại
+        val session = SessionManager(this)
+        val userId = session.getUserId()
+        if (userId == -1L) return
 
+        val db = AppDatabase.get(this)
+        val dao = db.userBehaviorDao()
 
+        // Hiển thị món đã nấu
+        lifecycleScope.launch {
+            val cookedFoods = dao.getCookedFoodsWithDetail(userId.toInt())
+            adapter.submitList(cookedFoods)
+        }
     }
 }
-
-/** Adapter dùng layout hệ thống simple_list_item_2 (2 dòng) */

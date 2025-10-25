@@ -3,12 +3,14 @@ package com.example.angiday.ui.profile
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
+import com.example.angiday.db.AppDatabase
+import com.example.angiday.session.SessionManager
 import com.example.angiday.ui.main.adapter.FoodAdapter
-//import com.example.angiday.model.Food
 import com.google.android.material.appbar.MaterialToolbar
+import kotlinx.coroutines.launch
 
 class FoodLvActivity : AppCompatActivity() {
 
@@ -17,24 +19,30 @@ class FoodLvActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_food_lv)
 
-        // Nút back trên AppBar
+        // Nút quay lại
         findViewById<MaterialToolbar>(R.id.topAppBar).setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        val rv = findViewById<RecyclerView>(R.id.rvFavorites)
+        // RecyclerView setup
+        val rv = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rvFavoriteFoods)
+        rv.layoutManager = LinearLayoutManager(this)
+        val adapter = FoodAdapter()
+        rv.adapter = adapter
 
-//        val foods = listOf(
-//            Food("Phở bò", "Nước dùng đậm, bò tái.", R.drawable.logo),
-//            Food("Bún bò Huế", "Cay nhẹ, thơm sả.", R.drawable.logo),
-//            Food("Cơm tấm", "Sườn bì chả.", R.drawable.logo),
-//            Food("Bánh mì", "Pate, dưa leo.", R.drawable.logo)
-//        )
-//
-//        rv.layoutManager = LinearLayoutManager(applicationContext)
-//        rv.setHasFixedSize(true)
-//        rv.adapter = FoodAdapter(foods) { /* handle click nếu cần */ }
+        // Lấy userId từ SessionManager
+        val session = SessionManager(this)
+        val userId = session.getUserId()
+        if (userId == -1L) return
 
+        // Lấy dữ liệu từ Room
+        val db = AppDatabase.get(this)
+        val foodDao = db.foodDao()
+        val behaviorDao = db.userBehaviorDao()
+        lifecycleScope.launch {
+            val favoriteFoods = behaviorDao.getFavoriteFoodsWithDetail(userId.toInt())
+            adapter.submitList(favoriteFoods)
+        }
 
     }
 }

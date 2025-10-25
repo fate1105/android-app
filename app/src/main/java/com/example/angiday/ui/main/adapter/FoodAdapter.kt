@@ -1,5 +1,6 @@
 package com.example.angiday.ui.main.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
 import com.example.angiday.model.relations.FoodWithRelations
-import com.example.angiday.utils.ImageUtils
+import com.example.angiday.util.ImageUtils
 
 class FoodAdapter(
     private var items: List<FoodWithRelations> = emptyList(),
@@ -31,13 +32,21 @@ class FoodAdapter(
         holder.title.text = item.title
         holder.desc.text = item.desc ?: "Không có mô tả"
 
-        // 🔹 Load ảnh theo tên trong drawable
+        // 🔹 Load ảnh bằng ImageUtils
         val resId = ImageUtils.getDrawableId(holder.itemView.context, item.imageRes)
-        holder.img.setImageResource(resId)
+        if (resId != 0) {
+            holder.img.setImageResource(resId)
+        } else {
+            holder.img.setImageResource(R.drawable.ic_launcher_foreground)
+        }
 
+        // 🔹 Click vào item
+        holder.itemView.setOnClickListener {     Log.d("DEBUG_CLICK", "Clicked food: ${item.title}, id=${item.id}")
+            onClick(item.id)
+        }
 
-        // 🔹 Click vào toàn bộ item
-        holder.itemView.setOnClickListener { onClick(item.id) }
+        // 🔹 Nút "Chia sẻ món ăn"
+
     }
 
 

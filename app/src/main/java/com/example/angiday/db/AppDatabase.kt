@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.angiday.db.dao.UserBehaviorDao
+import com.example.angiday.db.dao.UserDao
 import com.example.angiday.model.entity.*
 
 @Database(
@@ -14,16 +16,18 @@ import com.example.angiday.model.entity.*
         CategoryEntity::class,
         TagEntity::class,
         FoodTagCrossRef::class,
-        UserEntity::class
+        UserEntity::class,
+        UserBehaviorEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
-
     abstract fun foodDao(): FoodDao
     abstract fun metaDao(): MetaDao
     abstract fun userDao(): UserDao
+    abstract fun userBehaviorDao(): UserBehaviorDao
+
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
 
@@ -33,11 +37,10 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java, "angiday.db"
                 )
-                    // Copy DB có sẵn từ assets/databases/angiday.db
-                    .createFromAsset("databases/angiday.db")
                     .fallbackToDestructiveMigration()
-                    .build().also { INSTANCE = it }
+                    .allowMainThreadQueries() // chỉ nên bật khi test
+                    .build()
+                    .also { INSTANCE = it }
             }
     }
-
 }
