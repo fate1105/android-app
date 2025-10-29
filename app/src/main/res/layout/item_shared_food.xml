@@ -37,5 +37,13 @@
             android:textColor="#555"
             android:textSize="14sp"
             android:layout_marginTop="4dp" />
+        <ImageView
+            android:id="@+id/btnDeletePost"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_delete"
+            android:contentDescription="Xóa bài chia sẻ"
+             />
     </LinearLayout>
 </LinearLayout>

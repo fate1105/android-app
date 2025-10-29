@@ -1,78 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#FFF8E1">
 
-    <!-- 🧭 Thanh Toolbar có nút quay lại -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
-        style="@style/Widget.Material3.Toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:title="👤 Món ăn chia sẽ"
-        app:navigationIcon="@drawable/ic_arrow_back_24"
-        android:backgroundTint="?attr/colorSurface"
-        android:elevation="4dp" />
-
-    <!-- Nội dung chính -->
-    <ScrollView
+    <!-- Toàn bộ nội dung chính -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <!-- 🧭 Thanh Toolbar có nút quay lại -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            style="@style/Widget.Material3.Toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_height="?attr/actionBarSize"
+            app:title="👤 Món ăn chia sẻ"
+            app:navigationIcon="@drawable/ic_arrow_back_24"
+            android:backgroundTint="?attr/colorSurface"
+            android:elevation="4dp" />
 
-            <!-- Thông tin user -->
-            <TextView
-                android:id="@+id/tvName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Tên người dùng"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:layout_marginBottom="6dp" />
-
-            <TextView
-                android:id="@+id/tvEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Email"
-                android:textColor="#555"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:layout_marginBottom="16dp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#DDD"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Danh sách món đã chia sẻ -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="🍽️ Món đã chia sẻ"
-                android:textStyle="bold"
-                android:textColor="#E65100"
-                android:textSize="18sp"
-                android:layout_marginBottom="8dp" />
+        <!-- Nội dung chính -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
             <LinearLayout
-                android:id="@+id/layoutSharedFoods"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:padding="20dp">
 
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+                <!-- Thông tin user -->
+                <TextView
+                    android:id="@+id/tvName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tên người dùng"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="6dp" />
+
+                <TextView
+                    android:id="@+id/tvEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Email"
+                    android:textColor="#555"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#DDD"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Danh sách món đã chia sẻ -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🍽️ Món đã chia sẻ"
+                    android:textStyle="bold"
+                    android:textColor="#E65100"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="8dp" />
+
+
+                <LinearLayout
+                    android:id="@+id/layoutSharedFoods"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <!-- ➕ Nút tạo bài chia sẻ mới -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAddPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="24dp"
+        android:contentDescription="Tạo bài chia sẻ mới"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/colorPrimary"
+        app:tint="@android:color/white" />
+</FrameLayout>

@@ -40,6 +40,14 @@ class IntroActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
 
+        val prefs = getSharedPreferences("intro_prefs", MODE_PRIVATE)
+        val isIntroShown = prefs.getBoolean("intro_shown", false)
+        if (isIntroShown) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
         viewPager = findViewById(R.id.vpIntro)
         tabDots = findViewById(R.id.tabDots)
         btnSkip  = findViewById(R.id.btnSkip)
@@ -73,11 +81,19 @@ class IntroActivity : AppCompatActivity() {
     }
 
     private fun goToMain() {
+        val prefs = getSharedPreferences("intro_prefs", MODE_PRIVATE)
+        prefs.edit().putBoolean("intro_shown", true).apply()
+
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
+
     private fun goToLogin() {
+        val prefs = getSharedPreferences("intro_prefs", MODE_PRIVATE)
+        prefs.edit().putBoolean("intro_shown", true).apply()
+
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
+
 }

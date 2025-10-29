@@ -25,6 +25,11 @@ interface UserBehaviorDao {
     WHERE ub.userId = :userId AND ub.behaviorType = 'cooked'
 """)
     suspend fun getCookedFoodsWithDetail(userId: Int): List<FoodWithRelations>
+    // ❌ Xóa bài chia sẻ của người dùng
+    @Query("DELETE FROM user_behavior WHERE userId = :userId AND foodId = :foodId AND behaviorType = :type")
+    suspend fun deleteBehavior(userId: Long, foodId: Long, type: String)
+
+
 
     // 🧡 Lấy món đã chia sẻ
     @Query("""
