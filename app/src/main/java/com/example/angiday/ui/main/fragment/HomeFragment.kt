@@ -1,9 +1,7 @@
 package com.example.angiday.ui.main.fragment
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 
 import android.view.LayoutInflater
@@ -25,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
 import com.example.angiday.db.AppDatabase
 import com.example.angiday.repository.MetaRepository
-import com.example.angiday.service.FoodSuggestionService
 import com.example.angiday.ui.main.adapter.SuggestionAdapter
 import com.example.angiday.viewmodel.HomeViewModel
 import com.example.angiday.viewmodel.HomeViewModelFactory
@@ -34,7 +31,7 @@ import com.google.android.material.chip.ChipGroup
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import com.example.angiday.repository.FoodRepository
-import android.widget.Toast
+
 // Trong class HomeFragment
 
 class HomeFragment : Fragment() {
@@ -54,8 +51,9 @@ class HomeFragment : Fragment() {
     private var allSuggestions: List<String> = emptyList()
 
     // 🔹 BroadcastReceiver nhận món mới từ Service
-    private lateinit var receiver: BroadcastReceiver
-    private lateinit var tvRandomFood: TextView
+    override fun onDestroyView() {
+        super.onDestroyView()
+    }
 
 
     override fun onCreateView(
@@ -120,41 +118,6 @@ class HomeFragment : Fragment() {
                 adapter.updateData(allSuggestions)
             }
         }
-
-        // 👉 Khởi động Service khi mở HomeFragment
-        tvRandomFood = view.findViewById(R.id.tvRandomFood)
-
-// 👉 Khởi động Service
-        requireContext().startService(Intent(requireContext(), FoodSuggestionService::class.java))
-
-// 👉 Nhận dữ liệu từ Broadcast
-        receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                val newFood = intent?.getStringExtra("foodName") ?: return
-
-                // ✅ Hiển thị gợi ý
-                tvRandomFood.text = "🥢 Món gợi ý: $newFood"
-                Toast.makeText(requireContext(), "Món mới: $newFood", Toast.LENGTH_SHORT).show()
-
-                // ✅ Lưu lại vào SharedPreferences để NotificationActivity đọc được
-                val prefs = requireContext().getSharedPreferences("food_notifications", Context.MODE_PRIVATE)
-                val current = prefs.getStringSet("list", mutableSetOf())?.toMutableSet() ?: mutableSetOf()
-
-                // Thêm món mới (nếu đã có thì bỏ qua)
-                current.add("🥢 $newFood")
-
-                prefs.edit().putStringSet("list", current).apply()
-            }
-        }
-
-
-// Đăng ký BroadcastReceiver – dùng requireActivity() để chắc chắn nhận được
-        ContextCompat.registerReceiver(
-            requireActivity(),
-            receiver,
-            IntentFilter("NEW_FOOD_SUGGESTED"),
-            ContextCompat.RECEIVER_EXPORTED // ✅ cho phép nhận khi app đang foreground
-        )
 
 
 
@@ -221,12 +184,7 @@ class HomeFragment : Fragment() {
         return view
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        // 🧹 Huỷ đăng ký Receiver và dừng Service khi thoát Fragment
-        requireContext().unregisterReceiver(receiver)
-        requireContext().stopService(Intent(requireContext(), FoodSuggestionService::class.java))
-    }
+
 
     // ----------------- Các hàm phụ -----------------
 

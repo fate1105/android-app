@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@color/white"
+    android:background="@color/colorBackground"
     android:fillViewport="true">
 
     <LinearLayout
@@ -16,42 +16,12 @@
         <!-- Ô nhập nguyên liệu -->
         <LinearLayout
             android:layout_width="match_parent"
-
-
-            android:layout_height="84dp"
-
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <ImageView
-                android:id="@+id/imgLogo"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:adjustViewBounds="true"
-                android:contentDescription="Logo"
-                android:scaleType="fitCenter"
-                android:src="@drawable/logo" />
-
-            <TextView
-                android:id="@+id/tvGreeting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Hôm nay ăn gì?"
-                android:textColor="#333333"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="8dp"
             android:focusable="true"
-            android:focusableInTouchMode="true">
+            android:focusableInTouchMode="true"
+            android:background="@color/colorSurface">
 
             <!-- Ô nhập tìm kiếm -->
             <EditText
@@ -61,15 +31,46 @@
                 android:hint="Nhập nguyên liệu..."
                 android:inputType="textCapSentences"
                 android:singleLine="true"
-                android:imeOptions="actionDone"/>
-
+                android:imeOptions="actionDone"
+                android:textColor="@color/colorOnSurface"
+                android:textColorHint="@color/colorMuted"
+                android:backgroundTint="@color/colorOutline" />
 
             <!-- RecyclerView hiển thị gợi ý 3 cột -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSuggestions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
+            <!-- Header logo + chào -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="84dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <ImageView
+                    android:id="@+id/imgLogo"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="Logo"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/logo" />
+
+                <TextView
+                    android:id="@+id/tvGreeting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Hôm nay ăn gì?"
+                    android:textColor="@color/colorOnBackground"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
             <!-- ChipGroup hiển thị các lựa chọn -->
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroupSelected"
@@ -81,18 +82,17 @@
                 app:selectionRequired="false"
                 android:paddingBottom="8dp"
                 android:minHeight="48dp"
-                android:scrollHorizontally="false"/>
+                android:scrollHorizontally="false" />
+
+            <!-- Nút tìm món ăn -->
             <Button
                 android:id="@+id/btnFindRecipes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Tìm món ăn"
                 android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorOnPrimary"/>
-
-
+                android:textColor="@color/colorOnPrimary" />
         </LinearLayout>
-
 
         <!-- Món nổi bật -->
         <TextView
@@ -102,7 +102,8 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
 
         <ImageView
             android:layout_width="match_parent"
@@ -110,7 +111,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_menu"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/bg_card_simple"/>
+            android:background="@color/colorSurface" />
 
         <!-- Gợi ý theo bữa -->
         <TextView
@@ -120,17 +121,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
-            android:layout_marginBottom="8dp"/>
-        <TextView
-            android:id="@+id/tvRandomFood"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Đang gợi ý món ăn..."
-            android:textSize="18sp"
-            android:padding="14dp"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:background="@drawable/bg_card_simple" />
+            android:layout_marginBottom="8dp" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -146,9 +137,9 @@
                 android:layout_height="wrap_content"
                 android:text="Bữa sáng:"
                 android:padding="12dp"
-                android:background="@drawable/bg_item_simple"
+                android:background="@color/colorSurface"
                 android:textColor="@color/colorOnSurface"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="8dp" />
 
             <TextView
                 android:id="@+id/tvLunch"
@@ -157,9 +148,9 @@
                 android:layout_height="wrap_content"
                 android:text="Bữa trưa:"
                 android:padding="12dp"
-                android:background="@drawable/bg_item_simple"
+                android:background="@color/colorSurface"
                 android:textColor="@color/colorOnSurface"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="8dp" />
 
             <TextView
                 android:id="@+id/tvDinner"
@@ -168,8 +159,8 @@
                 android:layout_height="wrap_content"
                 android:text="Bữa tối:"
                 android:padding="12dp"
-                android:background="@drawable/bg_item_simple"
-                android:textColor="@color/colorOnSurface"/>
+                android:background="@color/colorSurface"
+                android:textColor="@color/colorOnSurface" />
         </LinearLayout>
 
         <!-- Khám phá nhanh -->
@@ -180,7 +171,7 @@
             android:textStyle="bold"
             android:textSize="18sp"
             android:textColor="@color/colorPrimary"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp" />
 
         <HorizontalScrollView
             android:id="@+id/horizontalScrollView"
@@ -196,8 +187,6 @@
                 android:layout_height="wrap_content" />
         </HorizontalScrollView>
 
-
-
         <!-- Nút hành động -->
         <Button
             android:id="@+id/btnMenu"
@@ -206,6 +195,6 @@
             android:text="Khám phá thêm món ăn"
             android:backgroundTint="@color/colorPrimary"
             android:textColor="@color/colorOnPrimary"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="24dp" />
     </LinearLayout>
 </ScrollView>

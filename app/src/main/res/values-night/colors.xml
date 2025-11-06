@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FF8A65</color>
-    <color name="colorPrimaryVariant">#FF7043</color>
-    <color name="colorOnPrimary">#000000</color>
+    <!-- ========== BRAND COLORS ========== -->
+    <!-- Màu thương hiệu cam dịu hơn để không chói trong dark mode -->
+    <color name="colorPrimary">#FF7A50</color>
+    <color name="colorPrimaryVariant">#E06A3F</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
 
-    <color name="colorSecondary">#FFD54F</color>
+    <!-- Màu phụ vàng dịu (accent nổi bật nhưng không quá sáng) -->
+    <color name="colorSecondary">#FFCA28</color>
     <color name="colorOnSecondary">#000000</color>
 
-    <color name="colorAccentGreen">#9CCC65</color>
+    <!-- Accent xanh lá tươi hơn một chút -->
+    <color name="colorAccentGreen">#AED581</color>
     <color name="colorOnAccentGreen">#000000</color>
 
+    <!-- ========== SURFACES & BACKGROUND ========== -->
+    <!-- Giữ tone đen-xám chuẩn Material -->
     <color name="colorBackground">#121212</color>
     <color name="colorSurface">#1E1E1E</color>
-    <color name="colorOnBackground">#EDEDED</color>
-    <color name="colorOnSurface">#EDEDED</color>
 
-    <color name="colorMuted">#B0B0B0</color>
-    <color name="colorOutline">#303030</color>
+    <!-- Text và icon trên nền tối -->
+    <color name="colorOnBackground">#FAFAFA</color>
+    <color name="colorOnSurface">#E0E0E0</color>
 
-    <color name="colorError">#EF5350</color>
+    <!-- ========== NEUTRAL / SUPPORTING ========== -->
+    <color name="colorMuted">#9E9E9E</color>
+    <color name="colorOutline">#373737</color>
+
+    <!-- ========== ERROR COLORS ========== -->
+    <color name="colorError">#CF6679</color>
     <color name="colorOnError">#000000</color>
 </resources>

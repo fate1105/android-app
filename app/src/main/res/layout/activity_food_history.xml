@@ -4,20 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFF8E1">
+    android:background="@color/colorBackground">
 
-    <!-- Toolbar có nút quay lại -->
+    <!-- Thanh tiêu đề -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         style="@style/Widget.Material3.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:title="🍳 Món đã nấu"
-        app:titleTextColor="@android:color/black"
+        app:title="Lịch sữ món ăn"
+        app:titleTextColor="@color/colorOnSurface"
         app:navigationIcon="@drawable/ic_arrow_back_24"
-        android:backgroundTint="?attr/colorSurface"
+        android:backgroundTint="@color/colorSurface"
         android:elevation="4dp"
         android:fitsSystemWindows="true" />
+
 
     <!-- Danh sách món đã nấu -->
     <androidx.recyclerview.widget.RecyclerView

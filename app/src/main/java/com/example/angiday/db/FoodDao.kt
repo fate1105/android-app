@@ -47,6 +47,8 @@ interface FoodDao {
     fun searchFoods(keyword: String): Flow<List<FoodWithRelations>>
     @Insert
     suspend fun insert(food: FoodEntity): Long
+    @Query("SELECT * FROM foods WHERE id = :id LIMIT 1")
+    suspend fun getFoodById(id: Long): FoodEntity?
 
     @Transaction
     @Query("SELECT * FROM foods WHERE id = :foodId")

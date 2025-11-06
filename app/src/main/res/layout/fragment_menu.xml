@@ -22,9 +22,9 @@
             android:text="Món nước"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/colorOnSurface"
             android:paddingVertical="8dp"
-            android:background="#EEEEEE" />
+            android:background="@color/colorSurface" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMonNuoc"
@@ -34,7 +34,6 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_marginBottom="16dp" />
 
-
         <!-- ======= MÓN CHIÊN ======= -->
         <TextView
             android:id="@+id/textViewMonChien"
@@ -43,9 +42,9 @@
             android:text="Món chiên"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/colorOnSurface"
             android:paddingVertical="8dp"
-            android:background="#EEEEEE" />
+            android:background="@color/colorSurface" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMonChien"
@@ -63,9 +62,9 @@
             android:text="Món cơm"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/colorOnSurface"
             android:paddingVertical="8dp"
-            android:background="#EEEEEE" />
+            android:background="@color/colorSurface" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMonCom"
@@ -73,6 +72,7 @@
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
         <!-- ======= MÓN ĂN CHAY ======= -->
         <TextView
             android:id="@+id/textViewChay"
@@ -81,9 +81,9 @@
             android:text="Món ăn chay"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/colorOnSurface"
             android:paddingVertical="8dp"
-            android:background="#EEEEEE" />
+            android:background="@color/colorSurface" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMonChay"
@@ -101,9 +101,9 @@
             android:text="Món ăn xào"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/colorOnSurface"
             android:paddingVertical="8dp"
-            android:background="#EEEEEE" />
+            android:background="@color/colorSurface" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMonXao"

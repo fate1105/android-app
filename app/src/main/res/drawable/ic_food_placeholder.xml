@@ -1,0 +1,26 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Viền bát -->
+    <path
+        android:fillColor="@color/colorOutline"
+        android:pathData="M2,10c0,5 4,9 10,9s10,-4 10,-9H2z" />
+
+    <!-- Bên trong bát -->
+    <path
+        android:fillColor="@color/colorSurface"
+        android:pathData="M4,10c0,4 3.6,7 8,7s8,-3 8,-7H4z" />
+
+    <!-- Đôi đũa / Trang trí -->
+    <path
+        android:fillColor="@color/colorPrimary"
+        android:pathData="M8,3h2v4H8zM14,3h2v4h-2z" />
+
+    <!-- Bong bóng hơi thức ăn -->
+    <path
+        android:fillColor="@color/colorMuted"
+        android:pathData="M6,7a1,1 0 1,0 2,0a1,1 0 1,0 -2,0zM16,7a1,1 0 1,0 2,0a1,1 0 1,0 -2,0z" />
+</vector>

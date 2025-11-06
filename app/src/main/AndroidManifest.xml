@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -23,7 +35,7 @@
             android:name=".ui.profile.FoodHistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.profile.FoodLvActivity"
+            android:name=".ui.profile.FoodFavoriteActivity"
             android:exported="false" />
         <activity
             android:name=".ui.profile.EditActivity"
@@ -33,9 +45,7 @@
         <activity
             android:name=".ui.auth.SignupActivity"
             android:exported="false" />
-        <service
-            android:name=".service.FoodSuggestionService"
-            android:exported="false" />
+
         <activity
             android:name=".ui.share.ShareActivity"
             android:exported="true">
