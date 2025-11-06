@@ -1,4 +1,4 @@
-package com.example.angiday.util
+package com.example.angiday.utils
 
 import android.content.Context
 import com.example.angiday.R
