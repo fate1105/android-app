@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFF8E1">
+    android:background="@color/colorSurface">
 
     <!-- Toolbar có nút quay lại -->
     <com.google.android.material.appbar.MaterialToolbar
@@ -12,16 +12,19 @@
         style="@style/Widget.Material3.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:title="Món ăn yêu thích"
+        app:title="🍽️ Món ăn yêu thích"
+        app:titleTextColor="@color/colorOnSurface"
         app:navigationIcon="@drawable/ic_arrow_back_24"
-        android:backgroundTint="?attr/colorSurface" />
+        android:background="@color/colorSurface"
+        android:elevation="4dp" />
 
     <!-- Danh sách món -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvFavoriteFoods"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
+        android:padding="@dimen/padding_normal"
         android:clipToPadding="false"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:background="@color/colorBackground" />
 </LinearLayout>

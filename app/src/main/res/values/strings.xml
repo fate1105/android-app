@@ -31,6 +31,14 @@
     <string name="diet_preferences">Chế độ ăn</string>
     <string name="save_changes">Lưu thay đổi</string>
 
+    <string name="no_description">Không có mô tả</string>
+
+    <string name="settings_title">Cài đặt</string>
+    <string name="language">Ngôn ngữ</string>
+    <string name="dark_mode">Chế độ tối</string>
+    <string name="notifications">Thông báo</string>
+    <string name="clear_cache">Xoá bộ nhớ đệm</string>
+    <string name="selected_language">Đã chọn: %1$s</string>
     <!-- Recipe Details -->
     <string name="ingredients">Nguyên liệu</string>
     <string name="steps">Cách làm</string>

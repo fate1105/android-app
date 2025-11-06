@@ -14,7 +14,7 @@ import com.example.angiday.session.SessionManager
 import com.example.angiday.ui.auth.LoginActivity
 import com.example.angiday.ui.profile.EditActivity
 import com.example.angiday.ui.profile.FoodHistoryActivity
-import com.example.angiday.ui.profile.FoodLvActivity
+import com.example.angiday.ui.profile.FoodFavoriteActivity
 import com.example.angiday.ui.profile.MyProfileActivity
 import com.example.angiday.ui.profile.NotificationActivity
 
@@ -61,7 +61,7 @@ class ProfileFragment : Fragment() {
 
         // 👉 Món yêu thích
         rowFavorite.setOnClickListener {
-            startActivity(Intent(requireContext(), FoodLvActivity::class.java))
+            startActivity(Intent(requireContext(), FoodFavoriteActivity::class.java))
         }
 
         // 👉 Lịch sử món đã nấu

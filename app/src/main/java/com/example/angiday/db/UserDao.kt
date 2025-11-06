@@ -7,7 +7,8 @@ import com.example.angiday.model.entity.UserEntity
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(user: UserEntity)
-
+    @Query("SELECT * FROM users WHERE id = :id LIMIT 1")
+    suspend fun getUserById(id: Int): UserEntity?
     @Query("SELECT * FROM users WHERE email = :email LIMIT 1")
     suspend fun findByEmail(email: String): UserEntity?
 

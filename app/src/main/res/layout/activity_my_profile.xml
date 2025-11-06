@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF8E1">
+    android:background="@color/colorSurface">
 
     <!-- Toàn bộ nội dung chính -->
     <LinearLayout
@@ -18,21 +18,23 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="👤 Món ăn chia sẻ"
+            app:titleTextColor="@color/colorOnSurface"
             app:navigationIcon="@drawable/ic_arrow_back_24"
-            android:backgroundTint="?attr/colorSurface"
+            android:background="@color/colorSurface"
             android:elevation="4dp" />
 
         <!-- Nội dung chính -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:fillViewport="true"
+            android:background="@color/colorBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="@dimen/padding_xlarge">
 
                 <!-- Thông tin user -->
                 <TextView
@@ -40,27 +42,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Tên người dùng"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp"
+                    android:textColor="@color/colorOnSurface"
+                    android:textSize="@dimen/text_large"
                     android:textStyle="bold"
                     android:gravity="center"
-                    android:layout_marginBottom="6dp" />
+                    android:layout_marginBottom="@dimen/margin_small" />
 
                 <TextView
                     android:id="@+id/tvEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Email"
-                    android:textColor="#555"
-                    android:textSize="16sp"
+                    android:textColor="@color/colorMuted"
+                    android:textSize="@dimen/text_medium"
                     android:gravity="center"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="@dimen/margin_medium" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#DDD"
-                    android:layout_marginBottom="16dp" />
+                    android:background="@color/colorOutline"
+                    android:layout_marginBottom="@dimen/margin_medium" />
 
                 <!-- Danh sách món đã chia sẻ -->
                 <TextView
@@ -68,17 +70,15 @@
                     android:layout_height="wrap_content"
                     android:text="🍽️ Món đã chia sẻ"
                     android:textStyle="bold"
-                    android:textColor="#E65100"
-                    android:textSize="18sp"
-                    android:layout_marginBottom="8dp" />
-
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_medium"
+                    android:layout_marginBottom="@dimen/margin_normal" />
 
                 <LinearLayout
                     android:id="@+id/layoutSharedFoods"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
-
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
@@ -89,9 +89,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="24dp"
+        android:layout_margin="@dimen/margin_xlarge"
         android:contentDescription="Tạo bài chia sẻ mới"
         android:src="@drawable/ic_add"
         app:backgroundTint="@color/colorPrimary"
-        app:tint="@android:color/white" />
+        app:tint="@color/colorOnPrimary" />
 </FrameLayout>
