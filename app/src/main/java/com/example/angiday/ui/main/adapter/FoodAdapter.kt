@@ -13,9 +13,10 @@ import com.example.angiday.utils.ImageUtils
 
 class FoodAdapter(
     private var items: List<FoodWithRelations> = emptyList(),
-    private val onClick: (Long) -> Unit = {}   // truyền foodId
+    private val onClick: (Long) -> Unit = {} // callback truyền foodId
 ) : RecyclerView.Adapter<FoodAdapter.VH>() {
 
+    // ViewHolder ánh xạ layout item_food.xml
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val img: ImageView = itemView.findViewById(R.id.imgFood)
         val title: TextView = itemView.findViewById(R.id.tvTitle)
@@ -23,35 +24,32 @@ class FoodAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_food, parent, false)
-        return VH(v)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_food, parent, false)
+        return VH(view)
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = items[position].food
+
+        // hiển thị thông tin món ăn
         holder.title.text = item.title
         holder.desc.text = item.desc ?: "Không có mô tả"
 
-        // 🔹 Load ảnh bằng ImageUtils
+        // load ảnh từ tên resource qua ImageUtils
         val resId = ImageUtils.getDrawableId(holder.itemView.context, item.imageRes)
-        if (resId != 0) {
-            holder.img.setImageResource(resId)
-        } else {
-            holder.img.setImageResource(R.drawable.ic_launcher_foreground)
-        }
+        holder.img.setImageResource(if (resId != 0) resId else R.drawable.ic_launcher_foreground)
 
-        // 🔹 Click vào item
-        holder.itemView.setOnClickListener {     Log.d("DEBUG_CLICK", "Clicked food: ${item.title}, id=${item.id}")
+        // xử lý khi click vào món ăn
+        holder.itemView.setOnClickListener {
+            Log.d("FoodAdapter", "Clicked food: ${item.title}, id=${item.id}")
             onClick(item.id)
         }
-
-        // 🔹 Nút "Chia sẻ món ăn"
-
     }
 
+    override fun getItemCount(): Int = items.size // số lượng món
 
-    override fun getItemCount() = items.size
-
+    // cập nhật danh sách món ăn
     fun submitList(newItems: List<FoodWithRelations>) {
         items = newItems
         notifyDataSetChanged()

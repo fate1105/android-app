@@ -110,8 +110,8 @@ class CommunityFragment : Fragment() {
                         holder.btnFavorite.setColorFilter(Color.RED)
                         dao.insert(
                             UserBehaviorEntity(
-                                userId = userId.toInt(),
-                                foodId = food.id.toInt(),
+                                userId = userId,
+                                foodId = food.id,
                                 behaviorType = "favorite"
                             )
                         )

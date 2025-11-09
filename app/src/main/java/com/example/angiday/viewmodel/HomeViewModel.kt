@@ -15,53 +15,66 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * HomeViewModel
+ * Quản lý logic hiển thị cho HomeFragment:
+ * - Load danh sách nguyên liệu và danh mục món ăn
+ * - Gợi ý ngẫu nhiên 3 bữa ăn/ngày (cache bằng SharedPreferences)
+ */
 class HomeViewModel(
     private val metaRepo: MetaRepository,
     private val foodRepo: FoodRepository
 ) : ViewModel() {
 
-    // ----- Constants -----
     companion object {
         private const val PREF_NAME = "daily_meals"
         private const val KEY_LAST_DATE = "last_date"
         private const val KEY_MEALS_JSON = "meals_json"
     }
 
-    // ----- StateFlow -----
+    // Dòng dữ liệu nguyên liệu (Ingredient)
     val ingredients: StateFlow<List<IngredientEntity>> =
         metaRepo.getAllIngredients()
             .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
+    // Dòng dữ liệu danh mục món ăn
     val categories = metaRepo.getAllCategories()
 
+    // Dòng dữ liệu 3 bữa ăn ngẫu nhiên
     private val _randomMeals = MutableStateFlow<List<FoodWithRelations>>(emptyList())
     val randomMeals: StateFlow<List<FoodWithRelations>> = _randomMeals.asStateFlow()
 
-    // ----- Public Methods -----
+    /**
+     * Load 3 món ngẫu nhiên (cache mỗi ngày)
+     * Nếu hôm nay đã có dữ liệu trong SharedPreferences → load lại từ cache.
+     */
     fun loadRandomMeals(context: Context) {
         viewModelScope.launch {
             val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
             val today = getCurrentDate()
             val lastDate = prefs.getString(KEY_LAST_DATE, null)
 
+            // Nếu đã cache trong ngày → đọc lại
             val cachedMeals = if (lastDate == today) loadCachedMeals(prefs) else null
             if (cachedMeals != null) {
                 _randomMeals.value = cachedMeals
                 return@launch
             }
 
+            // Nếu chưa có cache → lấy ngẫu nhiên và lưu lại
             val newMeals = foodRepo.getRandomFoods(3)
             _randomMeals.value = newMeals
             saveMealsToPrefs(prefs, today, newMeals)
         }
-        Log.d("SharedPrefs", "Loaded meals: ${Gson().toJson(_randomMeals.value)}")
 
+        Log.d("HomeViewModel", "Loaded meals: ${Gson().toJson(_randomMeals.value)}")
     }
 
-    // ----- Helper Functions -----
+    // Lấy ngày hiện tại dạng yyyy-MM-dd
     private fun getCurrentDate(): String =
         SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
+    // Đọc dữ liệu cache từ SharedPreferences
     private fun loadCachedMeals(prefs: android.content.SharedPreferences): List<FoodWithRelations>? {
         val json = prefs.getString(KEY_MEALS_JSON, null) ?: return null
         return runCatching {
@@ -69,6 +82,7 @@ class HomeViewModel(
         }.getOrNull()
     }
 
+    // Lưu dữ liệu cache vào SharedPreferences
     private fun saveMealsToPrefs(
         prefs: android.content.SharedPreferences,
         date: String,
@@ -81,6 +95,9 @@ class HomeViewModel(
     }
 }
 
+/**
+ * Factory tạo HomeViewModel
+ */
 class HomeViewModelFactory(
     private val metaRepo: MetaRepository,
     private val foodRepo: FoodRepository

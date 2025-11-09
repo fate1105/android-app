@@ -1,18 +1,12 @@
 package com.example.angiday.ui.main.fragment
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-
-import android.widget.LinearLayout
-import android.widget.TextView
-
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -22,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
 import com.example.angiday.db.AppDatabase
+import com.example.angiday.repository.FoodRepository
 import com.example.angiday.repository.MetaRepository
 import com.example.angiday.ui.main.adapter.SuggestionAdapter
 import com.example.angiday.viewmodel.HomeViewModel
@@ -30,16 +25,20 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import com.example.angiday.repository.FoodRepository
 
-// Trong class HomeFragment
-
+/**
+ * HomeFragment
+ * Màn hình chính của Angiday:
+ * - Gợi ý nguyên liệu & tìm công thức
+ * - Gợi ý bữa ăn ngẫu nhiên (sáng / trưa / tối)
+ * - Danh mục món ăn phổ biến
+ */
 class HomeFragment : Fragment() {
 
+    // UI components
     private lateinit var etSearch: EditText
     private lateinit var chipGroup: ChipGroup
     private lateinit var rvSuggestions: RecyclerView
-    private lateinit var adapter: SuggestionAdapter
     private lateinit var btnFindRecipes: Button
 
     private lateinit var tvBreakfast: TextView
@@ -47,14 +46,14 @@ class HomeFragment : Fragment() {
     private lateinit var tvDinner: TextView
     private lateinit var categoryContainer: LinearLayout
 
+    // ViewModel
     private lateinit var viewModel: HomeViewModel
+
+    // Adapter
+    private lateinit var adapter: SuggestionAdapter
     private var allSuggestions: List<String> = emptyList()
 
-    // 🔹 BroadcastReceiver nhận món mới từ Service
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
-
+    // Lifecycle
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,131 +61,65 @@ class HomeFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-
-        // --- Khởi tạo ViewModel ---
-        val dao = AppDatabase.get(requireContext()).metaDao()
-
-        val repo = MetaRepository(dao)
-//        val factory = HomeViewModelFactory(repo)
-
-        // --- Lấy instance database
-        val db = AppDatabase.get(requireContext())
-
-        val metaRepo = MetaRepository(db.metaDao())
-        val foodRepo = FoodRepository(db.foodDao())
-
-        val factory = HomeViewModelFactory(metaRepo, foodRepo)
-
-        // --- Tạo ViewModel
-
-        viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
-
-        // --- Ánh xạ View ---
-        etSearch = view.findViewById(R.id.etSearch)
-        chipGroup = view.findViewById(R.id.chipGroupSelected)
-        rvSuggestions = view.findViewById(R.id.rvSuggestions)
-        btnFindRecipes = view.findViewById(R.id.btnFindRecipes)
-        tvBreakfast = view.findViewById(R.id.tvBreakfast)
-        tvLunch = view.findViewById(R.id.tvLunch)
-        tvDinner = view.findViewById(R.id.tvDinner)
-
-        // --- Thiết lập RecyclerView ---
-        rvSuggestions.layoutManager = GridLayoutManager(requireContext(), 3)
-        adapter = SuggestionAdapter(allSuggestions.toMutableList()) { addChip(it) }
-        rvSuggestions.adapter = adapter
-
-        setupSearchFilter()
-        etSearch.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                // Nếu chưa gõ gì thì hiển thị tất cả gợi ý
-                if (etSearch.text.isEmpty()) {
-                    rvSuggestions.visibility = View.VISIBLE
-                    adapter.updateData(allSuggestions)
-                }
-            } else {
-                // Mất focus thì ẩn đi
-                rvSuggestions.visibility = View.GONE
-            }
-        }
-
-        setupUnfocus(view)
-
-        // --- Lấy dữ liệu từ ViewModel ---
-        lifecycleScope.launch {
-            viewModel.ingredients.collectLatest { ingredients ->
-                allSuggestions = ingredients.map { it.name }
-                adapter.updateData(allSuggestions)
-            }
-        }
-
-
-
-        // 🔹 Nút "Tìm công thức"
-        btnFindRecipes.setOnClickListener {
-            val selectedIngredients = mutableListOf<String>()
-            for (i in 0 until chipGroup.childCount) {
-                val chip = chipGroup.getChildAt(i) as Chip
-                selectedIngredients.add(chip.text.toString())
-            }
-
-            val bundle = Bundle().apply {
-                putStringArray("ingredients", selectedIngredients.toTypedArray())
-            }
-
-            val suggestFragment = SuggestFragment()
-            suggestFragment.arguments = bundle
-
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, suggestFragment)
-                .addToBackStack(null)
-                .commit()
-        }
-
-        viewModel.loadRandomMeals(requireContext())
-
-        lifecycleScope.launch {
-            viewModel.randomMeals.collectLatest { meals ->
-                if (meals.size >= 3) {
-                    tvBreakfast.text = "Bữa sáng:\n${meals[0].food.title}"
-                    tvLunch.text = "Bữa trưa:\n${meals[1].food.title}"
-                    tvDinner.text = "Bữa tối:\n${meals[2].food.title}"
-                }
-            }
-        }
-
-        categoryContainer = view.findViewById(R.id.categoryContainer)
-
-        lifecycleScope.launch {
-            viewModel.categories.collectLatest { categories ->
-                categoryContainer.removeAllViews()
-                for (category in categories) {
-                    val textView = TextView(requireContext()).apply {
-                        text = category.name
-                        setBackgroundResource(R.drawable.bg_chip_simple)
-                        setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
-                        setPadding(24, 12, 24, 12)
-
-                        val params = LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                        ).apply {
-                            setMargins(0, 0, 16, 0)
-                        }
-                        layoutParams = params
-                    }
-
-                    categoryContainer.addView(textView)
-                }
-            }
-        }
-
+        setupViewModel()
+        bindViews(view)
+        setupRecyclerView()
+        setupListeners(view)
+        observeData()
 
         return view
     }
 
+    // Setup ViewModel
 
+    private fun setupViewModel() {
+        val db = AppDatabase.get(requireContext())
+        val metaRepo = MetaRepository(db.metaDao())
+        val foodRepo = FoodRepository(db.foodDao())
+        val factory = HomeViewModelFactory(metaRepo, foodRepo)
+        viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
+    }
 
-    // ----------------- Các hàm phụ -----------------
+    // Ánh xạ View và UI khởi tạo
+
+    private fun bindViews(view: View) {
+        etSearch = view.findViewById(R.id.etSearch)
+        chipGroup = view.findViewById(R.id.chipGroupSelected)
+        rvSuggestions = view.findViewById(R.id.rvSuggestions)
+        btnFindRecipes = view.findViewById(R.id.btnFindRecipes)
+
+        tvBreakfast = view.findViewById(R.id.tvBreakfast)
+        tvLunch = view.findViewById(R.id.tvLunch)
+        tvDinner = view.findViewById(R.id.tvDinner)
+        categoryContainer = view.findViewById(R.id.categoryContainer)
+    }
+
+    private fun setupRecyclerView() {
+        rvSuggestions.layoutManager = GridLayoutManager(requireContext(), 3)
+        adapter = SuggestionAdapter(allSuggestions.toMutableList()) { addChip(it) }
+        rvSuggestions.adapter = adapter
+    }
+
+    // Thiết lập sự kiện & tương tác
+
+    private fun setupListeners(rootView: View) {
+        // Khi gõ tìm kiếm
+        setupSearchFilter()
+
+        // Khi focus vào ô tìm kiếm
+        etSearch.setOnFocusChangeListener { _, hasFocus ->
+            rvSuggestions.visibility =
+                if (hasFocus && etSearch.text.isEmpty()) View.VISIBLE else View.GONE
+        }
+
+        // Khi nhấn ra ngoài → ẩn bàn phím + ẩn danh sách gợi ý
+        setupUnfocus(rootView)
+
+        // Khi nhấn nút “Tìm công thức”
+        btnFindRecipes.setOnClickListener { navigateToSuggestFragment() }
+    }
+
+    // Tìm kiếm & chip nguyên liệu
 
     private fun setupSearchFilter() {
         etSearch.addTextChangedListener { input ->
@@ -208,6 +141,72 @@ class HomeFragment : Fragment() {
         chipGroup.addView(chip)
     }
 
+    // Điều hướng & xử lý nút "Tìm công thức"
+
+    private fun navigateToSuggestFragment() {
+        val selectedIngredients = mutableListOf<String>().apply {
+            for (i in 0 until chipGroup.childCount) {
+                val chip = chipGroup.getChildAt(i) as Chip
+                add(chip.text.toString())
+            }
+        }
+
+        val bundle = Bundle().apply {
+            putStringArray("ingredients", selectedIngredients.toTypedArray())
+        }
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, SuggestFragment().apply { arguments = bundle })
+            .addToBackStack(null)
+            .commit()
+    }
+
+    // Quan sát dữ liệu từ ViewModel (Flow)
+
+    private fun observeData() {
+        // Gợi ý nguyên liệu
+        lifecycleScope.launch {
+            viewModel.ingredients.collectLatest { ingredients ->
+                allSuggestions = ingredients.map { it.name }
+                adapter.updateData(allSuggestions)
+            }
+        }
+
+        // Gợi ý ngẫu nhiên cho 3 bữa
+        viewModel.loadRandomMeals(requireContext())
+        lifecycleScope.launch {
+            viewModel.randomMeals.collectLatest { meals ->
+                if (meals.size >= 3) {
+                    tvBreakfast.text = "Bữa sáng:\n${meals[0].food.title}"
+                    tvLunch.text = "Bữa trưa:\n${meals[1].food.title}"
+                    tvDinner.text = "Bữa tối:\n${meals[2].food.title}"
+                }
+            }
+        }
+
+        // Danh mục món ăn
+        lifecycleScope.launch {
+            viewModel.categories.collectLatest { categories ->
+                categoryContainer.removeAllViews()
+                for (category in categories) {
+                    val textView = TextView(requireContext()).apply {
+                        text = category.name
+                        setBackgroundResource(R.drawable.bg_chip_simple)
+                        setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+                        setPadding(24, 12, 24, 12)
+                        layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        ).apply { setMargins(0, 0, 16, 0) }
+                    }
+                    categoryContainer.addView(textView)
+                }
+            }
+        }
+    }
+
+    // Xử lý UI phụ (ẩn bàn phím, mất focus)
+
     private fun setupUnfocus(rootView: View) {
         rootView.setOnTouchListener { v, _ ->
             etSearch.clearFocus()
@@ -218,10 +217,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun hideKeyboard(view: View) {
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE)
-                as? android.view.inputmethod.InputMethodManager
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         imm?.hideSoftInputFromWindow(view.windowToken, 0)
     }
-
-
 }

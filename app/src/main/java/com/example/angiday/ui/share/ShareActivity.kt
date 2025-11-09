@@ -59,8 +59,8 @@ class ShareActivity : AppCompatActivity() {
                 val dao = AppDatabase.get(this@ShareActivity).userBehaviorDao()
                 dao.insert(
                     UserBehaviorEntity(
-                        userId = userId.toInt(),
-                        foodId = foodId.toInt(),
+                        userId = userId,
+                        foodId = foodId,
                         behaviorType = "shared"
                     )
                 )

@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.angiday.R
-import com.example.angiday.ui.wheel.WheelBottomSheet
-import com.example.angiday.ui.wheel.WheelItem
+import com.example.angiday.ui.wheels.WheelBottomSheet
+import com.example.angiday.ui.wheels.WheelItem
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 
