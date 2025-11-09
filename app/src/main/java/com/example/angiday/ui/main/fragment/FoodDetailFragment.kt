@@ -1,6 +1,7 @@
 package com.example.angiday.ui.main.fragment
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -25,9 +26,12 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.google.android.material.button.MaterialButton
 import com.example.angiday.model.entity.UserBehaviorEntity
 import com.example.angiday.session.SessionManager
+import com.example.angiday.utils.ImageUtils
+import java.io.File
+import java.io.FileOutputStream
+import android.graphics.Bitmap
 
 
 class FoodDetailFragment : Fragment() {
@@ -75,7 +79,9 @@ class FoodDetailFragment : Fragment() {
         youtubeContainer = view.findViewById(R.id.youtubeContainer)
 
         val foodId = requireArguments().getLong(ARG_FOOD_ID)
-
+        val dao = AppDatabase.get(requireContext()).userBehaviorDao()
+        val session = SessionManager(requireContext())
+        val userId = session.getUserId()
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getFood(foodId).collectLatest { foodWithRelations ->
                 foodWithRelations?.let { bindFood(it) }
@@ -85,8 +91,7 @@ class FoodDetailFragment : Fragment() {
         btnCook = view.findViewById(R.id.btnCook)
         btnShare = view.findViewById(R.id.btnShare)
 
-// Nút yêu thích ❤️
-        // Nút yêu thích ❤️
+        // Nút yêu thích
         btnFavorite.setOnClickListener {
             val session = SessionManager(requireContext())
             val userId = session.getUserId()
@@ -120,33 +125,40 @@ class FoodDetailFragment : Fragment() {
             }
         }
 
-// Nút “Đã nấu 🍳”
+        // Nút “Đã nấu”
+        var isCooked = false
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            // Kiểm tra trong DB xem món này đã nấu chưa
+            val count = dao.exists(userId.toInt(), foodId.toInt(), "cooked")
+            isCooked = count > 0
+            updateCookButtonState(isCooked)
+        }
+        // Khi bấm nút
         btnCook.setOnClickListener {
-            // Đổi màu & chữ
-            btnCook.text = "Đã hoàn thành món ✔"
-            btnCook.setBackgroundColor(
-                androidx.core.content.ContextCompat.getColor(requireContext(), R.color.colorPrimary)
-            )
-            btnCook.setTextColor(android.graphics.Color.WHITE)
-
-            // Ghi lại hành vi "cooked"
             viewLifecycleOwner.lifecycleScope.launch {
-                val dao = AppDatabase.get(requireContext()).userBehaviorDao()
-                val session = com.example.angiday.session.SessionManager(requireContext())
-                val userId = session.getUserId()
-                val foodId = requireArguments().getLong("arg_food_id")
-
-                dao.insert(
-                    com.example.angiday.model.entity.UserBehaviorEntity(
-                        userId = userId.toInt(),
-                        foodId = foodId.toInt(),
-                        behaviorType = "cooked"
+                isCooked = !isCooked // Đảo trạng thái
+                if (isCooked) {
+                    dao.insert(
+                        UserBehaviorEntity(
+                            userId = userId.toInt(),
+                            foodId = foodId.toInt(),
+                            behaviorType = "cooked"
+                        )
                     )
-                )
+                    Toast.makeText(requireContext(), "Đã lưu: món đã nấu ✔", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Nếu hủy trạng thái "đã nấu"
+                    dao.deleteByType(userId.toInt(), foodId.toInt(), "cooked")
+                    Toast.makeText(requireContext(), "Đã hủy trạng thái nấu món 🍳", Toast.LENGTH_SHORT).show()
+                }
+                // Cập nhật lại giao diện nút
+                updateCookButtonState(isCooked)
             }
         }
 
-// Nút “Chia sẻ 🔗”
+
+        // Nút “Chia sẻ 🔗”
         btnShare.setOnClickListener {
             val foodTitle = tvTitle.text.toString()
             val foodDesc = tvDesc.text.toString()
@@ -215,12 +227,27 @@ class FoodDetailFragment : Fragment() {
         tvDesc.text = foodEntity.desc ?: "Không có mô tả"
 
         // Ảnh
-        val resId = foodEntity.imageRes?.let { name ->
-            resources.getIdentifier(name, "drawable", requireContext().packageName)
-        } ?: 0
+        val imageName = foodEntity.imageRes
+        val drawableId = ImageUtils.getDrawableId(requireContext(), imageName)
+        // Tạo file cache dựa theo tên ảnh
+        val cachedFile = File(requireContext().cacheDir, "$imageName.png")
+        // Nếu có ảnh trong cache thì đọc từ cache, ngược lại tạo mới
+        val cachedBitmap = ImageUtils.loadCachedImage(cachedFile)
+        if (cachedBitmap != null) {
+            img.setImageBitmap(cachedBitmap)
+        } else {
+            img.setImageResource(drawableId)
+            // Ghi ảnh vào cache
+            val bitmap = BitmapFactory.decodeResource(resources, drawableId)
+            try {
+                FileOutputStream(cachedFile).use { out ->
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
 
-        if (resId != 0) img.setImageResource(resId)
-        else img.setImageResource(R.drawable.ic_launcher_foreground)
 
         // Ingredients
         chipGroupIngredients.removeAllViews()
@@ -265,4 +292,16 @@ class FoodDetailFragment : Fragment() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=$videoId"))
         startActivity(intent)
     }
+    private fun updateCookButtonState(isCooked: Boolean) {
+        if (isCooked) {
+            btnCook.text = "Đã hoàn thành món ✔"
+            btnCook.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+            btnCook.setTextColor(Color.WHITE)
+        } else {
+            btnCook.text = "Đã nấu 🍳"
+            btnCook.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorBackground))
+            btnCook.setTextColor(Color.BLACK)
+        }
+    }
+
 }
