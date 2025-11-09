@@ -8,43 +8,44 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.angiday.R
 import com.example.angiday.db.AppDatabase
+import com.example.angiday.model.entity.UserBehaviorEntity
 import com.example.angiday.model.relations.FoodWithRelations
 import com.example.angiday.repository.FoodRepository
+import com.example.angiday.session.SessionManager
+import com.example.angiday.utils.ImageUtils
 import com.example.angiday.viewmodel.FoodDetailViewModel
 import com.example.angiday.viewmodel.FoodDetailViewModelFactory
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import android.widget.Toast
-import androidx.core.content.ContextCompat
-import com.example.angiday.model.entity.UserBehaviorEntity
-import com.example.angiday.session.SessionManager
-import com.example.angiday.utils.ImageUtils
 import java.io.File
 import java.io.FileOutputStream
-import android.graphics.Bitmap
-
 
 class FoodDetailFragment : Fragment() {
+
     companion object {
         private const val ARG_FOOD_ID = "arg_food_id"
         fun newInstance(foodId: Long) = FoodDetailFragment().apply {
             arguments = Bundle().apply { putLong(ARG_FOOD_ID, foodId) }
         }
     }
+
     private lateinit var btnFavorite: ImageView
-    private lateinit var btnCook: com.google.android.material.button.MaterialButton
+    private lateinit var btnCook: MaterialButton
     private lateinit var btnShare: ImageView
+
     private var isFavorite = false
+    private var isCooked = false
 
     private lateinit var img: ImageView
     private lateinit var tvTitle: TextView
@@ -62,11 +63,7 @@ class FoodDetailFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-
-
-    ): View {
-        return inflater.inflate(R.layout.fragment_food_detail, container, false)
-    }
+    ): View = inflater.inflate(R.layout.fragment_food_detail, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         img = view.findViewById(R.id.imgFoodDetail)
@@ -78,220 +75,78 @@ class FoodDetailFragment : Fragment() {
         tvInstructions = view.findViewById(R.id.tvInstructions)
         youtubeContainer = view.findViewById(R.id.youtubeContainer)
 
-        val foodId = requireArguments().getLong(ARG_FOOD_ID)
-        val dao = AppDatabase.get(requireContext()).userBehaviorDao()
-        val session = SessionManager(requireContext())
-        val userId = session.getUserId()
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.getFood(foodId).collectLatest { foodWithRelations ->
-                foodWithRelations?.let { bindFood(it) }
-            }
-        }
         btnFavorite = view.findViewById(R.id.btnFavorite)
         btnCook = view.findViewById(R.id.btnCook)
         btnShare = view.findViewById(R.id.btnShare)
 
-        // Nút yêu thích
+        val foodId = requireArguments().getLong(ARG_FOOD_ID)
+        val dao = AppDatabase.get(requireContext()).userBehaviorDao()
+        val session = SessionManager(requireContext())
+        val userId = session.getUserId()
+
+        // Hiển thị chi tiết món ăn
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getFood(foodId).collectLatest { food ->
+                food?.let { bindFood(it) }
+            }
+        }
+
+        // Kiểm tra trạng thái yêu thích & nấu
+        viewLifecycleOwner.lifecycleScope.launch {
+            isFavorite = dao.exists(userId, foodId, "favorite") > 0
+            isCooked = dao.exists(userId, foodId, "cooked") > 0
+            updateFavoriteIcon()
+            updateCookButtonState(isCooked)
+        }
+
+        // ❤️ Nút yêu thích
         btnFavorite.setOnClickListener {
-            val session = SessionManager(requireContext())
-            val userId = session.getUserId()
             if (userId == -1L) {
                 Toast.makeText(requireContext(), "Vui lòng đăng nhập trước!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
-            val dao = AppDatabase.get(requireContext()).userBehaviorDao()
-
-            isFavorite = !isFavorite
             viewLifecycleOwner.lifecycleScope.launch {
+                isFavorite = !isFavorite
                 if (isFavorite) {
-                    btnFavorite.setImageResource(R.drawable.ic_favorite_filled)
-                    btnFavorite.setColorFilter(Color.RED)
-                    dao.insert(
-                        UserBehaviorEntity(
-                            userId = userId.toInt(),
-                            foodId = foodId.toInt(),
-                            behaviorType = "favorite"
-                        )
-                    )
+                    dao.insert(UserBehaviorEntity(userId = userId, foodId = foodId, behaviorType = "favorite"))
                 } else {
-                    btnFavorite.setImageResource(R.drawable.ic_favorite_border)
-                    btnFavorite.setColorFilter(
-                        ContextCompat.getColor(requireContext(), R.color.colorPrimary)
-                    )
-                    dao.delete(userId.toInt(), foodId.toInt())
-
+                    dao.deleteBehavior(userId, foodId, "favorite")
                 }
+                updateFavoriteIcon()
             }
         }
 
-        // Nút “Đã nấu”
-        var isCooked = false
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            // Kiểm tra trong DB xem món này đã nấu chưa
-            val count = dao.exists(userId.toInt(), foodId.toInt(), "cooked")
-            isCooked = count > 0
-            updateCookButtonState(isCooked)
-        }
-        // Khi bấm nút
+        // 🍳 Nút “Đã nấu”
         btnCook.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
-                isCooked = !isCooked // Đảo trạng thái
+                isCooked = !isCooked
                 if (isCooked) {
-                    dao.insert(
-                        UserBehaviorEntity(
-                            userId = userId.toInt(),
-                            foodId = foodId.toInt(),
-                            behaviorType = "cooked"
-                        )
-                    )
+                    dao.insert(UserBehaviorEntity(userId = userId, foodId = foodId, behaviorType = "cooked"))
                     Toast.makeText(requireContext(), "Đã lưu: món đã nấu ✔", Toast.LENGTH_SHORT).show()
                 } else {
-                    // Nếu hủy trạng thái "đã nấu"
-                    dao.deleteByType(userId.toInt(), foodId.toInt(), "cooked")
+                    dao.deleteBehavior(userId, foodId, "cooked")
                     Toast.makeText(requireContext(), "Đã hủy trạng thái nấu món 🍳", Toast.LENGTH_SHORT).show()
                 }
-                // Cập nhật lại giao diện nút
                 updateCookButtonState(isCooked)
             }
         }
 
-
-        // Nút “Chia sẻ 🔗”
-        btnShare.setOnClickListener {
-            val foodTitle = tvTitle.text.toString()
-            val foodDesc = tvDesc.text.toString()
-
-            // Lấy ảnh từ ImageView → convert thành file tạm
-            img.isDrawingCacheEnabled = true
-            val bitmap = android.graphics.Bitmap.createBitmap(img.drawingCache)
-            img.isDrawingCacheEnabled = false
-
-            val uri = androidx.core.content.FileProvider.getUriForFile(
-                requireContext(),
-                "${requireContext().packageName}.fileprovider",
-                java.io.File(requireContext().cacheDir, "shared_food.png").apply {
-                    java.io.FileOutputStream(this).use { out ->
-                        bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out)
-                    }
-                }
-            )
-
-            // Intent chia sẻ đến app khác
-            val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                type = "image/*"
-                putExtra(Intent.EXTRA_STREAM, uri)
-                putExtra(Intent.EXTRA_TEXT, "$foodTitle\n$foodDesc")
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-
-            // Intent mở ShareActivity của chính app bạn
-            val myAppIntent = Intent(requireContext(), com.example.angiday.ui.share.ShareActivity::class.java).apply {
-                putExtra(Intent.EXTRA_TEXT, "$foodTitle\n$foodDesc")
-                putExtra(Intent.EXTRA_STREAM, uri.toString())
-                putExtra("food_id", foodId)
-            }
-
-
-            // Mở chooser → người dùng có thể chọn app ngoài hoặc chính app bạn
-            val chooser = Intent.createChooser(shareIntent, "Chia sẻ món ăn qua...")
-            val initialIntents = arrayOf(myAppIntent)
-            chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, initialIntents)
-            startActivity(chooser)
-
-            // Lưu vào DB hành vi "shared"
-            viewLifecycleOwner.lifecycleScope.launch {
-                val dao = AppDatabase.get(requireContext()).userBehaviorDao()
-                val session = com.example.angiday.session.SessionManager(requireContext())
-                val userId = session.getUserId()
-                val foodId = requireArguments().getLong("arg_food_id")
-
-                dao.insert(
-                    com.example.angiday.model.entity.UserBehaviorEntity(
-                        userId = userId.toInt(),
-                        foodId = foodId.toInt(),
-                        behaviorType = "shared"
-                    )
-                )
-            }
-        }
-
-
+        // 📤 Nút chia sẻ
+        btnShare.setOnClickListener { shareFood(foodId, userId) }
     }
 
-    private fun bindFood(food: FoodWithRelations) {
-        val foodEntity = food.food
+    // -------------------- UI helpers --------------------
 
-        tvTitle.text = foodEntity.title
-        tvDesc.text = foodEntity.desc ?: "Không có mô tả"
-
-        // Ảnh
-        val imageName = foodEntity.imageRes
-        val drawableId = ImageUtils.getDrawableId(requireContext(), imageName)
-        // Tạo file cache dựa theo tên ảnh
-        val cachedFile = File(requireContext().cacheDir, "$imageName.png")
-        // Nếu có ảnh trong cache thì đọc từ cache, ngược lại tạo mới
-        val cachedBitmap = ImageUtils.loadCachedImage(cachedFile)
-        if (cachedBitmap != null) {
-            img.setImageBitmap(cachedBitmap)
+    private fun updateFavoriteIcon() {
+        if (isFavorite) {
+            btnFavorite.setImageResource(R.drawable.ic_favorite_filled)
+            btnFavorite.setColorFilter(Color.RED)
         } else {
-            img.setImageResource(drawableId)
-            // Ghi ảnh vào cache
-            val bitmap = BitmapFactory.decodeResource(resources, drawableId)
-            try {
-                FileOutputStream(cachedFile).use { out ->
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-
-        // Ingredients
-        chipGroupIngredients.removeAllViews()
-        food.ingredients.forEach { ing ->
-            val chip = Chip(requireContext()).apply {
-                text = ing.name
-                isCheckable = false
-                isClickable = false
-            }
-            chipGroupIngredients.addView(chip)
-        }
-
-        // Tags
-        chipGroupTags.removeAllViews()
-        food.tags.forEach { tag ->
-            val chip = Chip(requireContext()).apply {
-                text = tag.name
-                isCheckable = false
-                isClickable = false
-            }
-            chipGroupTags.addView(chip)
-        }
-
-        // Category
-        tvCategory.text = food.category?.name ?: "Không có danh mục"
-
-        // Instructions
-        tvInstructions.text = foodEntity.instructions ?: "Chưa có hướng dẫn nấu chi tiết."
-
-        // YouTube
-        if (!foodEntity.youtubeId.isNullOrBlank()) {
-            youtubeContainer.visibility = View.VISIBLE
-            youtubeContainer.setOnClickListener {
-                openYoutubeVideo(foodEntity.youtubeId!!)
-            }
-        } else {
-            youtubeContainer.visibility = View.GONE
+            btnFavorite.setImageResource(R.drawable.ic_favorite_border)
+            btnFavorite.setColorFilter(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
         }
     }
 
-    private fun openYoutubeVideo(videoId: String) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=$videoId"))
-        startActivity(intent)
-    }
     private fun updateCookButtonState(isCooked: Boolean) {
         if (isCooked) {
             btnCook.text = "Đã hoàn thành món ✔"
@@ -304,4 +159,100 @@ class FoodDetailFragment : Fragment() {
         }
     }
 
+    private fun bindFood(food: FoodWithRelations) {
+        val f = food.food
+        tvTitle.text = f.title
+        tvDesc.text = f.desc ?: "Không có mô tả"
+        tvCategory.text = food.category?.name ?: "Không có danh mục"
+        tvInstructions.text = f.instructions ?: "Chưa có hướng dẫn nấu chi tiết."
+
+        // Ảnh
+        val imageName = f.imageRes
+        val drawableId = ImageUtils.getDrawableId(requireContext(), imageName)
+        val cachedFile = File(requireContext().cacheDir, "$imageName.png")
+        val cachedBitmap = ImageUtils.loadCachedImage(cachedFile)
+
+        if (cachedBitmap != null) {
+            img.setImageBitmap(cachedBitmap)
+        } else {
+            img.setImageResource(drawableId)
+            val bitmap = BitmapFactory.decodeResource(resources, drawableId)
+            try {
+                FileOutputStream(cachedFile).use { out ->
+                    bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        // Ingredients
+        chipGroupIngredients.removeAllViews()
+        food.ingredients.forEach {
+            chipGroupIngredients.addView(Chip(requireContext()).apply {
+                text = it.name
+                isClickable = false
+                isCheckable = false
+            })
+        }
+
+        // Tags
+        chipGroupTags.removeAllViews()
+        food.tags.forEach {
+            chipGroupTags.addView(Chip(requireContext()).apply {
+                text = it.name
+                isClickable = false
+                isCheckable = false
+            })
+        }
+
+        // YouTube
+        if (!f.youtubeId.isNullOrBlank()) {
+            youtubeContainer.visibility = View.VISIBLE
+            youtubeContainer.setOnClickListener {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=${f.youtubeId}")))
+            }
+        } else {
+            youtubeContainer.visibility = View.GONE
+        }
+    }
+
+    private fun shareFood(foodId: Long, userId: Long) {
+        val title = tvTitle.text.toString()
+        val desc = tvDesc.text.toString()
+
+        val bitmap = img.drawable.toBitmap()
+        val file = File(requireContext().cacheDir, "shared_food.png")
+        FileOutputStream(file).use { bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
+
+        val uri = androidx.core.content.FileProvider.getUriForFile(
+            requireContext(),
+            "${requireContext().packageName}.fileprovider",
+            file
+        )
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "image/*"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            putExtra(Intent.EXTRA_TEXT, "$title\n$desc")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        val myAppIntent = Intent(requireContext(), com.example.angiday.ui.share.ShareActivity::class.java).apply {
+            putExtra(Intent.EXTRA_TEXT, "$title\n$desc")
+            putExtra(Intent.EXTRA_STREAM, uri.toString())
+            putExtra("food_id", foodId)
+        }
+
+        val chooser = Intent.createChooser(shareIntent, "Chia sẻ món ăn qua...")
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(myAppIntent))
+        startActivity(chooser)
+
+        // Lưu hành vi chia sẻ
+        viewLifecycleOwner.lifecycleScope.launch {
+            AppDatabase.get(requireContext()).userBehaviorDao().insert(
+                UserBehaviorEntity(userId = userId, foodId = foodId, behaviorType = "shared")
+            )
+        }
+    }
 }

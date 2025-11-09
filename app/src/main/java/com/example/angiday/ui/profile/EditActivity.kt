@@ -34,7 +34,7 @@ class EditActivity : AppCompatActivity() {
 
         // Hiển thị thông tin hiện tại
         lifecycleScope.launch {
-            val user = userDao.getById(userId)
+            val user = userDao.getUserById(userId)
             user?.let {
                 edtName.setText(it.name)
                 edtEmail.setText(it.email)
@@ -53,7 +53,7 @@ class EditActivity : AppCompatActivity() {
             }
 
             lifecycleScope.launch {
-                val user = userDao.getById(userId)
+                val user = userDao.getUserById(userId)
                 if (user != null) {
                     val updated = user.copy(
                         name = name,

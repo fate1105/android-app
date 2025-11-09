@@ -2,37 +2,32 @@ package com.example.angiday.ui.main
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.angiday.R
 import com.example.angiday.ui.community.CommunityFragment
-import com.example.angiday.ui.main.fragment.HomeFragment
-import com.example.angiday.ui.main.fragment.MenuFragment
-import com.example.angiday.ui.main.fragment.ProfileFragment
-import com.example.angiday.ui.main.fragment.SettingsFragment
-import com.example.angiday.ui.main.fragment.WheelFragment
-import com.example.angiday.utils.NotificationHelper
+import com.example.angiday.ui.main.fragment.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        requestNotificationPermission()
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
-        // Load fragment mặc định (Home)
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        requestNotificationPermission() // xin quyền thông báo (Android 13+)
+
+        // load fragment mặc định (Home)
         if (savedInstanceState == null) {
             loadFragment(HomeFragment())
         }
 
+        // điều hướng bottom navigation
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> loadFragment(HomeFragment())
@@ -44,39 +39,25 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-
-        val uri = Uri.parse("content://com.example.angiday.provider/foods")
-        val cursor = contentResolver.query(uri, null, null, null, null)
-
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                val id = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
-                val title = cursor.getString(cursor.getColumnIndexOrThrow("title"))
-                Log.d("ContentProviderTest", "ID=$id | $title")
-            } while (cursor.moveToNext())
-        } else {
-            Log.d("ContentProviderTest", "Không có dữ liệu món ăn.")
-        }
-        cursor?.close()
-
     }
 
-
+    // chuyển fragment
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
 
+    // thay đổi tab bottom nav từ fragment khác
     fun setBottomNavSelected(itemId: Int) {
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNav.selectedItemId = itemId
+        findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = itemId
     }
+
+    // xin quyền thông báo cho Android 13+
     private fun requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.POST_NOTIFICATIONS
+                    this, Manifest.permission.POST_NOTIFICATIONS
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 ActivityCompat.requestPermissions(

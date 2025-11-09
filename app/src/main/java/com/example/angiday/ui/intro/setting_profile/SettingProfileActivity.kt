@@ -6,8 +6,5 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.angiday.R
 
 class SettingProfileActivity : AppCompatActivity(){
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settingprofile)
-    }
+
 }
