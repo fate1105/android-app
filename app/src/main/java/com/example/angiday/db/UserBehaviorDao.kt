@@ -15,6 +15,20 @@ interface UserBehaviorDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(behavior: UserBehaviorEntity)
 
+    @Query("""
+        SELECT * 
+        FROM user_behavior 
+        WHERE userId = :userId AND foodId = :foodId 
+        LIMIT 1
+    """)
+    suspend fun getBehavior(userId: Long, foodId: Long): UserBehaviorEntity?
+
+    @Query("""
+        DELETE FROM user_behavior 
+        WHERE userId = :userId AND foodId = :foodId 
+        AND behaviorType = 'favorite'
+    """)
+    suspend fun delete(userId: Int, foodId: Int)
     // 🔍 Kiểm tra hành vi của người dùng với món ăn cụ thể
     @Query("SELECT * FROM user_behavior WHERE userId = :userId AND foodId = :foodId LIMIT 1")
     suspend fun getBehavior(userId: Long, foodId: Long): UserBehaviorEntity?
@@ -31,6 +45,8 @@ interface UserBehaviorDao {
     suspend fun delete(userId: Int, foodId: Int)
     // 🍳 Danh sách món đã nấu
     @Query("""
+        SELECT f.* 
+        FROM foods f
         SELECT f.* FROM foods f
         INNER JOIN user_behavior ub ON ub.foodId = f.id
         WHERE ub.userId = :userId AND ub.behaviorType = 'cooked'
@@ -39,7 +55,8 @@ interface UserBehaviorDao {
 
     // 📤 Danh sách món đã chia sẻ của người dùng hiện tại
     @Query("""
-        SELECT f.* FROM foods f
+        SELECT f.* 
+        FROM foods f
         INNER JOIN user_behavior ub ON ub.foodId = f.id
         WHERE ub.userId = :userId AND ub.behaviorType = 'shared'
         ORDER BY ub.id DESC
@@ -48,12 +65,36 @@ interface UserBehaviorDao {
 
     // ❤️ Danh sách món yêu thích
     @Query("""
-        SELECT f.* FROM foods f
+        SELECT f.* 
+        FROM foods f
         INNER JOIN user_behavior ub ON ub.foodId = f.id
         WHERE ub.userId = :userId AND ub.behaviorType = 'favorite'
     """)
     suspend fun getFavoriteFoodsWithDetail(userId: Int): List<FoodWithRelations>
 
+    @Query("""
+        SELECT * 
+        FROM user_behavior 
+        WHERE userId = :userId AND foodId = :foodId 
+        AND behaviorType = :type 
+        LIMIT 1
+    """)
+    suspend fun getBehavior(userId: Long, foodId: Long, type: String): UserBehaviorEntity?
+
+    @Query("""
+        SELECT COUNT(*) 
+        FROM user_behavior 
+        WHERE userId = :userId AND foodId = :foodId 
+        AND behaviorType = :type
+    """)
+    suspend fun exists(userId: Int, foodId: Int, type: String): Int
+
+    @Query("""
+        DELETE FROM user_behavior 
+        WHERE userId = :userId AND foodId = :foodId 
+        AND behaviorType = :type
+    """)
+    suspend fun deleteByType(userId: Int, foodId: Int, type: String)
     // 🌐 CỘNG ĐỒNG – Tất cả món được chia sẻ bởi mọi người
     @Query("""
         SELECT f.* FROM foods f

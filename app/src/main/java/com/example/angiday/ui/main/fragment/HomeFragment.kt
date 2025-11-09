@@ -142,7 +142,7 @@ class HomeFragment : Fragment() {
                 .commit()
         }
 
-        viewModel.loadRandomMeals()
+        viewModel.loadRandomMeals(requireContext())
 
         lifecycleScope.launch {
             viewModel.randomMeals.collectLatest { meals ->
@@ -150,10 +150,10 @@ class HomeFragment : Fragment() {
                     tvBreakfast.text = "Bữa sáng:\n${meals[0].food.title}"
                     tvLunch.text = "Bữa trưa:\n${meals[1].food.title}"
                     tvDinner.text = "Bữa tối:\n${meals[2].food.title}"
-
                 }
             }
         }
+
         categoryContainer = view.findViewById(R.id.categoryContainer)
 
         lifecycleScope.launch {

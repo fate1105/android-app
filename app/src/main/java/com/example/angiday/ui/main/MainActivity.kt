@@ -2,8 +2,10 @@ package com.example.angiday.ui.main
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -43,7 +45,19 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        NotificationHelper.showMealSuggestion(this, "Cơm chiên trứng")
+        val uri = Uri.parse("content://com.example.angiday.provider/foods")
+        val cursor = contentResolver.query(uri, null, null, null, null)
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
+                val title = cursor.getString(cursor.getColumnIndexOrThrow("title"))
+                Log.d("ContentProviderTest", "ID=$id | $title")
+            } while (cursor.moveToNext())
+        } else {
+            Log.d("ContentProviderTest", "Không có dữ liệu món ăn.")
+        }
+        cursor?.close()
 
     }
 
