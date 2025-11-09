@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_large"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackground">
+
+    <!-- Tên món ăn -->
+    <EditText
+        android:id="@+id/edtFoodName"
+        android:hint="Tên món ăn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorOnSurface"
+        android:textColorHint="@color/colorMuted"
+        android:backgroundTint="@color/colorOutline"
+        android:textSize="@dimen/text_medium" />
+
+    <!-- Mô tả -->
+    <EditText
+        android:id="@+id/edtFoodDesc"
+        android:hint="Mô tả"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:textColor="@color/colorOnSurface"
+        android:textColorHint="@color/colorMuted"
+        android:backgroundTint="@color/colorOutline"
+        android:textSize="@dimen/text_medium" />
+
+    <!-- Ảnh xem trước -->
+    <ImageView
+        android:id="@+id/imgPreview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:scaleType="centerCrop"
+        android:background="@color/colorSurface"
+        android:contentDescription="Ảnh xem trước" />
+
+    <!-- Nút chọn ảnh -->
+    <Button
+        android:id="@+id/btnSelectImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📸 Chọn ảnh từ thư viện hoặc chụp"
+        android:textAllCaps="false"
+        android:textColor="@color/colorOnPrimary"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:paddingVertical="@dimen/padding_text"
+        android:elevation="2dp" />
+
+</LinearLayout>

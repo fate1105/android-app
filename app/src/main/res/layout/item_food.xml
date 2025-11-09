@@ -8,7 +8,8 @@
     app:cardElevation="3dp"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/colorSurface">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -33,6 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="8dp"
+            android:background="@color/colorSurface"
             app:layout_constraintTop_toBottomOf="@id/imgFood"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +47,7 @@
                 android:text="Tên món ăn"
                 android:textStyle="bold"
                 android:textSize="18sp"
-                android:textColor="@color/black"
+                android:textColor="@color/colorOnSurface"
                 android:ellipsize="end"
                 android:maxLines="1" />
 
@@ -55,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:text="Mô tả món ăn..."
                 android:textSize="14sp"
-                android:textColor="#666666"
+                android:textColor="@color/colorMuted"
                 android:maxLines="2"
                 android:ellipsize="end" />
 

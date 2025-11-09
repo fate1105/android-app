@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.angiday.R
+import com.example.angiday.ui.community.CommunityFragment
 import com.example.angiday.ui.main.fragment.HomeFragment
 import com.example.angiday.ui.main.fragment.MenuFragment
 import com.example.angiday.ui.main.fragment.ProfileFragment
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home -> loadFragment(HomeFragment())
                 R.id.nav_profile -> loadFragment(ProfileFragment())
                 R.id.nav_menu -> loadFragment(MenuFragment())
+                R.id.nav_community -> loadFragment(CommunityFragment())
                 R.id.nav_wheel -> loadFragment(WheelFragment())
                 R.id.nav_setting -> loadFragment(SettingsFragment())
             }

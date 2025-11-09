@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_medium"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="3dp"
+    android:backgroundTint="@color/colorSurface"
+    android:padding="@dimen/padding_normal">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- 👤 Header người dùng -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/margin_small">
+
+            <!-- Avatar hình tròn -->
+            <ImageView
+                android:id="@+id/imgUserAvatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/chef"
+                android:background="@drawable/bg_avatar_circle"
+                android:padding="4dp"
+                android:contentDescription="Avatar người dùng" />
+
+            <!-- Tên người dùng -->
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="Nguyễn Văn A"
+                android:textColor="@color/colorOnSurface"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_medium" />
+        </LinearLayout>
+
+        <!-- 🖼 Ảnh món ăn -->
+        <ImageView
+            android:id="@+id/imgFood"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:background="@color/colorOutline"
+            android:contentDescription="@string/app_name"
+            android:layout_marginBottom="@dimen/margin_small" />
+
+        <!-- 🍽 Tên món ăn -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Phở bò"
+            android:textStyle="bold"
+            android:textColor="@color/colorOnSurface"
+            android:textSize="@dimen/text_large"
+            android:layout_marginBottom="@dimen/margin_small" />
+
+        <!-- 📝 Mô tả -->
+        <TextView
+            android:id="@+id/tvDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Món phở bò thơm ngon được nấu với nước dùng đậm đà..."
+            android:textColor="@color/colorMuted"
+            android:textSize="@dimen/text_normal"
+            android:layout_marginBottom="@dimen/margin_small" />
+
+        <!-- ❤️ Nút yêu thích -->
+        <ImageButton
+            android:id="@+id/btnFavorite"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_favorite_border"
+            android:tint="@color/colorPrimary"
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
