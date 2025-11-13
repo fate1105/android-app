@@ -7,18 +7,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.angiday.R
-import com.example.angiday.session.SessionManager
+import com.example.angiday.db.AppDatabase
 import com.example.angiday.ui.auth.LoginActivity
-import com.example.angiday.ui.profile.EditActivity
-import com.example.angiday.ui.profile.FoodHistoryActivity
-import com.example.angiday.ui.profile.FoodFavoriteActivity
-import com.example.angiday.ui.profile.MyProfileActivity
-import com.example.angiday.ui.profile.NotificationActivity
+import com.example.angiday.ui.profile.*
+import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
+
+    private lateinit var tvName: TextView
+    private lateinit var tvEmail: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,9 +28,8 @@ class ProfileFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
-        // --- Ánh xạ các view ---
-        val tvName = view.findViewById<TextView>(R.id.textView6)
-        val tvEmail = view.findViewById<TextView>(R.id.textView9)
+        tvName = view.findViewById(R.id.textView6)
+        tvEmail = view.findViewById(R.id.textView9)
 
         val rowNotice = view.findViewById<ConstraintLayout>(R.id.rowNotice)
         val rowEditProfile = view.findViewById<ConstraintLayout>(R.id.rowEditProfile)
@@ -37,53 +38,77 @@ class ProfileFragment : Fragment() {
         val rowMyProfile = view.findViewById<ConstraintLayout>(R.id.rowMyProfile)
         val rowLogout = view.findViewById<ConstraintLayout>(R.id.rowLogout)
 
-        // --- Hiển thị thông tin người dùng ---
-        val session = SessionManager(requireContext())
-        if (session.isLoggedIn()) {
-            val userName = session.getUserName() ?: "Người dùng"
-            val userEmail = session.getUserEmail() ?: "Chưa có email"
-            tvName.text = userName
-            tvEmail.text = userEmail
-        } else {
-            tvName.text = "Khách"
-            tvEmail.text = "Vui lòng đăng nhập"
-        }
-
-        // 👉 Chia sẻ món ăn
+        // 👉 Điều hướng
         rowNotice.setOnClickListener {
-            startActivity(Intent(requireContext(), NotificationActivity ::class.java))
+            startActivity(Intent(requireContext(), NotificationActivity::class.java))
         }
-
-        // 👉 Sửa hồ sơ
         rowEditProfile.setOnClickListener {
             startActivity(Intent(requireContext(), EditActivity::class.java))
         }
-
-        // 👉 Món yêu thích
         rowFavorite.setOnClickListener {
             startActivity(Intent(requireContext(), FoodFavoriteActivity::class.java))
         }
-
-        // 👉 Lịch sử món đã nấu
         rowHistory.setOnClickListener {
             startActivity(Intent(requireContext(), FoodHistoryActivity::class.java))
         }
-
-        // 👉 Hồ sơ của tôi
         rowMyProfile.setOnClickListener {
             startActivity(Intent(requireContext(), MyProfileActivity::class.java))
         }
-
         // 👉 Đăng xuất
         rowLogout.setOnClickListener {
+            Toast.makeText(requireContext(), "Đã đăng xuất!", Toast.LENGTH_SHORT).show()
+
+            // ❌ Không xóa file login.txt để form còn nhớ thông tin
+            // ✅ Chỉ xóa trạng thái đăng nhập trong SharedPref (nếu có)
             val sharedPref = requireContext().getSharedPreferences("USER_PREFS", Context.MODE_PRIVATE)
             sharedPref.edit().clear().apply()
 
+            // Mở lại trang đăng nhập
             val intent = Intent(requireContext(), LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
 
+
         return view
+    }
+
+    // ✅ Auto load lại mỗi khi người dùng quay lại màn hình Profile
+    override fun onResume() {
+        super.onResume()
+        loadUserInfo()
+    }
+
+    private fun loadUserInfo() {
+        val savedLogin = readLoginInfo(requireContext())
+        if (savedLogin != null) {
+            val (email, password) = savedLogin
+            val db = AppDatabase.get(requireContext())
+            val userDao = db.userDao()
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                val user = userDao.findByEmailAndPassword(email, password)
+                if (user != null) {
+                    tvName.text = user.name
+                    tvEmail.text = user.email
+                } else {
+                    tvName.text = "Khách"
+                    tvEmail.text = "Vui lòng đăng nhập"
+                }
+            }
+        } else {
+            tvName.text = "Khách"
+            tvEmail.text = "Vui lòng đăng nhập"
+        }
+    }
+
+    private fun readLoginInfo(context: Context): Pair<String, String>? {
+        return try {
+            val data = context.openFileInput("login.txt").bufferedReader().use { it.readText() }
+            val parts = data.split("|")
+            if (parts.size == 2) Pair(parts[0], parts[1]) else null
+        } catch (e: Exception) {
+            null
+        }
     }
 }
