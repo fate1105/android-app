@@ -42,6 +42,7 @@ class EditActivity : AppCompatActivity() {
 
         // ✅ Lấy thông tin người dùng thực từ DB
         lifecycleScope.launch {
+
             val user = userDao.findByEmailAndPassword(email, password)
             if (user != null) {
                 edtName.setText(user.name)
@@ -49,6 +50,7 @@ class EditActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this@EditActivity, "Không tìm thấy người dùng trong database!", Toast.LENGTH_SHORT).show()
                 finish()
+
             }
         }
 
@@ -64,7 +66,9 @@ class EditActivity : AppCompatActivity() {
             }
 
             lifecycleScope.launch {
+
                 val user = userDao.findByEmailAndPassword(email, password)
+
                 if (user != null) {
                     val updated = user.copy(
                         name = name,

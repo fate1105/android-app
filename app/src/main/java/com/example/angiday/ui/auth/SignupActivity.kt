@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.angiday.R
 import com.example.angiday.db.AppDatabase
+import com.example.angiday.ui.intro.setting_profile.SettingProfileActivity
 import com.example.angiday.viewmodel.RegisterViewModel
 import kotlinx.coroutines.launch
 
@@ -73,7 +74,7 @@ class SignupActivity : AppCompatActivity() {
 
         // Điều hướng sang màn hình đăng nhập
         tvLogin.setOnClickListener {
-            finish() // hoặc startActivity(Intent(this, LoginActivity::class.java))
+            startActivity(Intent(this, SettingProfileActivity::class.java))
         }
 
         // Quan sát UI state

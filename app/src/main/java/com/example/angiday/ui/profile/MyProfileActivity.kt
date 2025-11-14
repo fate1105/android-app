@@ -195,8 +195,8 @@ class MyProfileActivity : AppCompatActivity() {
                         // Dòng insert behavior
                         db.userBehaviorDao().insert(
                             UserBehaviorEntity(
-                                userId = userId.toInt(),
-                                foodId = foodId.toInt(),
+                                userId = userId,
+                                foodId = foodId,
                                 behaviorType = "shared"
                             )
                         )

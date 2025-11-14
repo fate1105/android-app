@@ -11,50 +11,56 @@ import com.example.angiday.model.relations.FoodWithRelations
 @Dao
 interface UserBehaviorDao {
 
-    // 🟢 Ghi nhận hành vi người dùng (yêu thích, chia sẻ, nấu, v.v.)
+    // 🟢 Thêm hoặc cập nhật hành vi
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(behavior: UserBehaviorEntity)
 
-    // 🔍 Kiểm tra hành vi của người dùng với món ăn cụ thể
-    @Query("SELECT * FROM user_behavior WHERE userId = :userId AND foodId = :foodId LIMIT 1")
+    // 🔍 Lấy hành vi theo user + food (bất kỳ loại)
+    @Query("""
+        SELECT * FROM user_behavior 
+        WHERE userId = :userId AND foodId = :foodId 
+        LIMIT 1
+    """)
     suspend fun getBehavior(userId: Long, foodId: Long): UserBehaviorEntity?
 
-    // ❌ Xóa hành vi yêu thích (favorite)
-    @Query("DELETE FROM user_behavior WHERE userId = :userId AND foodId = :foodId AND behaviorType = 'favorite'")
-    suspend fun deleteFavorite(userId: Int, foodId: Long)
+    // 🔍 Lấy hành vi cụ thể theo loại (favorite, shared, cooked)
+    @Query("""
+        SELECT * FROM user_behavior 
+        WHERE userId = :userId AND foodId = :foodId 
+        AND behaviorType = :type 
+        LIMIT 1
+    """)
+    suspend fun getBehaviorByType(userId: Long, foodId: Long, type: String): UserBehaviorEntity?
 
-    // ❌ Xóa hành vi bất kỳ (shared, cooked, favorite)
-    @Query("DELETE FROM user_behavior WHERE userId = :userId AND foodId = :foodId AND behaviorType = :type")
-    suspend fun deleteBehavior(userId: Long, foodId: Long, type: String)
-    // ❌ Xóa riêng hành vi yêu thích (favorite)
-    @Query("DELETE FROM user_behavior WHERE userId = :userId AND foodId = :foodId AND behaviorType = 'favorite'")
-    suspend fun delete(userId: Int, foodId: Int)
+    // ❤️ Danh sách món yêu thích
+    @Query("""
+        SELECT f.* 
+        FROM foods f
+        INNER JOIN user_behavior ub ON ub.foodId = f.id
+        WHERE ub.userId = :userId AND ub.behaviorType = 'favorite'
+    """)
+    suspend fun getFavoriteFoodsWithDetail(userId: Int): List<FoodWithRelations>
+
     // 🍳 Danh sách món đã nấu
     @Query("""
-        SELECT f.* FROM foods f
+        SELECT f.* 
+        FROM foods f
         INNER JOIN user_behavior ub ON ub.foodId = f.id
         WHERE ub.userId = :userId AND ub.behaviorType = 'cooked'
     """)
     suspend fun getCookedFoodsWithDetail(userId: Int): List<FoodWithRelations>
 
-    // 📤 Danh sách món đã chia sẻ của người dùng hiện tại
+    // 📤 Danh sách món đã chia sẻ của người dùng
     @Query("""
-        SELECT f.* FROM foods f
+        SELECT f.* 
+        FROM foods f
         INNER JOIN user_behavior ub ON ub.foodId = f.id
         WHERE ub.userId = :userId AND ub.behaviorType = 'shared'
         ORDER BY ub.id DESC
     """)
     suspend fun getSharedFoodsWithDetail(userId: Int): List<FoodWithRelations>
 
-    // ❤️ Danh sách món yêu thích
-    @Query("""
-        SELECT f.* FROM foods f
-        INNER JOIN user_behavior ub ON ub.foodId = f.id
-        WHERE ub.userId = :userId AND ub.behaviorType = 'favorite'
-    """)
-    suspend fun getFavoriteFoodsWithDetail(userId: Int): List<FoodWithRelations>
-
-    // 🌐 CỘNG ĐỒNG – Tất cả món được chia sẻ bởi mọi người
+    // 🌐 Tất cả món được chia sẻ trong cộng đồng
     @Query("""
         SELECT f.* FROM foods f
         INNER JOIN user_behavior ub ON ub.foodId = f.id
@@ -63,9 +69,24 @@ interface UserBehaviorDao {
     """)
     suspend fun getAllSharedFoods(): List<FoodEntity>
 
+    // 🗑️ Xóa hành vi theo loại
+    @Query("""
+        DELETE FROM user_behavior 
+        WHERE userId = :userId AND foodId = :foodId 
+        AND behaviorType = :type
+    """)
+    suspend fun deleteBehavior(userId: Long, foodId: Long, type: String)
+
+    // 🔢 Kiểm tra tồn tại hành vi
+    @Query("""
+        SELECT COUNT(*) 
+        FROM user_behavior 
+        WHERE userId = :userId AND foodId = :foodId 
+        AND behaviorType = :type
+    """)
+    suspend fun exists(userId: Long, foodId: Long, type: String): Int
+
+    // 📋 Lấy tất cả hành vi chia sẻ
     @Query("SELECT * FROM user_behavior WHERE behaviorType = 'shared'")
     suspend fun getAllSharedBehavior(): List<UserBehaviorEntity>
-
-
-
 }

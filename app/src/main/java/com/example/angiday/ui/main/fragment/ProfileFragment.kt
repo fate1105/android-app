@@ -15,7 +15,9 @@ import com.example.angiday.R
 import com.example.angiday.db.AppDatabase
 import com.example.angiday.ui.auth.LoginActivity
 import com.example.angiday.ui.profile.*
+
 import kotlinx.coroutines.launch
+
 
 class ProfileFragment : Fragment() {
 
@@ -25,11 +27,13 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
+
 
         tvName = view.findViewById(R.id.textView6)
         tvEmail = view.findViewById(R.id.textView9)
+
 
         val rowNotice = view.findViewById<ConstraintLayout>(R.id.rowNotice)
         val rowEditProfile = view.findViewById<ConstraintLayout>(R.id.rowEditProfile)
@@ -37,6 +41,7 @@ class ProfileFragment : Fragment() {
         val rowHistory = view.findViewById<ConstraintLayout>(R.id.rowHistory)
         val rowMyProfile = view.findViewById<ConstraintLayout>(R.id.rowMyProfile)
         val rowLogout = view.findViewById<ConstraintLayout>(R.id.rowLogout)
+
 
         // 👉 Điều hướng
         rowNotice.setOnClickListener {
@@ -66,6 +71,7 @@ class ProfileFragment : Fragment() {
             // Mở lại trang đăng nhập
             val intent = Intent(requireContext(), LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
             startActivity(intent)
         }
 

@@ -1,5 +1,6 @@
 package com.example.angiday.db
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -68,5 +69,9 @@ interface FoodDao {
     @Transaction
     @Query("SELECT * FROM foods ORDER BY RANDOM() LIMIT :count")
     suspend fun getRandomFoods(count: Int = 3): List<FoodWithRelations>
+    @Query("SELECT * FROM foods")
+    fun getAllCursor(): Cursor
 
+    @Query("SELECT * FROM foods WHERE id = :id")
+    fun getByIdCursor(id: Long): Cursor
 }
