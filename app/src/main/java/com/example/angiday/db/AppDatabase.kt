@@ -37,6 +37,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java, "angiday.db"
                 )
+                    .createFromAsset("databases/angiday.db")
                     .fallbackToDestructiveMigration()
                     .allowMainThreadQueries() // chỉ nên bật khi test
                     .build()
