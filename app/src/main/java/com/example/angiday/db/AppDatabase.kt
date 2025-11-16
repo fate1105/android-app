@@ -27,6 +27,7 @@ import com.example.angiday.model.entity.*
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
+
     abstract fun foodDao(): FoodDao
     abstract fun metaDao(): MetaDao
     abstract fun userDao(): UserDao
@@ -40,11 +41,17 @@ abstract class AppDatabase : RoomDatabase() {
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
-                    AppDatabase::class.java, "angiday.db"
+                    AppDatabase::class.java,
+                    "angiday.db"
                 )
+                    // 👉 Load từ assets 1 lần duy nhất
                     .createFromAsset("databases/angiday.db")
-                    .fallbackToDestructiveMigration()
-                    .allowMainThreadQueries() // chỉ nên bật khi test
+
+                    // ❌ KHÔNG XOÁ DB NỮA
+                    // .fallbackToDestructiveMigration()  --> BỎ
+
+                    // ⚠️ Nên tắt khi chạy production
+                    .allowMainThreadQueries()
                     .build()
                     .also { INSTANCE = it }
             }
