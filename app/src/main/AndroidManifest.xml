@@ -74,17 +74,11 @@
             android:exported="true"
             android:grantUriPermissions="true" />
 
-
-
-
-
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="false" />
         <activity android:name=".ui.main.MainActivity" />
-<!--        <activity-->
-<!--            android:name=".ui.setup.SetupInfoActivity"-->
-<!--            android:exported="false" />-->
+        <activity android:name=".ui.auth.SetupProfileActivity" />
 
         <activity
             android:name=".ui.intro.IntroActivity"
