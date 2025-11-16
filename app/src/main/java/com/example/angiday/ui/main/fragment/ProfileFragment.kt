@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.angiday.R
 import com.example.angiday.db.AppDatabase
+import com.example.angiday.session.SessionManager
 import com.example.angiday.ui.auth.LoginActivity
 import com.example.angiday.ui.profile.*
 import kotlinx.coroutines.launch
@@ -23,9 +24,11 @@ class ProfileFragment : Fragment() {
     private lateinit var tvEmail: TextView
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
         tvName = view.findViewById(R.id.textView6)
@@ -38,7 +41,7 @@ class ProfileFragment : Fragment() {
         val rowMyProfile = view.findViewById<ConstraintLayout>(R.id.rowMyProfile)
         val rowLogout = view.findViewById<ConstraintLayout>(R.id.rowLogout)
 
-        // 👉 Điều hướng
+        // 👉 Các điều hướng
         rowNotice.setOnClickListener {
             startActivity(Intent(requireContext(), NotificationActivity::class.java))
         }
@@ -57,11 +60,11 @@ class ProfileFragment : Fragment() {
 
         // 👉 Đăng xuất
         rowLogout.setOnClickListener {
-            Toast.makeText(requireContext(), "Đã đăng xuất!", Toast.LENGTH_SHORT).show()
+            val session = SessionManager(requireContext())
+            session.clearUserButKeepRemember()
 
-            // Xóa user_id
-            val sharedPref = requireContext().getSharedPreferences("USER_PREFS", Context.MODE_PRIVATE)
-            sharedPref.edit().clear().apply()
+
+            Toast.makeText(requireContext(), "Đã đăng xuất!", Toast.LENGTH_SHORT).show()
 
             val intent = Intent(requireContext(), LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -71,15 +74,14 @@ class ProfileFragment : Fragment() {
         return view
     }
 
-    // Tự load user mỗi khi quay lại tab
     override fun onResume() {
         super.onResume()
         loadUserInfo()
     }
 
     private fun loadUserInfo() {
-        val sharedPref = requireContext().getSharedPreferences("USER_PREFS", Context.MODE_PRIVATE)
-        val userId = sharedPref.getLong("user_id", -1)
+        val session = SessionManager(requireContext())
+        val userId = session.getUserId()
 
         if (userId == -1L) {
             tvName.text = "Khách"

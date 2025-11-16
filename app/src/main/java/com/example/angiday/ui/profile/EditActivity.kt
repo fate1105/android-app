@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.angiday.R
 import com.example.angiday.db.AppDatabase
+import com.example.angiday.session.SessionManager
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.button.MaterialButton
@@ -28,10 +29,10 @@ class EditActivity : AppCompatActivity() {
         val btnSave = findViewById<MaterialButton>(R.id.btnSave)
 
         val userDao = AppDatabase.get(this).userDao()
+        val session = SessionManager(this)
 
         // 🔥 lấy userId đã login
-        val pref = getSharedPreferences("USER_PREFS", MODE_PRIVATE)
-        val userId = pref.getLong("user_id", -1)
+        val userId = session.getUserId()
 
         if (userId == -1L) {
             Toast.makeText(this, "Bạn chưa đăng nhập!", Toast.LENGTH_SHORT).show()
@@ -39,7 +40,7 @@ class EditActivity : AppCompatActivity() {
             return
         }
 
-        // 🔥 load thông tin user theo ID
+        // 🔥 Load thông tin user theo ID
         lifecycleScope.launch {
             val user = userDao.getById(userId)
 
@@ -53,7 +54,7 @@ class EditActivity : AppCompatActivity() {
             edtEmail.setText(user.email)
         }
 
-        // 🔥 lưu thay đổi
+        // 🔥 Lưu thay đổi
         btnSave.setOnClickListener {
             val newName = edtName.text.toString().trim()
             val newEmail = edtEmail.text.toString().trim()
@@ -78,6 +79,9 @@ class EditActivity : AppCompatActivity() {
                 )
 
                 userDao.update(updated)
+
+                // 🔥 Cập nhật session khi user đổi name/email/password
+                session.saveUser(updated)
 
                 Toast.makeText(this@EditActivity, "Đã lưu thay đổi!", Toast.LENGTH_SHORT).show()
                 finish()
