@@ -1,6 +1,5 @@
 package com.example.angiday.viewmodel
 
-
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +11,8 @@ import kotlinx.coroutines.launch
 data class RegisterUiState(
     val loading: Boolean = false,
     val success: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val userId: Long? = null  // ← THÊM ĐỂ TRẢ VỀ USER ID
 )
 
 class RegisterViewModel(app: Application) : AndroidViewModel(app) {
@@ -32,8 +32,12 @@ class RegisterViewModel(app: Application) : AndroidViewModel(app) {
                 hashPassword = hashPassword
             )
             _ui.value = result.fold(
-                onSuccess = { RegisterUiState(success = true) },
-                onFailure = { RegisterUiState(error = it.message ?: "Có lỗi xảy ra") }
+                onSuccess = { userId ->
+                    RegisterUiState(success = true, userId = userId)
+                },
+                onFailure = { e ->
+                    RegisterUiState(error = e.message ?: "Có lỗi xảy ra")
+                }
             )
         }
     }

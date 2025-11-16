@@ -92,7 +92,7 @@ class ProfileFragment : Fragment() {
         val userDao = AppDatabase.get(requireContext()).userDao()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            val user = userDao.getById(userId)
+            val user = userDao.getUserById(userId)
 
             if (user != null) {
                 tvName.text = user.name

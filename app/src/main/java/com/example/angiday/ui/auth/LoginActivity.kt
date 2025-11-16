@@ -28,7 +28,9 @@ class LoginActivity : AppCompatActivity() {
         // -----------------------------------------------------
         if (session.isLoggedIn()) {
             lifecycleScope.launch {
+
                 val user = userDao.getById(session.getUserId())
+
                 if (user != null) {
                     startMain()
                     return@launch
