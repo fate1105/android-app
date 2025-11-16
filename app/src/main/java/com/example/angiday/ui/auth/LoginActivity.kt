@@ -27,7 +27,7 @@ class LoginActivity : AppCompatActivity() {
 
         if (savedUserId != -1L) {
             lifecycleScope.launch {
-                val user = userDao.getById(savedUserId)
+                val user = userDao.getUserById(savedUserId)
                 if (user != null) {
                     startMain()
                     return@launch

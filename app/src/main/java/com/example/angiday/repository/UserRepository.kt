@@ -20,14 +20,14 @@ class UserRepository private constructor(context: Context) {
             }
     }
 
-    // ===================== REGISTER =====================
+    // ======== REGISTER – TRẢ VỀ USER ID ========
     suspend fun registerUser(
         name: String,
         email: String,
         passwordPlain: String,
         preferences: String?,
         hashPassword: Boolean
-    ): Result<Unit> = withContext(Dispatchers.IO) {
+    ): Result<Long> = withContext(Dispatchers.IO) {
         try {
             // Check email đã tồn tại chưa
             val exists = userDao.findByEmail(email)
@@ -46,6 +46,8 @@ class UserRepository private constructor(context: Context) {
                 preferences = preferences
             )
 
+            val userId = userDao.insert(user) // ← Room trả về Long
+            Result.success(userId) // ← TRẢ VỀ USER ID
             // Lưu vào DB
             userDao.insert(user)
 

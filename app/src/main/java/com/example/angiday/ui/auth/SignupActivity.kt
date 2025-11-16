@@ -3,7 +3,6 @@ package com.example.angiday.ui.auth
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
@@ -13,71 +12,85 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.angiday.R
-import com.example.angiday.db.AppDatabase
-import com.example.angiday.ui.intro.setting_profile.SettingProfileActivity
 import com.example.angiday.viewmodel.RegisterViewModel
 import kotlinx.coroutines.launch
 
 class SignupActivity : AppCompatActivity() {
 
     private val vm: RegisterViewModel by viewModels()
+    private lateinit var etEmail: EditText
+    private lateinit var etPassword: EditText
+    private lateinit var etPassword2: EditText
+    private lateinit var btnRegister: Button
+    private lateinit var tvLogin: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_signup)
 
+        initViews()
+        setupListeners()
+        observeViewModel()
+    }
 
-        val etEmail     = findViewById<EditText>(R.id.email)
-        val etPassword  = findViewById<EditText>(R.id.pass)
-        val etPassword2 = findViewById<EditText>(R.id.pass2)
-        val btnRegister = findViewById<Button>(R.id.signupBtn)
-        val tvLogin     = findViewById<TextView>(R.id.loginText)
+    private fun initViews() {
+        etEmail = findViewById(R.id.email)
+        etPassword = findViewById(R.id.pass)
+        etPassword2 = findViewById(R.id.pass2)
+        btnRegister = findViewById(R.id.signupBtn)
+        tvLogin = findViewById(R.id.loginText)
+    }
 
-        btnRegister.setOnClickListener {
-            val email = etEmail.text.toString().trim()
-            val pass  = etPassword.text.toString()
-            val pass2 = etPassword2.text.toString()
+    private fun setupListeners() {
+        btnRegister.setOnClickListener { handleRegister() }
 
-            if (email.isEmpty()) {
-                etEmail.error = "Nhập email"; return@setOnClickListener
-            }
-            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                etEmail.error = "Email không hợp lệ"; return@setOnClickListener
-            }
-            if (pass.length < 6) {
-                etPassword.error = "Mật khẩu ≥ 6 ký tự"; return@setOnClickListener
-            }
-            if (pass != pass2) {
-                etPassword2.error = "Mật khẩu nhập lại không khớp"; return@setOnClickListener
-            }
-
-            val name = email.substringBefore("@")
-            vm.register(
-                name = name,
-                email = email,
-                password = pass,
-                hashPassword = false
-            )
+        tvLogin.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         }
-        val btnSupport = findViewById<TextView>(R.id.btnSupport)
-        btnSupport.setOnClickListener {
+
+        findViewById<TextView>(R.id.btnSupport).setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse("mailto:")
-                putExtra(Intent.EXTRA_EMAIL, arrayOf("naml75803@gmail.com"))
+                data = Uri.parse("mailto:naml75803@gmail.com")
                 putExtra(Intent.EXTRA_SUBJECT, "Hỗ trợ đăng ký tài khoản")
                 putExtra(Intent.EXTRA_TEXT, "Xin chào, tôi cần giúp đỡ về việc đăng ký...")
             }
-            startActivity(Intent.createChooser(intent, "Gửi email bằng..."))
+            startActivity(Intent.createChooser(intent, "Gửi email"))
+        }
+    }
+
+    private fun handleRegister() {
+        val email = etEmail.text.toString().trim()
+        val pass = etPassword.text.toString()
+        val pass2 = etPassword2.text.toString()
+
+        // Validate
+        if (email.isEmpty()) {
+            etEmail.error = "Nhập email"; return
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.error = "Email không hợp lệ"; return
+        }
+        if (pass.length < 6) {
+            etPassword.error = "Mật khẩu ≥ 6 ký tự"; return
+        }
+        if (pass != pass2) {
+            etPassword2.error = "Mật khẩu không khớp"; return
         }
 
+        // Tên tạm = email prefix (có thể để trống, user tự nhập ở Setup)
+        val tempName = email.substringBefore("@").takeIf { it.isNotBlank() } ?: "User"
 
-        // Điều hướng sang màn hình đăng nhập
-        tvLogin.setOnClickListener {
-            startActivity(Intent(this, SettingProfileActivity::class.java))
-        }
+        vm.register(
+            name = tempName,
+            email = email,
+            password = pass,
+            hashPassword = false
+        )
+    }
 
-        // Quan sát UI state
+    private fun observeViewModel() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.ui.collect { state ->
@@ -89,10 +102,17 @@ class SignupActivity : AppCompatActivity() {
                         state.success -> {
                             btnRegister.isEnabled = true
                             btnRegister.text = "Đăng ký"
+
                             Toast.makeText(this@SignupActivity, "Đăng ký thành công!", Toast.LENGTH_SHORT).show()
 
-                            // 👉 Sau khi đăng ký xong, chuyển qua LoginActivity
-                            startActivity(Intent(this@SignupActivity, LoginActivity::class.java))
+                            // LẤY userId từ ViewModel (giả sử có)
+                            val userId = state.userId
+
+                            // → CHUYỂN QUA SETUP PROFILE
+                            val intent = Intent(this@SignupActivity, SetupProfileActivity::class.java).apply {
+                                putExtra("user_id", userId)
+                            }
+                            startActivity(intent)
                             finish()
                         }
                         state.error != null -> {
@@ -104,6 +124,5 @@ class SignupActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
 }
