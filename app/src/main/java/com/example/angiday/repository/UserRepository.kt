@@ -8,6 +8,7 @@ import kotlinx.coroutines.withContext
 import java.security.MessageDigest
 
 class UserRepository private constructor(context: Context) {
+
     private val userDao = AppDatabase.get(context).userDao()
 
     companion object {
@@ -28,15 +29,16 @@ class UserRepository private constructor(context: Context) {
         hashPassword: Boolean
     ): Result<Long> = withContext(Dispatchers.IO) {
         try {
-            // Kiểm tra trùng email
+            // Check email đã tồn tại chưa
             val exists = userDao.findByEmail(email)
             if (exists != null) {
                 return@withContext Result.failure(Exception("Email đã tồn tại"))
             }
 
-            // Hash mật khẩu nếu cần
+            // Hash password
             val finalPassword = if (hashPassword) hash(passwordPlain) else passwordPlain
 
+            // Tạo user mới
             val user = UserEntity(
                 name = name,
                 email = email,
@@ -46,13 +48,17 @@ class UserRepository private constructor(context: Context) {
 
             val userId = userDao.insert(user) // ← Room trả về Long
             Result.success(userId) // ← TRẢ VỀ USER ID
+            // Lưu vào DB
+            userDao.insert(user)
+
+            Result.success(Unit)
         } catch (e: Exception) {
             e.printStackTrace()
             Result.failure(e)
         }
     }
 
-    // ======== LOGIN ========
+    // ===================== LOGIN =====================
     suspend fun loginUser(
         email: String,
         passwordPlain: String,
@@ -63,16 +69,18 @@ class UserRepository private constructor(context: Context) {
                 ?: return@withContext Result.failure(Exception("Không tìm thấy tài khoản"))
 
             val inputPass = if (hashPassword) hash(passwordPlain) else passwordPlain
+
             return@withContext if (user.password == inputPass)
                 Result.success(user)
             else
                 Result.failure(Exception("Sai mật khẩu"))
+
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    // ======== HASH UTIL ========
+    // ===================== UTIL =====================
     private fun hash(str: String): String {
         val md = MessageDigest.getInstance("SHA-256")
         return md.digest(str.toByteArray())

@@ -15,7 +15,7 @@ interface UserBehaviorDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(behavior: UserBehaviorEntity)
 
-    // 🔍 Lấy hành vi theo user + food (bất kỳ loại)
+
     @Query("""
         SELECT * FROM user_behavior 
         WHERE userId = :userId AND foodId = :foodId 
