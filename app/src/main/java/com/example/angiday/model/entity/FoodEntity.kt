@@ -20,6 +20,7 @@ data class FoodEntity(
     val desc: String?,               // nullable
     val imageRes: String?,              // drawable resId
     val instructions: String?,       // nullable
+    val calories: Int?,
     val youtubeId: String?,           // nullable
     val categoryId: Int?
 )

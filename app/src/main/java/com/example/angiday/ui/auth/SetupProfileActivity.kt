@@ -65,9 +65,9 @@ class SetupProfileActivity : AppCompatActivity() {
             height = height,
             weight = weight,
             spicyLevel = spicyLevel,
-            preferMeat = true, // Có thể thêm checkbox sau
-            preferVeg = true,
-            allergies = emptyList() // Có thể thêm input sau
+            preferMeat = 1, // Có thể thêm checkbox sau
+            preferVeg = 1,
+            allergies = null // Có thể thêm input sau
         )
 
         lifecycleScope.launch {

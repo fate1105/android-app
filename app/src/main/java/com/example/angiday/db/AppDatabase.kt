@@ -22,7 +22,7 @@ import com.example.angiday.model.entity.*
         UserBehaviorEntity::class,
         UserProfileEntity::class
     ],
-    version = 2,
+    version = 1,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

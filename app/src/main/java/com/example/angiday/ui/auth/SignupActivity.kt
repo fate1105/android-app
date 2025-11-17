@@ -3,6 +3,7 @@ package com.example.angiday.ui.auth
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
@@ -118,8 +119,13 @@ class SignupActivity : AppCompatActivity() {
                         state.error != null -> {
                             btnRegister.isEnabled = true
                             btnRegister.text = "Đăng ký"
-                            Toast.makeText(this@SignupActivity, "Lỗi: ${state.error}", Toast.LENGTH_LONG).show()
+
+
+                            Log.e("REGISTER_ERROR", "Lỗi: ${state.error}")
+
                         }
+
+
                     }
                 }
             }
