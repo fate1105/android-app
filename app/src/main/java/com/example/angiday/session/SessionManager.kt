@@ -28,9 +28,24 @@ class SessionManager(context: Context) {
 
     // 🔹 Kiểm tra trạng thái đăng nhập
     fun isLoggedIn(): Boolean = getUserId() > 0
-
-    // 🔹 Xoá phiên đăng nhập
+    fun isRemembered(): Boolean = sp.getBoolean("remember_login", false)
+    // 🔥 Lưu user + trạng thái Remember Login
+    fun saveUser(user: UserEntity, remember: Boolean) {
+        sp.edit()
+            .putLong("user_id", user.id)
+            .putString("user_name", user.name)
+            .putString("user_email", user.email)
+            .putBoolean("remember_login", remember)
+            .apply()
+    }
     fun clear() {
         sp.edit().clear().apply()
+    }
+    fun clearUserButKeepRemember() {
+        sp.edit()
+            .remove("user_id")
+            .remove("user_name")
+            .remove("user_email")
+            .apply()
     }
 }

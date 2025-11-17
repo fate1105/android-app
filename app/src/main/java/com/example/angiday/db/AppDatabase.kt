@@ -28,6 +28,7 @@ import com.example.angiday.model.entity.*
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
+
     abstract fun foodDao(): FoodDao
     abstract fun metaDao(): MetaDao
     abstract fun userDao(): UserDao

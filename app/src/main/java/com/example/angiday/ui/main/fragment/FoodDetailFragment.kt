@@ -99,12 +99,14 @@ class FoodDetailFragment : Fragment() {
             updateCookButtonState(isCooked)
         }
 
-        // ❤️ Nút yêu thích
+
         btnFavorite.setOnClickListener {
+
             if (userId == -1L) {
                 Toast.makeText(requireContext(), "Vui lòng đăng nhập trước!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
             viewLifecycleOwner.lifecycleScope.launch {
                 isFavorite = !isFavorite
                 if (isFavorite) {
@@ -115,6 +117,8 @@ class FoodDetailFragment : Fragment() {
                 updateFavoriteIcon()
             }
         }
+
+
 
         // 🍳 Nút “Đã nấu”
         btnCook.setOnClickListener {
