@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import com.example.angiday.db.dao.UserBehaviorDao
 import com.example.angiday.db.dao.UserDao
 import com.example.angiday.db.dao.UserProfileDao
+import com.example.angiday.db.providers.DatabaseCopier
 import com.example.angiday.model.entity.*
 
 @Database(
@@ -39,21 +40,20 @@ abstract class AppDatabase : RoomDatabase() {
 
         fun get(context: Context): AppDatabase =
             INSTANCE ?: synchronized(this) {
+
+                // COPY DB nếu chưa tồn tại
+                DatabaseCopier.copyPrepopulatedDB(context)
+
                 INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
                     "angiday.db"
                 )
-                    // 👉 Load từ assets 1 lần duy nhất
-                    .createFromAsset("databases/angiday.db")
-
-                    // ❌ KHÔNG XOÁ DB NỮA
-                    // .fallbackToDestructiveMigration()  --> BỎ
-
-                    // ⚠️ Nên tắt khi chạy production
+                    .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
                     .build()
                     .also { INSTANCE = it }
             }
+
     }
 }
