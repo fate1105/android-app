@@ -29,7 +29,7 @@ class UserRepository private constructor(context: Context) {
         hashPassword: Boolean
     ): Result<Long> = withContext(Dispatchers.IO) {
         try {
-            // Check email đã tồn tại chưa
+            // Check email đã tồn tại
             val exists = userDao.findByEmail(email)
             if (exists != null) {
                 return@withContext Result.failure(Exception("Email đã tồn tại"))
@@ -46,17 +46,18 @@ class UserRepository private constructor(context: Context) {
                 preferences = preferences
             )
 
-            val userId = userDao.insert(user) // ← Room trả về Long
-            Result.success(userId) // ← TRẢ VỀ USER ID
-            // Lưu vào DB
-            userDao.insert(user)
+            // INSERT 1 lần — lấy ID
+            val userId = userDao.insert(user)
 
-            Result.success(Unit)
+            // RETURN KẾT QUẢ RA NGOÀI
+            return@withContext Result.success(userId)
+
         } catch (e: Exception) {
             e.printStackTrace()
-            Result.failure(e)
+            return@withContext Result.failure(e)
         }
     }
+
 
     // ===================== LOGIN =====================
     suspend fun loginUser(

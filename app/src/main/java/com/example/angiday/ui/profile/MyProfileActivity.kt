@@ -188,6 +188,7 @@ class MyProfileActivity : AppCompatActivity() {
                             desc = desc,
                             imageRes = imagePath,
                             instructions = null,
+                            calories = null,
                             youtubeId = null,
                             categoryId = null
                         )
