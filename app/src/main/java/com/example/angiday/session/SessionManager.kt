@@ -9,14 +9,6 @@ class SessionManager(context: Context) {
     private val sp: SharedPreferences =
         context.getSharedPreferences("session_prefs", Context.MODE_PRIVATE)
 
-    fun saveUser(user: UserEntity, remember: Boolean) {
-        sp.edit()
-            .putLong("user_id", user.id)
-            .putString("user_name", user.name)
-            .putString("user_email", user.email)
-            .putBoolean("remember_login", remember)
-            .apply()
-    }
 
     fun getUserId(): Long = sp.getLong("user_id", -1L)
     fun getUserName(): String? = sp.getString("user_name", null)

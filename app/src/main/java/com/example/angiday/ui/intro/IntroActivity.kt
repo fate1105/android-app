@@ -22,17 +22,17 @@ class IntroActivity : AppCompatActivity() {
         IntroPage(
             title = "Cooking",
             subtitle = "Nhiều món ngon, hãy thử nấu ngay!",
-            imageRes = R.drawable.spaghetti
+            imageRes = R.drawable.intro1
         ),
         IntroPage(
             title = "Gợi ý món ăn",
             subtitle = "Chọn nguyên liệu sẵn có, nhận gợi ý phù hợp.",
-            imageRes = R.drawable.ic_home
+            imageRes = R.drawable.intro2
         ),
         IntroPage(
             title = "Vòng quay may mắn",
             subtitle = "Không biết ăn gì? Xoay vòng chọn món liền!",
-            imageRes = R.drawable.ic_home
+            imageRes = R.drawable.luckywheel
         )
     )
 

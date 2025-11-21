@@ -24,5 +24,3 @@ data class FoodEntity(
     val youtubeId: String?,           // nullable
     val categoryId: Int?
 )
-
-
