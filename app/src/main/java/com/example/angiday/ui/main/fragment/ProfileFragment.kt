@@ -15,6 +15,7 @@ import com.example.angiday.R
 import com.example.angiday.db.AppDatabase
 import com.example.angiday.session.SessionManager
 import com.example.angiday.ui.auth.LoginActivity
+import com.example.angiday.ui.profile.CookingHistoryActivity
 import com.example.angiday.ui.profile.*
 import kotlinx.coroutines.launch
 
@@ -52,7 +53,7 @@ class ProfileFragment : Fragment() {
             startActivity(Intent(requireContext(), FoodFavoriteActivity::class.java))
         }
         rowHistory.setOnClickListener {
-            startActivity(Intent(requireContext(), FoodHistoryActivity::class.java))
+            startActivity(Intent(requireContext(), CookingHistoryActivity::class.java))
         }
         rowMyProfile.setOnClickListener {
             startActivity(Intent(requireContext(), MyProfileActivity::class.java))
@@ -61,7 +62,7 @@ class ProfileFragment : Fragment() {
         // 👉 Đăng xuất
         rowLogout.setOnClickListener {
             val session = SessionManager(requireContext())
-            session.clearUserButKeepRemember()
+            session.clear()
 
 
             Toast.makeText(requireContext(), "Đã đăng xuất!", Toast.LENGTH_SHORT).show()

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Glow -->
+    <path
+        android:fillColor="#33FF6F3C"
+        android:pathData="M12,2C8,6 6,10 6,13c0,5 4,9 6,9s6,-4 6,-9c0,-3 -2,-7 -6,-11z" />
+
+    <!-- Outer flame -->
+    <path
+        android:fillColor="#FF6F3C"
+        android:pathData="M12,2C8,6 6,10 6,13c0,5 4,9 6,9s6,-4 6,-9c0,-3 -2,-7 -6,-11z" />
+
+    <!-- Inner flame -->
+    <path
+        android:fillColor="#FFB35A"
+        android:pathData="M12,6c-2,2 -4,4 -4,6c0,3 2,6 4,6s4,-3 4,-6c0,-2 -1,-4 -4,-6z" />
+
+</vector>

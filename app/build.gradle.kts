@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.fragment)
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.4")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation(libs.androidx.cardview)
     implementation(libs.androidx.viewpager2)
