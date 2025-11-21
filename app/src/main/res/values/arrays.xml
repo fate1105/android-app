@@ -1,0 +1,8 @@
+<resources>
+    <string-array name="times_per_day_options">
+        <item>1 lần/ngày</item>
+        <item>2 lần/ngày</item>
+        <item>3 lần/ngày</item>
+        <item>4 lần/ngày</item>
+    </string-array>
+</resources>

@@ -6,88 +6,189 @@
     android:orientation="vertical"
     android:background="@color/colorBackground">
 
-    <!-- Thanh tiêu đề -->
+    <!-- Toolbar -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         style="@style/Widget.Material3.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:title="✏️ Chỉnh sửa thông tin"
+        app:title="Chỉnh sửa thông tin"
         app:titleTextColor="@color/colorOnSurface"
         app:navigationIcon="@drawable/ic_arrow_back_24"
         android:background="@color/colorSurface"
-        android:elevation="4dp"
-        android:fitsSystemWindows="true" />
+        android:elevation="4dp" />
 
-    <!-- Nội dung chính -->
+    <!-- Scrollable Content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/padding_large"
-        android:background="@color/colorBackground">
+        android:padding="@dimen/padding_large">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Họ tên -->
+            <!-- === THÔNG TIN CƠ BẢN === -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Họ và tên">
+                android:hint="Họ và tên"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:textColor="@color/colorOnSurface"
-                    android:textColorHint="@color/colorMuted" />
+                    android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Email -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
-                android:layout_marginTop="@dimen/margin_normal">
+                android:layout_marginTop="@dimen/margin_normal"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:textColor="@color/colorOnSurface"
-                    android:textColorHint="@color/colorMuted" />
+                    android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Mật khẩu -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Mật khẩu mới"
-                android:layout_marginTop="@dimen/margin_normal">
+                android:hint="Mật khẩu mới (để trống nếu không đổi)"
+                android:layout_marginTop="@dimen/margin_normal"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:textColor="@color/colorOnSurface"
-                    android:textColorHint="@color/colorMuted" />
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- === HỒ SƠ DINH DƯỠNG === -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🍽️ Hồ sơ dinh dưỡng"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_small" />
+
+            <!-- Chiều cao -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Chiều cao (cm)"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtHeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Cân nặng -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Cân nặng (kg)"
+                android:layout_marginTop="@dimen/margin_normal"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtWeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Khẩu vị cay -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bạn thích ăn cay đến mức nào?"
+                android:textSize="14sp"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginBottom="4dp" />
+
+            <RadioGroup
+                android:id="@+id/rgSpicy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/rb_low"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Không cay" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/rb_medium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Vừa" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/rb_high"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cay tedai" />
+            </RadioGroup>
+
+            <!-- Sở thích -->
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cbPreferMeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ăn mặn"
+                android:layout_marginTop="@dimen/margin_normal" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cbPreferVeg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ăn chay"
+                android:layout_marginTop="@dimen/margin_small" />
+
+            <!-- Dị ứng -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Dị ứng (VD: đậu phộng, sữa - cách nhau bằng dấu phẩy)"
+                android:layout_marginTop="@dimen/margin_normal"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtAllergies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Nút lưu -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="💾 Lưu thay đổi"
+                android:layout_height="56dp"
+                android:text="Lưu thay đổi"
                 android:textAllCaps="false"
                 android:layout_marginTop="@dimen/margin_large"
+                app:cornerRadius="12dp"
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="@color/colorOnPrimary" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -1,30 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurface"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/colorSurface">  <!-- #FFF8F1 -->
 
-    <!-- Thanh tiêu đề -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
-        style="@style/Widget.Material3.Toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:title="🔔 Thông báo"
-        app:titleTextColor="@color/colorOnSurface"
-        app:navigationIcon="@drawable/ic_arrow_back_24"
-        android:background="@color/colorSurface"
-        android:elevation="4dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cài đặt thông báo gợi ý món ăn"
+        android:textColor="@color/colorOnSurface"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp" />
 
-    <!-- Danh sách thông báo -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvNotifications"
+    <!-- Số lần gợi ý mỗi ngày -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Số lần gợi ý mỗi ngày"
+        android:textColor="@color/colorOnSurface"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <Spinner
+        android:id="@+id/spinner_times_per_day"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/padding_medium"
-        android:clipToPadding="false"
-        android:scrollbars="vertical"
-        android:background="@color/colorBackground" />
+        android:layout_height="48dp"
+        android:layout_marginBottom="24dp"
+        android:background="@android:color/white"
+        android:entries="@array/times_per_day_options" />
+
+    <!-- Thời gian gợi ý -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thời gian gợi ý trong ngày"
+        android:textColor="@color/colorOnSurface"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="32dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Từ giờ"
+            android:textColor="@color/colorMuted"
+            android:textSize="15sp"/>
+
+        <Button
+            android:id="@+id/btn_pick_start_time"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="140dp"
+            android:layout_height="48dp"
+            android:text="08:00"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginEnd="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" đến "
+            android:textColor="@color/colorMuted"
+            android:textSize="16sp"/>
+
+        <Button
+            android:id="@+id/btn_pick_end_time"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="140dp"
+            android:layout_height="48dp"
+            android:text="20:00"
+            android:textColor="@color/colorPrimary"/>
+    </LinearLayout>
+
+    <!-- Nút Lưu -->
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Lưu cài đặt"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_marginTop="24dp"
+        android:elevation="4dp"/>
 </LinearLayout>

@@ -38,6 +38,15 @@ class SessionManager(context: Context) {
             .putBoolean("remember_login", remember)
             .apply()
     }
+    // 👉 Gọi khi mới đăng ký (chưa có UserEntity đầy đủ)
+    fun saveUserId(userId: Long, email: String) {
+        sp.edit()
+            .putLong("user_id", userId)
+            .putString("user_email", email)
+            .putBoolean("remember_login", true)  // auto remember
+            .apply()
+    }
+
     fun clear() {
         sp.edit().clear().apply()
     }

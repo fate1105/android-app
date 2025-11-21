@@ -1,6 +1,8 @@
 package com.example.angiday.utils
 
-import android.app.*
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -12,23 +14,20 @@ import com.example.angiday.ui.main.MainActivity
 object NotificationHelper {
 
     private const val CHANNEL_ID = "meal_suggestion_channel"
-    private const val CHANNEL_NAME = "Gợi ý bữa ăn"
+    private const val NOTIFICATION_ID = 1001
 
     fun showMealSuggestion(context: Context, mealName: String) {
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val nm = context.getSystemService(NotificationManager::class.java)
 
+        // Tạo channel chỉ 1 lần (từ Android O)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_DEFAULT
-            ).apply {
-                description = "Thông báo gợi ý món ăn mỗi ngày"
-                enableLights(true)
-                lightColor = Color.GREEN
-            }
-            notificationManager.createNotificationChannel(channel)
+            nm.getNotificationChannel(CHANNEL_ID) ?: nm.createNotificationChannel(
+                NotificationChannel(CHANNEL_ID, "Gợi ý bữa ăn", NotificationManager.IMPORTANCE_DEFAULT).apply {
+                    description = "Thông báo gợi ý món ăn mỗi ngày"
+                    enableLights(true)
+                    lightColor = Color.GREEN
+                }
+            )
         }
 
         val intent = Intent(context, MainActivity::class.java).apply {
@@ -39,18 +38,18 @@ object NotificationHelper {
             context,
             0,
             intent,
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.chef)
             .setContentTitle("Gợi ý món ăn hôm nay 🍱")
-            .setContentText("Hôm nay bạn thử món '$mealName' nhé?")
+            .setContentText("Hôm nay thử món '$mealName' nhé?")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .build()
 
-        notificationManager.notify(1001, notification)
+        nm.notify(NOTIFICATION_ID, notification)
     }
 }

@@ -17,11 +17,4 @@ class Converters {
         return if (json.isNullOrBlank()) emptyList()
         else Gson().fromJson(json, object : TypeToken<List<String>>() {}.type)
     }
-
-    // Cho Boolean → INTEGER (0/1)
-    @TypeConverter
-    fun fromBoolean(value: Boolean): Int = if (value) 1 else 0
-
-    @TypeConverter
-    fun toBoolean(value: Int): Boolean = value == 1
 }
