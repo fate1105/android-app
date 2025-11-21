@@ -23,13 +23,13 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     private val _ui = MutableStateFlow(LoginUiState())
     val ui: StateFlow<LoginUiState> = _ui
 
-    fun login(email: String, password: String, hashPassword: Boolean = false) {
+    fun login(email: String, password: String, remember: Boolean, hashPassword: Boolean = false) {
         _ui.value = LoginUiState(loading = true)
         viewModelScope.launch {
             val result = repo.loginUser(email, password, hashPassword)
             _ui.value = result.fold(
                 onSuccess = {
-                    session.saveUser(it)
+                    session.saveUser(it, remember)
                     LoginUiState(success = true)
                 },
                 onFailure = {
@@ -38,4 +38,5 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
             )
         }
     }
+
 }

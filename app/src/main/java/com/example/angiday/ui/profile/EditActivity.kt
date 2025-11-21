@@ -80,8 +80,10 @@ class EditActivity : AppCompatActivity() {
 
                 userDao.update(updated)
 
-                // 🔥 Cập nhật session khi user đổi name/email/password
-                session.saveUser(updated)
+                session.saveUser(
+                    user = updated,
+                    remember = session.isRemembered()
+                )
 
                 Toast.makeText(this@EditActivity, "Đã lưu thay đổi!", Toast.LENGTH_SHORT).show()
                 finish()

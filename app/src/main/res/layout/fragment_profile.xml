@@ -12,15 +12,14 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!-- Header -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="159dp"
@@ -35,9 +34,9 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/chef" />
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <!-- USER INFO -->
                 <TextView
                     android:id="@+id/textView6"
                     android:layout_width="match_parent"
@@ -46,7 +45,7 @@
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="26sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView9"
@@ -62,17 +61,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_top"
                     android:layout_marginTop="@dimen/padding_text"
-                    android:layout_marginEnd="@dimen/margin_top"
-                    android:layout_marginBottom="@dimen/padding_text">
+                    android:layout_marginEnd="@dimen/margin_top">
 
                     <ImageView
                         android:id="@+id/ivNotice"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
+                        app:srcCompat="@drawable/ic_notice"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:srcCompat="@drawable/notices" />
+                        app:layout_constraintBottom_toBottomOf="parent" />
 
                     <TextView
                         android:id="@+id/tvshare"
@@ -90,10 +88,10 @@
                         android:id="@+id/ivChevronNotice"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
+                        app:srcCompat="@drawable/chevron"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:srcCompat="@drawable/chevron" />
+                        app:layout_constraintBottom_toBottomOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- Row: Chỉnh sửa thông tin -->
@@ -103,17 +101,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_top"
                     android:layout_marginTop="@dimen/padding_text"
-                    android:layout_marginEnd="@dimen/margin_top"
-                    android:layout_marginBottom="@dimen/padding_text">
+                    android:layout_marginEnd="@dimen/margin_top">
 
                     <ImageView
                         android:id="@+id/ivEditProfile"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
+                        app:srcCompat="@drawable/ic_profile"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:srcCompat="@drawable/profile" />
+                        app:layout_constraintBottom_toBottomOf="parent" />
 
                     <TextView
                         android:id="@+id/tvEditProfile"
@@ -131,10 +128,10 @@
                         android:id="@+id/ivChevronEditProfile"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
+                        app:srcCompat="@drawable/chevron"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:srcCompat="@drawable/chevron" />
+                        app:layout_constraintBottom_toBottomOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- Row: Món ăn yêu thích -->
@@ -144,17 +141,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_top"
                     android:layout_marginTop="@dimen/padding_text"
-                    android:layout_marginEnd="@dimen/margin_top"
-                    android:layout_marginBottom="@dimen/padding_text">
+                    android:layout_marginEnd="@dimen/margin_top">
 
                     <ImageView
                         android:id="@+id/ivFavorite"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
+                        app:srcCompat="@drawable/ic_favorite"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:srcCompat="@drawable/like" />
+                        app:layout_constraintBottom_toBottomOf="parent" />
 
                     <TextView
                         android:id="@+id/tvFavorite"
@@ -172,30 +168,29 @@
                         android:id="@+id/ivChevronFavorite"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
+                        app:srcCompat="@drawable/chevron"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:srcCompat="@drawable/chevron" />
+                        app:layout_constraintBottom_toBottomOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <!-- Row: Lịch sử món ăn -->
+                <!-- Row: Lịch sử -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/rowHistory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_top"
                     android:layout_marginTop="@dimen/padding_text"
-                    android:layout_marginEnd="@dimen/margin_top"
-                    android:layout_marginBottom="@dimen/padding_text">
+                    android:layout_marginEnd="@dimen/margin_top">
 
                     <ImageView
                         android:id="@+id/ivHistory"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
+                        app:srcCompat="@drawable/ic_history"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:srcCompat="@drawable/history" />
+                        app:layout_constraintBottom_toBottomOf="parent" />
 
                     <TextView
                         android:id="@+id/tvHistory"
@@ -213,10 +208,10 @@
                         android:id="@+id/ivChevronHistory"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
+                        app:srcCompat="@drawable/chevron"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:srcCompat="@drawable/chevron" />
+                        app:layout_constraintBottom_toBottomOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- Row: Chuỗi nấu ăn -->
@@ -226,24 +221,23 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_top"
                     android:layout_marginTop="@dimen/padding_text"
-                    android:layout_marginEnd="@dimen/margin_top"
-                    android:layout_marginBottom="@dimen/padding_text">
+                    android:layout_marginEnd="@dimen/margin_top">
 
                     <ImageView
                         android:id="@+id/ivCooking"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
+                        app:srcCompat="@drawable/ic_cooking"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:srcCompat="@drawable/calendar" />
+                        app:layout_constraintBottom_toBottomOf="parent" />
 
                     <TextView
                         android:id="@+id/tvCooking"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:text="Chia sẽ món ăn"
+                        android:text="Chia sẻ món ăn"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@id/ivCooking"
@@ -254,10 +248,10 @@
                         android:id="@+id/ivChevronCooking"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
+                        app:srcCompat="@drawable/chevron"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:srcCompat="@drawable/chevron" />
+                        app:layout_constraintBottom_toBottomOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- Row: Đăng xuất -->
@@ -274,10 +268,10 @@
                         android:id="@+id/ivExit"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
+                        app:srcCompat="@drawable/ic_exit"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:srcCompat="@drawable/exit" />
+                        app:layout_constraintBottom_toBottomOf="parent" />
 
                     <TextView
                         android:id="@+id/loginText"
@@ -291,7 +285,6 @@
                         app:layout_constraintTop_toTopOf="@id/ivExit"
                         app:layout_constraintBottom_toBottomOf="@id/ivExit" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
             </LinearLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

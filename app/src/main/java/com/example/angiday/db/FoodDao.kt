@@ -22,7 +22,14 @@ interface FoodDao {
         ORDER BY f.id DESC
     """)
     fun getFoodsByTag(tagName: String): Flow<List<FoodWithRelations>>
-
+    @Query("""
+        SELECT DATE(timestamp) AS day
+        FROM user_behavior
+        WHERE userId = :userId AND behaviorType = 'cooked'
+        GROUP BY DATE(timestamp)
+        ORDER BY DATE(timestamp) DESC
+    """)
+    suspend fun getCookedDays(userId: Int): List<String>
     // ===== Menu theo CATEGORY (vd: "Món cơm", "Món nước" ...)
     @Transaction
     @Query("""
@@ -54,6 +61,16 @@ interface FoodDao {
     @Transaction
     @Query("SELECT * FROM foods WHERE id = :foodId")
     fun getFood(foodId: Long): Flow<FoodWithRelations>
+
+    @Query("""
+    SELECT f.* 
+    FROM foods f
+    JOIN user_behavior ub ON ub.foodId = f.id
+    WHERE ub.userId = :userId
+      AND ub.behaviorType = 'cooked'
+      AND DATE(ub.timestamp / 1000, 'unixepoch') = :date
+""")
+    suspend fun getFoodsCookedOnDate(userId: Long, date: String): List<FoodEntity>
 
     // ===== Lọc theo danh sách nguyên liệu: món có ÍT NHẤT 1 nguyên liệu trùng
     @Transaction

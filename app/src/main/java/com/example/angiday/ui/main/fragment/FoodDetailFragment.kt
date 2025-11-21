@@ -30,6 +30,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class FoodDetailFragment : Fragment() {
 
@@ -125,7 +128,15 @@ class FoodDetailFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 isCooked = !isCooked
                 if (isCooked) {
-                    dao.insert(UserBehaviorEntity(userId = userId, foodId = foodId, behaviorType = "cooked"))
+                    dao.insert(
+                        UserBehaviorEntity(
+                            userId = userId,
+                            foodId = foodId,
+                            behaviorType = "cooked",
+                            timestamp = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                        )
+                    )
+
                     Toast.makeText(requireContext(), "Đã lưu: món đã nấu ✔", Toast.LENGTH_SHORT).show()
                 } else {
                     dao.deleteBehavior(userId, foodId, "cooked")
