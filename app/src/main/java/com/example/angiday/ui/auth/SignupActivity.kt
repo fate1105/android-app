@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.angiday.R
+import com.example.angiday.session.SessionManager
 import com.example.angiday.viewmodel.RegisterViewModel
 import kotlinx.coroutines.launch
 
@@ -108,6 +109,10 @@ class SignupActivity : AppCompatActivity() {
 
                             // LẤY userId từ ViewModel (giả sử có)
                             val userId = state.userId
+                            SessionManager(this@SignupActivity).saveUserId(
+                                userId = userId,
+                                email = etEmail.text.toString()
+                            )
 
                             // → CHUYỂN QUA SETUP PROFILE
                             val intent = Intent(this@SignupActivity, SetupProfileActivity::class.java).apply {

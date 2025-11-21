@@ -61,7 +61,38 @@
             android:hint="Cân nặng (kg)"
             android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
+    <!-- Thích thịt -->
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/cbPreferMeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thích ăn thịt"
+        android:checked="true"
+        android:layout_marginBottom="8dp" />
 
+    <!-- Thích rau -->
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/cbPreferVeg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thích ăn rau"
+        android:checked="true"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Dị ứng -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etAllergies"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Dị ứng (VD: đậu phộng, sữa - cách nhau bằng dấu phẩy)"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
     <!-- Khẩu vị cay -->
     <TextView
         android:layout_width="wrap_content"

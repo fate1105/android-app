@@ -12,15 +12,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FoodDao {
 
-    // ===== Menu theo TAG (vd: "Bữa sáng", "Bữa trưa", "Bữa tối")
     @Transaction
-    @Query("""
-        SELECT f.* FROM foods f
-        INNER JOIN food_tag_crossref ft ON ft.foodId = f.id
-        INNER JOIN tags t ON t.id = ft.tagId
-        WHERE t.name = :tagName
-        ORDER BY f.id DESC
-    """)
+    @Query("SELECT f.* FROM foods f INNER JOIN food_tag_crossref ft ON ft.foodId = f.id INNER JOIN tags t ON t.id = ft.tagId WHERE t.name = :tagName ORDER BY f.id DESC")
     fun getFoodsByTag(tagName: String): Flow<List<FoodWithRelations>>
     @Query("""
         SELECT DATE(timestamp) AS day
@@ -32,29 +25,25 @@ interface FoodDao {
     suspend fun getCookedDays(userId: Int): List<String>
     // ===== Menu theo CATEGORY (vd: "Món cơm", "Món nước" ...)
     @Transaction
-    @Query("""
-        SELECT f.* FROM foods f
-        INNER JOIN categories c ON c.id = f.categoryId
-        WHERE c.name = :categoryName
-        ORDER BY f.id DESC
-    """)
+    @Query("SELECT f.* FROM foods f INNER JOIN categories c ON c.id = f.categoryId WHERE c.name = :categoryName ORDER BY f.id DESC")
     fun getFoodsByCategory(categoryName: String): Flow<List<FoodWithRelations>>
 
-    // ===== Danh sách / tìm kiếm / chi tiết
     @Transaction
     @Query("SELECT * FROM foods ORDER BY id DESC")
     fun getAllFoods(): Flow<List<FoodWithRelations>>
 
     @Transaction
     @Query("""
-        SELECT * FROM foods 
+        SELECT * FROM foods
         WHERE title LIKE '%' || :keyword || '%' 
-           OR "desc"  LIKE '%' || :keyword || '%'
+        OR "desc" LIKE '%' || :keyword || '%'
         ORDER BY id DESC
     """)
     fun searchFoods(keyword: String): Flow<List<FoodWithRelations>>
+
     @Insert
     suspend fun insert(food: FoodEntity): Long
+
     @Query("SELECT * FROM foods WHERE id = :id LIMIT 1")
     suspend fun getFoodById(id: Long): FoodEntity?
 
@@ -82,10 +71,18 @@ interface FoodDao {
         ORDER BY f.id DESC
     """)
     fun getFoodsByAnyIngredients(ingredientNames: List<String>): Flow<List<FoodWithRelations>>
+    @Transaction
+    @Query("SELECT * FROM foods WHERE id = :id LIMIT 1")
+    suspend fun getFoodWithRelationsById(id: Long): FoodWithRelations?
 
     @Transaction
     @Query("SELECT * FROM foods ORDER BY RANDOM() LIMIT :count")
     suspend fun getRandomFoods(count: Int = 3): List<FoodWithRelations>
+
+    @Transaction
+    @Query("SELECT * FROM foods ORDER BY RANDOM() LIMIT 1")
+    suspend fun getRandomFood(): FoodWithRelations?
+
     @Query("SELECT * FROM foods")
     fun getAllCursor(): Cursor
 

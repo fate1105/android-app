@@ -106,12 +106,15 @@
             android:layout_marginBottom="8dp" />
 
         <ImageView
+            android:id="@+id/imgFeatured"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_menu"
-            android:layout_marginBottom="16dp"
-            android:background="@color/colorSurface" />
+            android:background="@color/colorSurface"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless" />
+
 
         <!-- Gợi ý theo bữa -->
         <TextView

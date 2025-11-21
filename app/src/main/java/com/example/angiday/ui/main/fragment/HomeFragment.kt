@@ -35,25 +35,19 @@ import kotlinx.coroutines.launch
  */
 class HomeFragment : Fragment() {
 
-    // UI components
     private lateinit var etSearch: EditText
     private lateinit var chipGroup: ChipGroup
     private lateinit var rvSuggestions: RecyclerView
     private lateinit var btnFindRecipes: Button
-
+    private lateinit var imgFeatured: ImageView
     private lateinit var tvBreakfast: TextView
     private lateinit var tvLunch: TextView
     private lateinit var tvDinner: TextView
     private lateinit var categoryContainer: LinearLayout
 
-    // ViewModel
     private lateinit var viewModel: HomeViewModel
-
-    // Adapter
     private lateinit var adapter: SuggestionAdapter
-    private var allSuggestions: List<String> = emptyList()
-
-    // Lifecycle
+    private var allSuggestions = emptyList<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,10 +61,11 @@ class HomeFragment : Fragment() {
         setupListeners(view)
         observeData()
 
+        // 🔥 Quan trọng: Load dữ liệu home 1 lần
+        viewModel.loadHomeData(requireContext())
+
         return view
     }
-
-    // Setup ViewModel
 
     private fun setupViewModel() {
         val db = AppDatabase.get(requireContext())
@@ -80,14 +75,12 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
     }
 
-    // Ánh xạ View và UI khởi tạo
-
     private fun bindViews(view: View) {
         etSearch = view.findViewById(R.id.etSearch)
         chipGroup = view.findViewById(R.id.chipGroupSelected)
         rvSuggestions = view.findViewById(R.id.rvSuggestions)
         btnFindRecipes = view.findViewById(R.id.btnFindRecipes)
-
+        imgFeatured = view.findViewById(R.id.imgFeatured)
         tvBreakfast = view.findViewById(R.id.tvBreakfast)
         tvLunch = view.findViewById(R.id.tvLunch)
         tvDinner = view.findViewById(R.id.tvDinner)
@@ -100,32 +93,30 @@ class HomeFragment : Fragment() {
         rvSuggestions.adapter = adapter
     }
 
-    // Thiết lập sự kiện & tương tác
-
     private fun setupListeners(rootView: View) {
-        // Khi gõ tìm kiếm
         setupSearchFilter()
 
-        // Khi focus vào ô tìm kiếm
         etSearch.setOnFocusChangeListener { _, hasFocus ->
             rvSuggestions.visibility =
                 if (hasFocus && etSearch.text.isEmpty()) View.VISIBLE else View.GONE
         }
 
-        // Khi nhấn ra ngoài → ẩn bàn phím + ẩn danh sách gợi ý
-        setupUnfocus(rootView)
+        rootView.setOnTouchListener { v, _ ->
+            etSearch.clearFocus()
+            hideKeyboard(etSearch)
+            v.performClick()
+            false
+        }
 
-        // Khi nhấn nút “Tìm công thức”
         btnFindRecipes.setOnClickListener { navigateToSuggestFragment() }
     }
-
-    // Tìm kiếm & chip nguyên liệu
 
     private fun setupSearchFilter() {
         etSearch.addTextChangedListener { input ->
             val query = input?.toString()?.lowercase() ?: ""
-            val filtered = if (query.isEmpty()) allSuggestions
-            else allSuggestions.filter { it.lowercase().contains(query) }
+            val filtered =
+                if (query.isEmpty()) allSuggestions
+                else allSuggestions.filter { it.lowercase().contains(query) }
 
             rvSuggestions.visibility = if (filtered.isEmpty()) View.GONE else View.VISIBLE
             adapter.updateData(filtered)
@@ -141,14 +132,9 @@ class HomeFragment : Fragment() {
         chipGroup.addView(chip)
     }
 
-    // Điều hướng & xử lý nút "Tìm công thức"
-
     private fun navigateToSuggestFragment() {
-        val selectedIngredients = mutableListOf<String>().apply {
-            for (i in 0 until chipGroup.childCount) {
-                val chip = chipGroup.getChildAt(i) as Chip
-                add(chip.text.toString())
-            }
+        val selectedIngredients = (0 until chipGroup.childCount).map {
+            (chipGroup.getChildAt(it) as Chip).text.toString()
         }
 
         val bundle = Bundle().apply {
@@ -161,19 +147,63 @@ class HomeFragment : Fragment() {
             .commit()
     }
 
-    // Quan sát dữ liệu từ ViewModel (Flow)
-
     private fun observeData() {
-        // Gợi ý nguyên liệu
+        // ---- INGREDIENTS ----
         lifecycleScope.launch {
             viewModel.ingredients.collectLatest { ingredients ->
                 allSuggestions = ingredients.map { it.name }
                 adapter.updateData(allSuggestions)
             }
         }
+// ---- FEATURED FOOD ----
+        lifecycleScope.launch {
+            viewModel.featuredFood.collectLatest { food ->
+                if (food != null) {
 
-        // Gợi ý ngẫu nhiên cho 3 bữa
-        viewModel.loadRandomMeals(requireContext())
+                    val resId = resources.getIdentifier(
+                        food.imageRes, "drawable", requireContext().packageName
+                    )
+
+                    imgFeatured.apply {
+                        alpha = 0f
+                        setImageResource(if (resId != 0) resId else R.drawable.ic_menu)
+                        animate().alpha(1f).setDuration(500).start()
+
+                        // 👍 Đặt click listener ở đây mới đúng!
+                        setOnClickListener {
+                            val foodId = viewModel.featuredFoodId.value
+                            if (foodId != null) {
+                                parentFragmentManager.beginTransaction()
+                                    .replace(
+                                        R.id.fragment_container,
+                                        FoodDetailFragment.newInstance(foodId)
+                                    )
+                                    .addToBackStack(null)
+                                    .commit()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        imgFeatured.setOnClickListener {
+            val foodId = viewModel.featuredFoodId.value
+            if (foodId != null) {
+                parentFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.fragment_container,
+                        FoodDetailFragment.newInstance(foodId)
+                    )
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+
+
+
+        // ---- RANDOM MEALS ----
         lifecycleScope.launch {
             viewModel.randomMeals.collectLatest { meals ->
                 if (meals.size >= 3) {
@@ -184,40 +214,35 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Danh mục món ăn
+        // ---- CATEGORIES ----
         lifecycleScope.launch {
             viewModel.categories.collectLatest { categories ->
                 categoryContainer.removeAllViews()
-                for (category in categories) {
-                    val textView = TextView(requireContext()).apply {
+                categories.forEach { category ->
+                    val tv = TextView(requireContext()).apply {
                         text = category.name
                         setBackgroundResource(R.drawable.bg_chip_simple)
-                        setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+                        setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.colorPrimary
+                            )
+                        )
                         setPadding(24, 12, 24, 12)
                         layoutParams = LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT
                         ).apply { setMargins(0, 0, 16, 0) }
                     }
-                    categoryContainer.addView(textView)
+                    categoryContainer.addView(tv)
                 }
             }
         }
     }
 
-    // Xử lý UI phụ (ẩn bàn phím, mất focus)
-
-    private fun setupUnfocus(rootView: View) {
-        rootView.setOnTouchListener { v, _ ->
-            etSearch.clearFocus()
-            hideKeyboard(etSearch)
-            v.performClick()
-            false
-        }
-    }
-
     private fun hideKeyboard(view: View) {
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE)
+                as InputMethodManager?
         imm?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
