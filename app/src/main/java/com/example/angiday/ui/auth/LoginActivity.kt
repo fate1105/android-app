@@ -19,31 +19,19 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val db = AppDatabase.get(this)
-        val userDao = db.userDao()
         val session = SessionManager(this)
 
-        // -----------------------------------------------------
-        // 🔥 AUTO LOGIN — nếu user đã "Remember Login"
-        // -----------------------------------------------------
-        if (session.isLoggedIn()) {
-            lifecycleScope.launch {
-
-                val user = userDao.getById(session.getUserId())
-
-                if (user != null) {
-                    startMain()
-                    return@launch
-                } else {
-                    session.clear()
-                }
-            }
+        // 🔥 AUTO LOGIN
+        if (session.isRemembered() && session.getUserId() > 0) {
+            startMain()
+            return
         }
 
-        // -----------------------------------------------------
-        // 🔥 Hiển thị giao diện login
-        // -----------------------------------------------------
         setContentView(R.layout.activity_login)
+
+        val db = AppDatabase.get(this)
+        val userDao = db.userDao()
+
         setupLoginUI(userDao, session)
     }
 
@@ -52,21 +40,28 @@ class LoginActivity : AppCompatActivity() {
         userDao: com.example.angiday.db.dao.UserDao,
         session: SessionManager
     ) {
-
         val etEmail = findViewById<EditText>(R.id.email)
         val etPass = findViewById<EditText>(R.id.pass)
         val chkRemember = findViewById<CheckBox>(R.id.chkRemember)
         val btnLogin = findViewById<Button>(R.id.signup2Btn)
         val tvRegister = findViewById<TextView>(R.id.loginText)
 
-        // -----------------------------------------------------
-        // 👉 Sự kiện Đăng nhập
-        // -----------------------------------------------------
+        // ---------------------------------------------------------
+        // 🔥 1. Restore Remember Login
+        // ---------------------------------------------------------
+        chkRemember.isChecked = session.isRemembered()
+
+        if (session.isRemembered()) {
+            etEmail.setText(session.getUserEmail() ?: "")
+        }
+
+        // ---------------------------------------------------------
+        // 🔥 2. Đăng nhập
+        // ---------------------------------------------------------
         btnLogin.setOnClickListener {
             val email = etEmail.text.toString().trim()
             val pass = etPass.text.toString()
 
-            // Validate input
             if (email.isEmpty()) {
                 etEmail.error = "Vui lòng nhập email"
                 return@setOnClickListener
@@ -80,15 +75,11 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Thực hiện đăng nhập
             lifecycleScope.launch {
                 val user = userDao.findByEmailAndPassword(email, pass)
 
                 if (user != null) {
 
-                    // -----------------------------------------------------
-                    // 🔥 Lưu user + trạng thái Remember Login
-                    // -----------------------------------------------------
                     session.saveUser(
                         user = user,
                         remember = chkRemember.isChecked
@@ -112,16 +103,11 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        // → Điều hướng sang đăng ký
         tvRegister.setOnClickListener {
             startActivity(Intent(this, SignupActivity::class.java))
         }
     }
 
-
-    // -----------------------------------------------------
-    // 👉 Điều hướng sang MainActivity
-    // -----------------------------------------------------
     private fun startMain() {
         startActivity(Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

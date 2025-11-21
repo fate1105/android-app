@@ -1,6 +1,7 @@
 package com.example.angiday.db.dao
 
 import androidx.room.Dao
+import androidx.room.Embedded
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -74,6 +75,16 @@ interface UserBehaviorDao {
         AND behaviorType = :type
     """)
     suspend fun deleteBehavior(userId: Long, foodId: Long, type: String)
+    @Query("""
+    SELECT DATE(timestamp) AS day
+    FROM user_behavior
+    WHERE userId = :userId 
+      AND behaviorType = 'cooked'
+      AND timestamp IS NOT NULL
+    GROUP BY DATE(timestamp)
+    ORDER BY DATE(timestamp) DESC
+""")
+    suspend fun getCookedDays(userId: Int): List<String>
 
     // 🔢 Kiểm tra tồn tại hành vi
     @Query("""
@@ -83,6 +94,18 @@ interface UserBehaviorDao {
         AND behaviorType = :type
     """)
     suspend fun exists(userId: Long, foodId: Long, type: String): Int
+    data class CookedFood(
+        @Embedded val food: FoodEntity,
+        val cookedTime: String?
+    )
+    @Query("""
+    SELECT f.*, ub.timestamp AS cookedTime
+    FROM user_behavior ub
+    JOIN foods f ON f.id = ub.foodId
+    WHERE ub.userId = :userId AND ub.behaviorType = 'cooked'
+    ORDER BY ub.timestamp DESC
+""")
+    suspend fun getCookedFoods(userId: Int): List<CookedFood>
 
     // 📋 Lấy tất cả hành vi chia sẻ
     @Query("SELECT * FROM user_behavior WHERE behaviorType = 'shared'")

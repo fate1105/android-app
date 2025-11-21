@@ -128,6 +128,10 @@ class EditActivity : AppCompatActivity() {
 
         // Password
         val newPass = binding.edtPassword.text.toString()
+                session.saveUser(
+                    user = updated,
+                    remember = session.isRemembered()
+                )
 
         lifecycleScope.launch {
             // Update User

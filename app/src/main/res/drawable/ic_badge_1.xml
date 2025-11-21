@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Vòng ngoài -->
+    <path
+        android:fillColor="#FFB888"
+        android:pathData="M50,5 A45,45 0,1,1 49.9,5" />
+
+    <!-- Vòng trong -->
+    <path
+        android:fillColor="#FFF3E9"
+        android:pathData="M50,20 A30,30 0,1,1 49.9,20" />
+
+    <!-- Icon ngôi sao -->
+    <path
+        android:fillColor="#FF6F3C"
+        android:pathData="M50 30 L55 45 L70 45 L58 55 L62 70 L50 62 L38 70 L42 55 L30 45 L45 45 Z"/>
+</vector>

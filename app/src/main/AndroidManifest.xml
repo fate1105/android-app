@@ -31,8 +31,10 @@
             android:name=".ui.wheel.SpinWheelActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.profile.FoodHistoryActivity"
+            android:name=".ui.profile.CookingHistoryActivity"
             android:exported="false" />
+
+
         <activity
             android:name=".ui.profile.FoodFavoriteActivity"
             android:exported="false" />
