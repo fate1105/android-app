@@ -43,6 +43,7 @@ class HomeFragment : Fragment() {
     private lateinit var tvBreakfast: TextView
     private lateinit var tvLunch: TextView
     private lateinit var tvDinner: TextView
+    private lateinit var btnMenu: Button
     private lateinit var categoryContainer: LinearLayout
 
     private lateinit var viewModel: HomeViewModel
@@ -85,6 +86,7 @@ class HomeFragment : Fragment() {
         tvLunch = view.findViewById(R.id.tvLunch)
         tvDinner = view.findViewById(R.id.tvDinner)
         categoryContainer = view.findViewById(R.id.categoryContainer)
+        btnMenu = view.findViewById(R.id.btnMenu)
     }
 
     private fun setupRecyclerView() {
@@ -109,6 +111,10 @@ class HomeFragment : Fragment() {
         }
 
         btnFindRecipes.setOnClickListener { navigateToSuggestFragment() }
+        btnMenu.setOnClickListener {
+            openMenuFragment()
+        }
+
     }
 
     private fun setupSearchFilter() {
@@ -201,8 +207,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-
-
         // ---- RANDOM MEALS ----
         lifecycleScope.launch {
             viewModel.randomMeals.collectLatest { meals ->
@@ -218,6 +222,7 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.categories.collectLatest { categories ->
                 categoryContainer.removeAllViews()
+
                 categories.forEach { category ->
                     val tv = TextView(requireContext()).apply {
                         text = category.name
@@ -233,11 +238,32 @@ class HomeFragment : Fragment() {
                             LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT
                         ).apply { setMargins(0, 0, 16, 0) }
+
+                        // ⭐ CLICK VÀO CATEGORY → MỞ CategoryFragment
+                        setOnClickListener {
+                            openCategoryFragment(category.name)
+                        }
                     }
                     categoryContainer.addView(tv)
                 }
             }
         }
+
+    }
+    private fun openMenuFragment() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, MenuFragment())
+            .addToBackStack(null)
+            .commit()
+    }
+    private fun openCategoryFragment(categoryName: String) {
+        parentFragmentManager.beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                CategoryFragment.newInstance(categoryName)
+            )
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun hideKeyboard(view: View) {

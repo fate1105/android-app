@@ -128,10 +128,6 @@ class EditActivity : AppCompatActivity() {
 
         // Password
         val newPass = binding.edtPassword.text.toString()
-                session.saveUser(
-                    user = updated,
-                    remember = session.isRemembered()
-                )
 
         lifecycleScope.launch {
             // Update User
@@ -142,7 +138,7 @@ class EditActivity : AppCompatActivity() {
                 password = if (newPass.isNotEmpty()) newPass else user.password
             )
             db.userDao().update(updatedUser)
-            session.saveUser(updatedUser)
+            session.saveUser(updatedUser, true)
 
             // Update / Insert Profile
             val existingProfile = db.userProfileDao().getByUserId(userId)

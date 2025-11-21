@@ -24,7 +24,8 @@ class FoodRepository(private val dao: FoodDao) {
     // ⭐ Random 1 món (ảnh Featured + Notification)
     suspend fun getRandomFood() =
         dao.getRandomFood()
-
+    fun getFoodsByCategory(categoryName: String) =
+        dao.getFoodsByCategory(categoryName)
     // Tag theo bữa ăn
     fun breakfastFoods() = dao.getFoodsByTag("Bữa sáng")
     fun lunchFoods()     = dao.getFoodsByTag("Bữa trưa")
