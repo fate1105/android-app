@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="@android:color/white">
+    android:background="@color/colorBackground">
 
     <!-- Tiêu đề -->
     <TextView
@@ -14,7 +14,7 @@
         android:text="Hoàn thiện hồ sơ"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
+        android:textColor="@color/colorOnBackground"
         android:layout_marginBottom="24dp" />
 
     <!-- Họ tên -->
@@ -22,14 +22,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@color/colorOutline"
+        app:hintTextColor="@color/colorMuted"
+        app:boxStrokeWidth="1dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Họ và tên"
-            android:inputType="textPersonName" />
+            android:textColor="@color/colorOnBackground"
+            android:textColorHint="@color/colorMuted" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Chiều cao -->
@@ -37,14 +41,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@color/colorOutline"
+        app:hintTextColor="@color/colorMuted">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etHeight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Chiều cao (cm)"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:textColor="@color/colorOnBackground"
+            android:textColorHint="@color/colorMuted" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Cân nặng -->
@@ -52,21 +60,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@color/colorOutline"
+        app:hintTextColor="@color/colorMuted">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etWeight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Cân nặng (kg)"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:textColor="@color/colorOnBackground"
+            android:textColorHint="@color/colorMuted" />
     </com.google.android.material.textfield.TextInputLayout>
+
     <!-- Thích thịt -->
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/cbPreferMeat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Thích ăn thịt"
+        android:textColor="@color/colorOnBackground"
         android:checked="true"
         android:layout_marginBottom="8dp" />
 
@@ -76,6 +90,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Thích ăn rau"
+        android:textColor="@color/colorOnBackground"
         android:checked="true"
         android:layout_marginBottom="16dp" />
 
@@ -84,15 +99,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@color/colorOutline"
+        app:hintTextColor="@color/colorMuted">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etAllergies"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Dị ứng (VD: đậu phộng, sữa - cách nhau bằng dấu phẩy)"
-            android:inputType="text" />
+            android:textColor="@color/colorOnBackground"
+            android:textColorHint="@color/colorMuted" />
     </com.google.android.material.textfield.TextInputLayout>
+
     <!-- Khẩu vị cay -->
     <TextView
         android:layout_width="wrap_content"
@@ -100,6 +119,7 @@
         android:text="Bạn thích ăn cay đến mức nào?"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:textColor="@color/colorOnBackground"
         android:layout_marginBottom="8dp" />
 
     <RadioGroup
@@ -114,7 +134,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Không cay" />
+            android:text="Không cay"
+            android:textColor="@color/colorOnBackground" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/rb_medium"
@@ -122,6 +143,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Vừa"
+            android:textColor="@color/colorOnBackground"
             android:checked="true" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
@@ -129,7 +151,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Caytedai" />
+            android:text="Cay tedai"
+            android:textColor="@color/colorOnBackground" />
     </RadioGroup>
 
     <!-- Nút lưu -->
@@ -139,6 +162,8 @@
         android:layout_height="56dp"
         android:text="Hoàn thành"
         android:textSize="16sp"
+        android:textColor="@color/colorOnPrimary"
+        app:backgroundTint="@color/colorPrimary"
         app:cornerRadius="12dp"
         android:layout_gravity="center"
         android:layout_marginTop="16dp" />
