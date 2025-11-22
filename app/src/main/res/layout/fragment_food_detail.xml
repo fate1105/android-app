@@ -58,6 +58,23 @@
             android:text="..."
             android:layout_marginTop="4dp"
             android:textColor="@color/colorOnSurface"/>
+        <!-- Calories -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Calories:"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginTop="12dp"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/tvCalories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 kcal"
+            android:textColor="@color/colorOnSurface"
+            android:layout_marginTop="4dp"/>
 
         <!-- Tags -->
         <TextView

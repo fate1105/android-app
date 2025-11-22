@@ -40,6 +40,9 @@ interface FoodDao {
         ORDER BY id DESC
     """)
     fun searchFoods(keyword: String): Flow<List<FoodWithRelations>>
+    @Transaction
+    @Query("SELECT * FROM foods")
+    suspend fun getAllFoodsWithRelations(): List<FoodWithRelations>
 
     @Insert
     suspend fun insert(food: FoodEntity): Long
