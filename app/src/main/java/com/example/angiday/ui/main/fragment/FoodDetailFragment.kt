@@ -56,6 +56,8 @@ class FoodDetailFragment : Fragment() {
     private lateinit var chipGroupIngredients: ChipGroup
     private lateinit var chipGroupTags: ChipGroup
     private lateinit var tvCategory: TextView
+    private lateinit var tvCalories: TextView
+
     private lateinit var tvInstructions: TextView
     private lateinit var youtubeContainer: LinearLayout
 
@@ -75,6 +77,7 @@ class FoodDetailFragment : Fragment() {
         chipGroupIngredients = view.findViewById(R.id.chipGroupIngredients)
         chipGroupTags = view.findViewById(R.id.chipGroupTags)
         tvCategory = view.findViewById(R.id.tvCategory)
+        tvCalories = view.findViewById(R.id.tvCalories)
         tvInstructions = view.findViewById(R.id.tvInstructions)
         youtubeContainer = view.findViewById(R.id.youtubeContainer)
 
@@ -179,6 +182,7 @@ class FoodDetailFragment : Fragment() {
         tvTitle.text = f.title
         tvDesc.text = f.desc ?: "Không có mô tả"
         tvCategory.text = food.category?.name ?: "Không có danh mục"
+        tvCalories.text = "${f.calories ?: 0} kcal"
         tvInstructions.text = f.instructions ?: "Chưa có hướng dẫn nấu chi tiết."
 
         // Ảnh

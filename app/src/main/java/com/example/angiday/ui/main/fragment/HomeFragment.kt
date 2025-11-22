@@ -18,6 +18,7 @@ import com.example.angiday.R
 import com.example.angiday.db.AppDatabase
 import com.example.angiday.repository.FoodRepository
 import com.example.angiday.repository.MetaRepository
+import com.example.angiday.session.SessionManager
 import com.example.angiday.ui.main.adapter.SuggestionAdapter
 import com.example.angiday.viewmodel.HomeViewModel
 import com.example.angiday.viewmodel.HomeViewModelFactory
@@ -70,8 +71,17 @@ class HomeFragment : Fragment() {
 
     private fun setupViewModel() {
         val db = AppDatabase.get(requireContext())
-        val metaRepo = MetaRepository(db.metaDao())
+
+        val session = SessionManager(requireContext())
+
+        val metaRepo = MetaRepository(
+            db.metaDao(),
+            db.userProfileDao(),
+            session
+        )
+
         val foodRepo = FoodRepository(db.foodDao())
+
         val factory = HomeViewModelFactory(metaRepo, foodRepo)
         viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
     }
@@ -175,7 +185,6 @@ class HomeFragment : Fragment() {
                         setImageResource(if (resId != 0) resId else R.drawable.ic_menu)
                         animate().alpha(1f).setDuration(500).start()
 
-                        // 👍 Đặt click listener ở đây mới đúng!
                         setOnClickListener {
                             val foodId = viewModel.featuredFoodId.value
                             if (foodId != null) {
@@ -193,28 +202,37 @@ class HomeFragment : Fragment() {
             }
         }
 
-
-        imgFeatured.setOnClickListener {
-            val foodId = viewModel.featuredFoodId.value
-            if (foodId != null) {
-                parentFragmentManager.beginTransaction()
-                    .replace(
-                        R.id.fragment_container,
-                        FoodDetailFragment.newInstance(foodId)
-                    )
-                    .addToBackStack(null)
-                    .commit()
-            }
-        }
-
         // ---- RANDOM MEALS ----
         lifecycleScope.launch {
             viewModel.randomMeals.collectLatest { meals ->
-                if (meals.size >= 3) {
-                    tvBreakfast.text = "Bữa sáng:\n${meals[0].food.title}"
-                    tvLunch.text = "Bữa trưa:\n${meals[1].food.title}"
-                    tvDinner.text = "Bữa tối:\n${meals[2].food.title}"
+                if (meals.isNotEmpty()) {
+                    val breakfast = meals.getOrNull(0)
+                    val lunch = meals.getOrNull(1)
+                    val dinner = meals.getOrNull(2)
+
+                    tvBreakfast.text = "Bữa sáng:\n${breakfast?.food?.title ?: "Không có món"}"
+                    tvLunch.text     = "Bữa trưa:\n${lunch?.food?.title ?: "Không có món"}"
+                    tvDinner.text    = "Bữa tối:\n${dinner?.food?.title ?: "Không có món"}"
+
+                    tvBreakfast.setOnClickListener {
+                        breakfast?.let {
+                            openFoodDetail(it.food.id)
+                        }
+                    }
+
+                    tvLunch.setOnClickListener {
+                        lunch?.let {
+                            openFoodDetail(it.food.id)
+                        }
+                    }
+
+                    tvDinner.setOnClickListener {
+                        dinner?.let {
+                            openFoodDetail(it.food.id)
+                        }
+                    }
                 }
+
             }
         }
 
@@ -261,6 +279,15 @@ class HomeFragment : Fragment() {
             .replace(
                 R.id.fragment_container,
                 CategoryFragment.newInstance(categoryName)
+            )
+            .addToBackStack(null)
+            .commit()
+    }
+    private fun openFoodDetail(foodId: Long) {
+        parentFragmentManager.beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                FoodDetailFragment.newInstance(foodId)
             )
             .addToBackStack(null)
             .commit()
