@@ -35,18 +35,17 @@ class EditActivity : AppCompatActivity() {
             return
         }
 
-        // Toolbar: back
         binding.topAppBar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // Load data
         loadUserData()
-
-        // Save
         binding.btnSave.setOnClickListener { validateAndSave() }
     }
 
+    // -----------------------------------------------------
+    // LOAD USER + PROFILE
+    // -----------------------------------------------------
     private fun loadUserData() {
         lifecycleScope.launch {
             val user = db.userDao().getById(userId)
@@ -59,16 +58,13 @@ class EditActivity : AppCompatActivity() {
             }
 
             with(binding) {
-                // User
                 edtName.setText(user.name)
                 edtEmail.setText(user.email)
 
-                // Profile
                 profile?.let {
                     edtHeight.setText(it.height?.toString() ?: "")
                     edtWeight.setText(it.weight?.toString() ?: "")
 
-                    // Spicy
                     when (it.spicyLevel) {
                         1 -> rgSpicy.check(R.id.rb_low)
                         3 -> rgSpicy.check(R.id.rb_medium)
@@ -76,30 +72,33 @@ class EditActivity : AppCompatActivity() {
                         else -> rgSpicy.check(R.id.rb_medium)
                     }
 
-                    // Checkbox
                     cbPreferMeat.isChecked = it.preferMeat == 1
                     cbPreferVeg.isChecked = it.preferVeg == 1
 
-                    // Allergies
-                    val allergiesList = gson.fromJson(it.allergies, Array<String>::class.java)?.toList() ?: emptyList()
+                    val allergiesList =
+                        gson.fromJson(it.allergies, Array<String>::class.java)?.toList()
+                            ?: emptyList()
                     edtAllergies.setText(allergiesList.joinToString(", "))
                 }
             }
         }
     }
 
+    // -----------------------------------------------------
+    // VALIDATE + SAVE (CÓ KIỂM TRA MẬT KHẨU HOÀN CHỈNH)
+    // -----------------------------------------------------
     private fun validateAndSave() {
-        // Name + Email
         val name = binding.edtName.text.toString().trim()
         val email = binding.edtEmail.text.toString().trim()
+
         if (name.isEmpty() || email.isEmpty()) {
             Toast.makeText(this, "Nhập tên & email!", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Height + Weight
         val height = binding.edtHeight.text.toString().toFloatOrNull()
         val weight = binding.edtWeight.text.toString().toFloatOrNull()
+
         if (height != null && height <= 0) {
             binding.edtHeight.error = "Chiều cao > 0"
             return
@@ -109,7 +108,6 @@ class EditActivity : AppCompatActivity() {
             return
         }
 
-        // Spicy
         val spicyLevel = when (binding.rgSpicy.checkedRadioButtonId) {
             R.id.rb_low -> 1
             R.id.rb_medium -> 3
@@ -117,53 +115,120 @@ class EditActivity : AppCompatActivity() {
             else -> 3
         }
 
-        // Prefer
         val preferMeat = if (binding.cbPreferMeat.isChecked) 1 else 0
         val preferVeg = if (binding.cbPreferVeg.isChecked) 1 else 0
 
-        // Allergies
         val allergiesInput = binding.edtAllergies.text.toString().trim()
-        val allergiesJson = if (allergiesInput.isBlank()) null
-        else gson.toJson(allergiesInput.split(",").map { it.trim() }.filter { it.isNotEmpty() })
+        val allergiesJson =
+            if (allergiesInput.isBlank()) null
+            else gson.toJson(allergiesInput.split(",").map { it.trim() })
 
-        // Password
-        val newPass = binding.edtPassword.text.toString()
+        // ----------- PASSWORD -----------
+
+        val oldPass = binding.edtOldPassword.text.toString().trim()
+        val newPass = binding.edtNewPassword.text.toString().trim()
+        val confirmPass = binding.edtConfirmPassword.text.toString().trim()
 
         lifecycleScope.launch {
-            // Update User
-            val user = db.userDao().getById(userId) ?: return@launch
-            val updatedUser = user.copy(
+
+            val userDB = db.userDao().getById(userId)
+            if (userDB == null) {
+                Toast.makeText(this@EditActivity, "User không tồn tại!", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            // Nếu nhập bất kỳ trường mật khẩu nào -> check toàn bộ
+            if (oldPass.isNotEmpty() || newPass.isNotEmpty() || confirmPass.isNotEmpty()) {
+
+                if (oldPass.isEmpty()) {
+                    binding.edtOldPassword.error = "Vui lòng nhập mật khẩu hiện tại"
+                    return@launch
+                }
+                if (oldPass != userDB.password) {
+                    binding.edtOldPassword.error = "Mật khẩu hiện tại không đúng"
+                    return@launch
+                }
+
+                if (newPass.isEmpty()) {
+                    binding.edtNewPassword.error = "Vui lòng nhập mật khẩu mới"
+                    return@launch
+                }
+                if (newPass == oldPass) {
+                    binding.edtNewPassword.error = "Mật khẩu mới phải khác mật khẩu cũ"
+                    return@launch
+                }
+
+                if (confirmPass.isEmpty()) {
+                    binding.edtConfirmPassword.error = "Vui lòng nhập lại mật khẩu mới"
+                    return@launch
+                }
+                if (confirmPass != newPass) {
+                    binding.edtConfirmPassword.error = "Xác nhận mật khẩu không khớp"
+                    return@launch
+                }
+            }
+
+            saveUserAndProfile(
                 name = name,
                 email = email,
-                password = if (newPass.isNotEmpty()) newPass else user.password
-            )
-            db.userDao().update(updatedUser)
-            session.saveUser(updatedUser, true)
-
-            // Update / Insert Profile
-            val existingProfile = db.userProfileDao().getByUserId(userId)
-            val profile = (existingProfile ?: UserProfileEntity(
-                userId = userId,
-                name = name,  // <-- DÙNG name ĐÃ VALIDATE TRƯỚC
-                height = null,
-                weight = null,
-                spicyLevel = 3,
-                preferMeat = 1,
-                preferVeg = 1,
-                allergies = null
-            )).copy(
-                name = name,
+                newPassword = if (newPass.isNotEmpty()) newPass else userDB.password,
                 height = height,
                 weight = weight,
                 spicyLevel = spicyLevel,
                 preferMeat = preferMeat,
                 preferVeg = preferVeg,
-                allergies = allergiesJson
+                allergiesJson = allergiesJson
             )
-            db.userProfileDao().insert(profile) // onConflict = REPLACE
-
-            Toast.makeText(this@EditActivity, "Đã lưu!", Toast.LENGTH_SHORT).show()
-            finish()
         }
+    }
+
+    // -----------------------------------------------------
+    // SAVE TO DB
+    // -----------------------------------------------------
+    private suspend fun saveUserAndProfile(
+        name: String,
+        email: String,
+        newPassword: String,
+        height: Float?,
+        weight: Float?,
+        spicyLevel: Int,
+        preferMeat: Int,
+        preferVeg: Int,
+        allergiesJson: String?
+    ) {
+        val user = db.userDao().getById(userId) ?: return
+
+        val updatedUser = user.copy(
+            name = name,
+            email = email,
+            password = newPassword
+        )
+        db.userDao().update(updatedUser)
+        session.saveUser(updatedUser, true)
+
+        val profileOld = db.userProfileDao().getByUserId(userId)
+        val profile = (profileOld ?: UserProfileEntity(
+            userId = userId,
+            name = name,
+            height = null,
+            weight = null,
+            spicyLevel = 3,
+            preferMeat = 1,
+            preferVeg = 1,
+            allergies = null
+        )).copy(
+            name = name,
+            height = height,
+            weight = weight,
+            spicyLevel = spicyLevel,
+            preferMeat = preferMeat,
+            preferVeg = preferVeg,
+            allergies = allergiesJson
+        )
+
+        db.userProfileDao().insert(profile)
+
+        Toast.makeText(this, "Đã lưu!", Toast.LENGTH_SHORT).show()
+        finish()
     }
 }
