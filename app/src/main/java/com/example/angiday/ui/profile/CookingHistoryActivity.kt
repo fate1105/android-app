@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.angiday.R
 import com.example.angiday.db.AppDatabase
 import com.example.angiday.db.dao.UserBehaviorDao
-import com.example.angiday.model.entity.FoodEntity
+import com.example.angiday.session.SessionManager
 import com.example.angiday.utils.EmojiUtils
 import com.example.angiday.viewmodel.CookingHistoryViewModel
 import com.google.android.material.appbar.MaterialToolbar
@@ -28,6 +28,8 @@ import kotlinx.coroutines.launch
 class CookingHistoryActivity : AppCompatActivity() {
 
     private val vm: CookingHistoryViewModel by viewModels()
+
+    private lateinit var session: SessionManager
 
     // UI streak
     private lateinit var flameContainer: LinearLayout
@@ -46,9 +48,19 @@ class CookingHistoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cooking_history)
 
-        // 🔙 Toolbar
+        // Toolbar
         findViewById<MaterialToolbar>(R.id.topAppBar).setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+        }
+
+        // Init Session
+        session = SessionManager(this)
+        val userId = session.getUserId().toInt()
+
+        // Nếu chưa có userId => out
+        if (userId == -1) {
+            finish()
+            return
         }
 
         // Animation
@@ -62,19 +74,16 @@ class CookingHistoryActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         imgBadge = findViewById(R.id.imgBadge)
 
-        // ---------------------------
-        // ⭐ RecyclerView món đã nấu
-        // ---------------------------
         rvFoods = findViewById(R.id.rvCookedFoods)
         foodAdapter = CookedFoodAdapter()
         rvFoods.adapter = foodAdapter
         rvFoods.layoutManager = LinearLayoutManager(this)
 
-        // Load món đã nấu
-        loadCookedFoods()
+        // ⭐ Load đúng lịch sử món theo user
+        loadCookedFoods(userId)
 
-        // Load dữ liệu streak
-        vm.loadStreak(1)
+        // ⭐ Load đúng streak theo user
+        vm.loadStreak(userId)
 
         lifecycleScope.launchWhenResumed {
             vm.streak.collect { data ->
@@ -83,10 +92,10 @@ class CookingHistoryActivity : AppCompatActivity() {
         }
     }
 
-    // ---------------------------
-    // ⭐ LOAD DANH SÁCH MÓN ĐÃ NẤU
-    // ---------------------------
-    private fun loadCookedFoods(userId: Int = 1) {
+    // -------------------------------
+    // ⭐ Load danh sách món đã nấu
+    // -------------------------------
+    private fun loadCookedFoods(userId: Int) {
         val db = AppDatabase.get(this)
         lifecycleScope.launch {
             val list = db.userBehaviorDao().getCookedFoods(userId)
@@ -94,9 +103,9 @@ class CookingHistoryActivity : AppCompatActivity() {
         }
     }
 
-    // ---------------------------
-    // ⭐ RENDER STREAK UI
-    // ---------------------------
+    // -------------------------------
+    // ⭐ Render streak UI
+    // -------------------------------
     private fun renderStreakUI(streak: Int, total: Int, best: Int) {
 
         flameContainer.removeAllViews()
@@ -112,7 +121,7 @@ class CookingHistoryActivity : AppCompatActivity() {
             flameContainer.addView(flame)
         }
 
-        // ⭐ Icon star
+        // Icon star
         val star = ImageView(this)
         star.setImageResource(R.drawable.ic_star)
         star.layoutParams = LinearLayout.LayoutParams(50, 50).apply {
@@ -145,9 +154,9 @@ class CookingHistoryActivity : AppCompatActivity() {
     }
 }
 
-/* ------------------------------------------------------------------
-   ⭐ COOKED FOOD ADAPTER — đặt trong cùng file cho gọn như bạn yêu cầu
-------------------------------------------------------------------- */
+/* ---------------------------------------------------------
+   ⭐ CookedFoodAdapter — FULL CODE
+---------------------------------------------------------- */
 class CookedFoodAdapter : RecyclerView.Adapter<CookedFoodAdapter.VH>() {
 
     private val items = mutableListOf<UserBehaviorDao.CookedFood>()
