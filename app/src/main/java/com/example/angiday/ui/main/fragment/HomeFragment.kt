@@ -51,6 +51,8 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: SuggestionAdapter
     private var allSuggestions = emptyList<String>()
 
+    private var lastCategoryList = emptyList<String>()   // ⭐ cache category
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,29 +63,25 @@ class HomeFragment : Fragment() {
         bindViews(view)
         setupRecyclerView()
         setupListeners(view)
-        observeData()
-
-        // 🔥 Quan trọng: Load dữ liệu home 1 lần
-        viewModel.loadHomeData(requireContext())
 
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // 🔥 CHỈ LOAD 1 LẦN
+        viewModel.loadHomeData(requireContext())
+
+        observeData()
+    }
+
     private fun setupViewModel() {
         val db = AppDatabase.get(requireContext())
-
         val session = SessionManager(requireContext())
-
-        val metaRepo = MetaRepository(
-            db.metaDao(),
-            db.userProfileDao(),
-            session
-        )
-
+        val metaRepo = MetaRepository(db.metaDao(), db.userProfileDao(), session)
         val foodRepo = FoodRepository(db.foodDao())
-
-        val factory = HomeViewModelFactory(metaRepo, foodRepo)
-        viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
+        viewModel = ViewModelProvider(this, HomeViewModelFactory(metaRepo, foodRepo))[HomeViewModel::class.java]
     }
 
     private fun bindViews(view: View) {
@@ -121,10 +119,7 @@ class HomeFragment : Fragment() {
         }
 
         btnFindRecipes.setOnClickListener { navigateToSuggestFragment() }
-        btnMenu.setOnClickListener {
-            openMenuFragment()
-        }
-
+        btnMenu.setOnClickListener { openMenuFragment() }
     }
 
     private fun setupSearchFilter() {
@@ -136,6 +131,89 @@ class HomeFragment : Fragment() {
 
             rvSuggestions.visibility = if (filtered.isEmpty()) View.GONE else View.VISIBLE
             adapter.updateData(filtered)
+        }
+    }
+
+    private fun observeData() {
+
+        // ========== INGREDIENTS ==========
+        lifecycleScope.launch {
+            viewModel.ingredients.collect { ingredients ->
+                val list = ingredients.map { it.name }
+
+                if (list != allSuggestions) {
+                    allSuggestions = list
+                    adapter.updateData(list)
+                }
+            }
+        }
+
+        // ========== FEATURED FOOD ==========
+        lifecycleScope.launch {
+            viewModel.featuredFood.collect { food ->
+                food ?: return@collect
+
+                val resId = resources.getIdentifier(
+                    food.imageRes, "drawable", requireContext().packageName
+                )
+
+                imgFeatured.alpha = 0f
+                imgFeatured.setImageResource(if (resId != 0) resId else R.drawable.ic_menu)
+                imgFeatured.animate().alpha(1f).setDuration(400).start()
+
+                imgFeatured.setOnClickListener {
+                    val id = viewModel.featuredFoodId.value ?: return@setOnClickListener
+                    openFoodDetail(id)
+                }
+            }
+        }
+
+        // ========== RANDOM MEALS ==========
+        lifecycleScope.launch {
+            viewModel.randomMeals.collect { meals ->
+                if (meals.isEmpty()) return@collect
+
+                val breakfast = meals.getOrNull(0)
+                val lunch = meals.getOrNull(1)
+                val dinner = meals.getOrNull(2)
+
+                tvBreakfast.text = "Bữa sáng:\n${breakfast?.food?.title ?: "Không có món"}"
+                tvLunch.text     = "Bữa trưa:\n${lunch?.food?.title ?: "Không có món"}"
+                tvDinner.text    = "Bữa tối:\n${dinner?.food?.title ?: "Không có món"}"
+
+                tvBreakfast.setOnClickListener { breakfast?.let { openFoodDetail(it.food.id) } }
+                tvLunch.setOnClickListener { lunch?.let { openFoodDetail(it.food.id) } }
+                tvDinner.setOnClickListener { dinner?.let { openFoodDetail(it.food.id) } }
+            }
+        }
+
+        // ========== CATEGORIES ==========
+        lifecycleScope.launch {
+            viewModel.categories.collect { list ->
+                val names = list.map { it.name }
+
+                // 🔥 Không render lại nếu không đổi dữ liệu
+                if (names == lastCategoryList) return@collect
+
+                lastCategoryList = names
+                categoryContainer.removeAllViews()
+
+                names.forEach { name ->
+                    val tv = TextView(requireContext()).apply {
+                        text = name
+                        setBackgroundResource(R.drawable.bg_chip_simple)
+                        setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+                        setPadding(24, 12, 24, 12)
+                        layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        ).apply { setMargins(0, 0, 16, 0) }
+
+                        setOnClickListener { openCategoryFragment(name) }
+                    }
+                    categoryContainer.addView(tv)
+                }
+            }
         }
     }
 
@@ -153,127 +231,23 @@ class HomeFragment : Fragment() {
             (chipGroup.getChildAt(it) as Chip).text.toString()
         }
 
-        val bundle = Bundle().apply {
-            putStringArray("ingredients", selectedIngredients.toTypedArray())
-        }
-
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, SuggestFragment().apply { arguments = bundle })
+            .replace(
+                R.id.fragment_container,
+                SuggestFragment().apply { arguments = Bundle().apply {
+                    putStringArray("ingredients", selectedIngredients.toTypedArray())
+                }})
             .addToBackStack(null)
             .commit()
     }
 
-    private fun observeData() {
-        // ---- INGREDIENTS ----
-        lifecycleScope.launch {
-            viewModel.ingredients.collectLatest { ingredients ->
-                allSuggestions = ingredients.map { it.name }
-                adapter.updateData(allSuggestions)
-            }
-        }
-// ---- FEATURED FOOD ----
-        lifecycleScope.launch {
-            viewModel.featuredFood.collectLatest { food ->
-                if (food != null) {
-
-                    val resId = resources.getIdentifier(
-                        food.imageRes, "drawable", requireContext().packageName
-                    )
-
-                    imgFeatured.apply {
-                        alpha = 0f
-                        setImageResource(if (resId != 0) resId else R.drawable.ic_menu)
-                        animate().alpha(1f).setDuration(500).start()
-
-                        setOnClickListener {
-                            val foodId = viewModel.featuredFoodId.value
-                            if (foodId != null) {
-                                parentFragmentManager.beginTransaction()
-                                    .replace(
-                                        R.id.fragment_container,
-                                        FoodDetailFragment.newInstance(foodId)
-                                    )
-                                    .addToBackStack(null)
-                                    .commit()
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // ---- RANDOM MEALS ----
-        lifecycleScope.launch {
-            viewModel.randomMeals.collectLatest { meals ->
-                if (meals.isNotEmpty()) {
-                    val breakfast = meals.getOrNull(0)
-                    val lunch = meals.getOrNull(1)
-                    val dinner = meals.getOrNull(2)
-
-                    tvBreakfast.text = "Bữa sáng:\n${breakfast?.food?.title ?: "Không có món"}"
-                    tvLunch.text     = "Bữa trưa:\n${lunch?.food?.title ?: "Không có món"}"
-                    tvDinner.text    = "Bữa tối:\n${dinner?.food?.title ?: "Không có món"}"
-
-                    tvBreakfast.setOnClickListener {
-                        breakfast?.let {
-                            openFoodDetail(it.food.id)
-                        }
-                    }
-
-                    tvLunch.setOnClickListener {
-                        lunch?.let {
-                            openFoodDetail(it.food.id)
-                        }
-                    }
-
-                    tvDinner.setOnClickListener {
-                        dinner?.let {
-                            openFoodDetail(it.food.id)
-                        }
-                    }
-                }
-
-            }
-        }
-
-        // ---- CATEGORIES ----
-        lifecycleScope.launch {
-            viewModel.categories.collectLatest { categories ->
-                categoryContainer.removeAllViews()
-
-                categories.forEach { category ->
-                    val tv = TextView(requireContext()).apply {
-                        text = category.name
-                        setBackgroundResource(R.drawable.bg_chip_simple)
-                        setTextColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.colorPrimary
-                            )
-                        )
-                        setPadding(24, 12, 24, 12)
-                        layoutParams = LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                        ).apply { setMargins(0, 0, 16, 0) }
-
-                        // ⭐ CLICK VÀO CATEGORY → MỞ CategoryFragment
-                        setOnClickListener {
-                            openCategoryFragment(category.name)
-                        }
-                    }
-                    categoryContainer.addView(tv)
-                }
-            }
-        }
-
-    }
     private fun openMenuFragment() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, MenuFragment())
             .addToBackStack(null)
             .commit()
     }
+
     private fun openCategoryFragment(categoryName: String) {
         parentFragmentManager.beginTransaction()
             .replace(
@@ -283,6 +257,7 @@ class HomeFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
+
     private fun openFoodDetail(foodId: Long) {
         parentFragmentManager.beginTransaction()
             .replace(

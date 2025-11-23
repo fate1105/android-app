@@ -9,7 +9,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.angiday.R
-import com.example.angiday.ui.community.CommunityFragment
+import com.example.angiday.ui.explore.ExploreFragment
 import com.example.angiday.ui.main.fragment.*
 import com.example.angiday.utils.NotificationScheduler
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         // load fragment mặc định (Home)
         if (savedInstanceState == null) {
             loadFragment(HomeFragment())
+            bottomNav.selectedItemId = R.id.nav_home
         }
 
         // điều hướng bottom navigation
@@ -33,8 +34,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home -> loadFragment(HomeFragment())
                 R.id.nav_profile -> loadFragment(ProfileFragment())
                 R.id.nav_menu -> loadFragment(MenuFragment())
-                R.id.nav_community -> loadFragment(CommunityFragment())
-                R.id.nav_wheel -> loadFragment(WheelFragment())
+                R.id.nav_explore -> loadFragment(ExploreFragment())
                 R.id.nav_setting -> loadFragment(SettingsFragment())
             }
             true
