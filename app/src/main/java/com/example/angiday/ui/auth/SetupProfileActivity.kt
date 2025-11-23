@@ -58,14 +58,29 @@ class SetupProfileActivity : AppCompatActivity() {
         // === Khẩu vị cay ===
         val spicyLevel = when (binding.rgSpicy.checkedRadioButtonId) {
             R.id.rb_low -> 1
-            R.id.rb_medium -> 3
             R.id.rb_high -> 5
-            else -> 3 // default
+            else -> 1
         }
 
+
         // === Thích thịt / rau ===
-        val preferMeat = if (binding.cbPreferMeat.isChecked) 1 else 0
-        val preferVeg = if (binding.cbPreferVeg.isChecked) 1 else 0
+        val preferMeat: Int
+        val preferVeg: Int
+
+        when (binding.rgDiet.checkedRadioButtonId) {
+            R.id.rb_veg -> {      // Ăn chay
+                preferMeat = 0
+                preferVeg = 1
+            }
+            R.id.rb_meat -> {     // Ăn mặn
+                preferMeat = 1
+                preferVeg = 0
+            }
+            else -> {             // Mặc định
+                preferMeat = 1
+                preferVeg = 0
+            }
+        }
 
         // === Dị ứng → JSON string ===
         val allergiesInput = binding.etAllergies.text.toString().trim()

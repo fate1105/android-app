@@ -66,14 +66,17 @@ class EditActivity : AppCompatActivity() {
                     edtWeight.setText(it.weight?.toString() ?: "")
 
                     when (it.spicyLevel) {
-                        1 -> rgSpicy.check(R.id.rb_low)
-                        3 -> rgSpicy.check(R.id.rb_medium)
-                        5 -> rgSpicy.check(R.id.rb_high)
-                        else -> rgSpicy.check(R.id.rb_medium)
+                        1 -> binding.rgSpicy.check(R.id.rb_low)   // Không cay
+                        5 -> binding.rgSpicy.check(R.id.rb_high)  // Cay
+                        else -> binding.rgSpicy.check(R.id.rb_low)
                     }
 
-                    cbPreferMeat.isChecked = it.preferMeat == 1
-                    cbPreferVeg.isChecked = it.preferVeg == 1
+                    // === DIET (Ăn mặn / Ăn chay) ===
+                    if (it.preferMeat == 1) {
+                        rgDiet.check(R.id.rb_meat)
+                    } else {
+                        rgDiet.check(R.id.rb_veg)
+                    }
 
                     val allergiesList =
                         gson.fromJson(it.allergies, Array<String>::class.java)?.toList()
@@ -109,15 +112,18 @@ class EditActivity : AppCompatActivity() {
         }
 
         val spicyLevel = when (binding.rgSpicy.checkedRadioButtonId) {
-            R.id.rb_low -> 1
-            R.id.rb_medium -> 3
-            R.id.rb_high -> 5
-            else -> 3
+            R.id.rb_low -> 1   // Không cay
+            R.id.rb_high -> 5  // Cay
+            else -> 1
         }
 
-        val preferMeat = if (binding.cbPreferMeat.isChecked) 1 else 0
-        val preferVeg = if (binding.cbPreferVeg.isChecked) 1 else 0
-
+        // === DIET ===
+        val (preferMeat, preferVeg) = when (binding.rgDiet.checkedRadioButtonId) {
+            R.id.rb_meat -> 1 to 0
+            R.id.rb_veg -> 0 to 1
+            else -> 1 to 0
+        }
+        // Allergies
         val allergiesInput = binding.edtAllergies.text.toString().trim()
         val allergiesJson =
             if (allergiesInput.isBlank()) null

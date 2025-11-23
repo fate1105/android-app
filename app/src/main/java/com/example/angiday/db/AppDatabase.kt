@@ -26,7 +26,6 @@ import com.example.angiday.model.entity.*
     version = 1,
     exportSchema = false
 )
-@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun foodDao(): FoodDao
