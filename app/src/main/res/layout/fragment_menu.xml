@@ -1,116 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    tools:context=".ui.main.fragment.MenuFragment">
+    android:fillViewport="true">
 
     <LinearLayout
+        android:id="@+id/containerMenu"
         android:orientation="vertical"
         android:padding="12dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" />
 
-        <!-- ======= MÓN NƯỚC ======= -->
-        <TextView
-            android:id="@+id/textViewMonNuoc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Món nước"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorOnSurface"
-            android:paddingVertical="8dp"
-            android:background="@color/colorSurface" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvMonNuoc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:layout_marginBottom="16dp" />
-
-        <!-- ======= MÓN CHIÊN ======= -->
-        <TextView
-            android:id="@+id/textViewMonChien"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Món chiên"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorOnSurface"
-            android:paddingVertical="8dp"
-            android:background="@color/colorSurface" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvMonChien"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:layout_marginBottom="16dp" />
-
-        <!-- ======= MÓN CƠM ======= -->
-        <TextView
-            android:id="@+id/textViewMonCom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Món cơm"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorOnSurface"
-            android:paddingVertical="8dp"
-            android:background="@color/colorSurface" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvMonCom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-        <!-- ======= MÓN ĂN CHAY ======= -->
-        <TextView
-            android:id="@+id/textViewChay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Món ăn chay"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorOnSurface"
-            android:paddingVertical="8dp"
-            android:background="@color/colorSurface" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvMonChay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:layout_marginBottom="16dp" />
-
-        <!-- ======= MÓN ĂN XÀO ======= -->
-        <TextView
-            android:id="@+id/textViewXao"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Món ăn xào"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorOnSurface"
-            android:paddingVertical="8dp"
-            android:background="@color/colorSurface" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvMonXao"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-    </LinearLayout>
 </ScrollView>
