@@ -20,7 +20,7 @@ class HomeViewModel(
     private val metaRepo: MetaRepository,
     private val foodRepo: FoodRepository
 ) : ViewModel() {
-
+    private var isLoaded = false
     companion object {
         private const val PREF_NAME = "daily_home"
 
@@ -58,6 +58,9 @@ class HomeViewModel(
     //  LOAD HOME DATA
     // ====================================================================== //
     fun loadHomeData(context: Context) {
+        if (isLoaded) return   // 🔥 CHẶN xử lý lặp
+        isLoaded = true
+
         viewModelScope.launch {
             loadDailyMeals(context)
             loadFeaturedFood(context)

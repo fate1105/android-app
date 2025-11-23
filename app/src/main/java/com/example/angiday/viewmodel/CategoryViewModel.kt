@@ -16,11 +16,14 @@ class CategoryViewModel(private val repo: FoodRepository) : ViewModel() {
 
     fun loadCategoryFoods(category: String) {
         viewModelScope.launch {
-            repo.getFoodsByCategory(category).collect {
-                _foods.value = it
+            repo.getFoodsByCategory(category).collect { newList ->
+                if (newList != _foods.value) {
+                    _foods.value = newList
+                }
             }
         }
     }
+
 }
 class CategoryViewModelFactory(
     private val repo: FoodRepository
