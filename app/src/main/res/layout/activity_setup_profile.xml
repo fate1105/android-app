@@ -74,49 +74,44 @@
             android:textColorHint="@color/colorMuted" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Thích thịt -->
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/cbPreferMeat"
+    <!-- Chế độ ăn -->
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Thích ăn thịt"
+        android:text="Bạn ăn chay hay ăn mặn?"
+        android:textSize="16sp"
+        android:textStyle="bold"
         android:textColor="@color/colorOnBackground"
-        android:checked="true"
         android:layout_marginBottom="8dp" />
 
-    <!-- Thích rau -->
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/cbPreferVeg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Thích ăn rau"
-        android:textColor="@color/colorOnBackground"
-        android:checked="true"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Dị ứng -->
-    <com.google.android.material.textfield.TextInputLayout
+    <RadioGroup
+        android:id="@+id/rgDiet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:boxStrokeColor="@color/colorOutline"
-        app:hintTextColor="@color/colorMuted">
+        android:orientation="horizontal"
+        android:layout_marginBottom="24dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etAllergies"
-            android:layout_width="match_parent"
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/rb_veg"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Dị ứng (VD: đậu phộng, sữa - cách nhau bằng dấu phẩy)"
-            android:textColor="@color/colorOnBackground"
-            android:textColorHint="@color/colorMuted" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_weight="1"
+            android:text="Ăn chay"
+            android:textColor="@color/colorOnBackground" />
 
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/rb_meat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ăn mặn"
+            android:textColor="@color/colorOnBackground" />
+    </RadioGroup>
     <!-- Khẩu vị cay -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bạn thích ăn cay đến mức nào?"
+        android:text="Bạn có ăn cay không?"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@color/colorOnBackground"
@@ -138,22 +133,31 @@
             android:textColor="@color/colorOnBackground" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
-            android:id="@+id/rb_medium"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Vừa"
-            android:textColor="@color/colorOnBackground"
-            android:checked="true" />
-
-        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/rb_high"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cay tedai"
+            android:text="Cay"
             android:textColor="@color/colorOnBackground" />
     </RadioGroup>
+
+    <!-- Dị ứng -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@color/colorOutline"
+        app:hintTextColor="@color/colorMuted">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etAllergies"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Dị ứng (VD: đậu phộng, sữa - cách nhau bằng dấu phẩy)"
+            android:textColor="@color/colorOnBackground"
+            android:textColorHint="@color/colorMuted" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Nút lưu -->
     <com.google.android.material.button.MaterialButton

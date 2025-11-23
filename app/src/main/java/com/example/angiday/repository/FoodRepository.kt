@@ -9,15 +9,12 @@ class FoodRepository(private val dao: FoodDao) {
 
     fun getAllFoods() = dao.getAllFoods()
 
-    fun searchFoods(keyword: String) = dao.searchFoods(keyword)
-
     fun getFoodsByAnyIngredients(ingredientNames: List<String>) =
         dao.getFoodsByAnyIngredients(ingredientNames)
 
     fun getFood(foodId: Long) = dao.getFood(foodId)
     suspend fun getFoodEntityById(id: Long): FoodEntity? =
         dao.getFoodById(id)
-
 
     // Random nhiều món (3 bữa)
     suspend fun getRandomFoods(count: Int = 3) =
@@ -64,13 +61,13 @@ class FoodRepository(private val dao: FoodDao) {
             if (allergies.any { allergen ->
                     ingNames.any { it.contains(allergen) }
                 }) {
-                return -999   // loại ngay
+                return -999
             }
         }
 
         // ===== 2. Tag cay ===== //
         val hasSpicy = food.tags.any {
-            it.name.lowercase().contains("cay") || it.name.lowercase().contains("spicy")
+            it.name.lowercase().contains("cay")
         }
 
         val userSpicy = profile.spicyLevel ?: 2
@@ -82,8 +79,8 @@ class FoodRepository(private val dao: FoodDao) {
         // ===== 3. Tag thịt / rau ===== //
         val categoryName = food.category?.name?.lowercase() ?: ""
 
-        val hasMeat = categoryName.contains("mặn") || categoryName.contains("meat")
-        val hasVeg  = categoryName.contains("chay") || categoryName.contains("veg")
+        val hasMeat = categoryName.contains("mặn")
+        val hasVeg  = categoryName.contains("chay")
 
         if (profile.preferMeat == 1 && hasMeat) score += 3
         if (profile.preferVeg == 1 && hasVeg)   score += 3
@@ -122,8 +119,4 @@ class FoodRepository(private val dao: FoodDao) {
         }
     }
 
-    // Tag theo bữa ăn
-    fun breakfastFoods() = dao.getFoodsByTag("Bữa sáng")
-    fun lunchFoods()     = dao.getFoodsByTag("Bữa trưa")
-    fun dinnerFoods()    = dao.getFoodsByTag("Bữa tối")
 }

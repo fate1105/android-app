@@ -109,12 +109,41 @@
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
+            <!-- Chế độ ăn: ăn mặn / ăn chay -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chế độ ăn"
+                android:textSize="14sp"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginBottom="4dp" />
+
+            <RadioGroup
+                android:id="@+id/rgDiet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/rb_meat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ăn mặn" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/rb_veg"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ăn chay" />
+            </RadioGroup>
 
             <!-- Khẩu vị cay -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bạn thích ăn cay đến mức nào?"
+                android:text="Bạn có ăn cay không?"
                 android:textSize="14sp"
                 android:layout_marginTop="@dimen/margin_normal"
                 android:layout_marginBottom="4dp" />
@@ -133,34 +162,13 @@
                     android:text="Không cay" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
-                    android:id="@+id/rb_medium"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Vừa" />
-
-                <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/rb_high"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Cay tedai" />
+                    android:text="Cay" />
             </RadioGroup>
 
-            <!-- Sở thích -->
-            <com.google.android.material.checkbox.MaterialCheckBox
-                android:id="@+id/cbPreferMeat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ăn mặn"
-                android:layout_marginTop="@dimen/margin_normal" />
-
-            <com.google.android.material.checkbox.MaterialCheckBox
-                android:id="@+id/cbPreferVeg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ăn chay"
-                android:layout_marginTop="@dimen/margin_small" />
 
             <!-- Dị ứng -->
             <com.google.android.material.textfield.TextInputLayout
