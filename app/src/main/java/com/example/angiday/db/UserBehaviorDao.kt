@@ -12,7 +12,7 @@ import com.example.angiday.model.relations.FoodWithRelations
 @Dao
 interface UserBehaviorDao {
 
-    // 🟢 Thêm hoặc cập nhật hành vi
+    //  Thêm hoặc cập nhật hành vi
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(behavior: UserBehaviorEntity)
     @Query("""
@@ -22,7 +22,7 @@ interface UserBehaviorDao {
     """)
     suspend fun getBehavior(userId: Long, foodId: Long): UserBehaviorEntity?
 
-    // 🔍 Lấy hành vi cụ thể theo loại (favorite, shared, cooked)
+    //  Lấy hành vi cụ thể theo loại (favorite, shared, cooked)
     @Query("""
         SELECT * FROM user_behavior 
         WHERE userId = :userId AND foodId = :foodId 
@@ -31,7 +31,7 @@ interface UserBehaviorDao {
     """)
     suspend fun getBehaviorByType(userId: Long, foodId: Long, type: String): UserBehaviorEntity?
 
-    // ❤️ Danh sách món yêu thích
+    // ️ Danh sách món yêu thích
     @Query("""
         SELECT f.* 
         FROM foods f
@@ -40,7 +40,7 @@ interface UserBehaviorDao {
     """)
     suspend fun getFavoriteFoodsWithDetail(userId: Int): List<FoodWithRelations>
 
-    // 🍳 Danh sách món đã nấu
+    //  Danh sách món đã nấu
     @Query("""
         SELECT f.* 
         FROM foods f
@@ -49,7 +49,7 @@ interface UserBehaviorDao {
     """)
     suspend fun getCookedFoodsWithDetail(userId: Int): List<FoodWithRelations>
 
-    // 📤 Danh sách món đã chia sẻ của người dùng
+    // Danh sách món đã chia sẻ của người dùng
     @Query("""
         SELECT f.* 
         FROM foods f
@@ -59,7 +59,7 @@ interface UserBehaviorDao {
     """)
     suspend fun getSharedFoodsWithDetail(userId: Int): List<FoodWithRelations>
 
-    // 🌐 Tất cả món được chia sẻ trong cộng đồng
+    // Tất cả món được chia sẻ trong cộng đồng
     @Query("""
         SELECT f.* FROM foods f
         INNER JOIN user_behavior ub ON ub.foodId = f.id
@@ -68,7 +68,7 @@ interface UserBehaviorDao {
     """)
     suspend fun getAllSharedFoods(): List<FoodEntity>
 
-    // 🗑️ Xóa hành vi theo loại
+    // Xóa hành vi theo loại
     @Query("""
         DELETE FROM user_behavior 
         WHERE userId = :userId AND foodId = :foodId 
@@ -86,7 +86,7 @@ interface UserBehaviorDao {
 """)
     suspend fun getCookedDays(userId: Int): List<String>
 
-    // 🔢 Kiểm tra tồn tại hành vi
+    //  Kiểm tra tồn tại hành vi
     @Query("""
         SELECT COUNT(*) 
         FROM user_behavior 
@@ -106,8 +106,14 @@ interface UserBehaviorDao {
     ORDER BY ub.timestamp DESC
 """)
     suspend fun getCookedFoods(userId: Int): List<CookedFood>
+    @Query("""
+    SELECT * FROM user_behavior
+    WHERE behaviorType = 'cooked'
+    ORDER BY timestamp ASC
+""")
+    suspend fun getAllCooked(): List<UserBehaviorEntity>
 
-    // 📋 Lấy tất cả hành vi chia sẻ
+    // Lấy tất cả hành vi chia sẻ
     @Query("SELECT * FROM user_behavior WHERE behaviorType = 'shared'")
     suspend fun getAllSharedBehavior(): List<UserBehaviorEntity>
 }

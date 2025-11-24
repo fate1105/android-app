@@ -24,7 +24,7 @@ class HomeViewModel(
     companion object {
         private const val PREF_NAME = "daily_home"
 
-        // ⭐ Tách cache thành 2 key riêng
+        //Tách cache thành 2 key riêng
         private const val KEY_LAST_DATE_MEALS = "last_date_meals"
         private const val KEY_LAST_DATE_FEATURED = "last_date_featured"
 
@@ -54,10 +54,7 @@ class HomeViewModel(
     private val _featuredFoodId = MutableStateFlow<Long?>(null)
     val featuredFoodId = _featuredFoodId.asStateFlow()
 
-    // ====================================================================== //
-    //  LOAD HOME DATA
-    // ====================================================================== //
-    fun loadHomeData(context: Context) {
+  fun loadHomeData(context: Context) {
         if (isLoaded) return   // 🔥 CHẶN xử lý lặp
         isLoaded = true
 
@@ -67,10 +64,7 @@ class HomeViewModel(
         }
     }
 
-    // ====================================================================== //
-    //  1) Load 3 món mỗi ngày (CÓ CÁ NHÂN HOÁ)
-    // ====================================================================== //
-    private suspend fun loadDailyMeals(context: Context) {
+     private suspend fun loadDailyMeals(context: Context) {
         val pref = prefs(context)
         val today = getToday()
         val lastDate = pref.getString(KEY_LAST_DATE_MEALS, "")
@@ -83,7 +77,7 @@ class HomeViewModel(
             }
         }
 
-        // ➤ Loading mới bằng recommender
+        //  Loading mới bằng recommender
         val profile = metaRepo.getUserProfile()
 
         val meals = if (profile != null)
@@ -107,15 +101,12 @@ class HomeViewModel(
         }.getOrNull()
     }
 
-    // ====================================================================== //
-    //  2) Load Featured Food (CÓ CÁ NHÂN HOÁ)
-    // ====================================================================== //
     private suspend fun loadFeaturedFood(context: Context) {
         val pref = prefs(context)
         val today = getToday()
         val lastDate = pref.getString(KEY_LAST_DATE_FEATURED, "")
 
-        // ➤ Nếu đã cache trong ngày → lấy featured id
+        // Nếu đã cache trong ngày → lấy featured id
         val savedId =
             if (today == lastDate) pref.getLong(KEY_FEATURED_ID, -1L).takeIf { it > 0 }
             else null
@@ -127,7 +118,7 @@ class HomeViewModel(
             return
         }
 
-        // ➤ FEATURED PERSONALIZED
+        // FEATURED PERSONALIZED
         val profile = metaRepo.getUserProfile()
 
         val selected = if (profile != null) {
@@ -148,12 +139,9 @@ class HomeViewModel(
         _featuredFoodId.value = food.id
     }
 
-    // ====================================================================== //
-    private fun getToday(): String =
+  private fun getToday(): String =
         SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
 }
-
-// ================= FACTORY ================= //
 
 class HomeViewModelFactory(
     private val metaRepo: MetaRepository,

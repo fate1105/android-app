@@ -9,6 +9,7 @@ import com.example.angiday.R
 import com.example.angiday.databinding.FragmentExploreBinding
 import com.example.angiday.ui.community.CommunityFragment
 import com.example.angiday.ui.main.fragment.WheelFragment
+import com.example.angiday.ui.ranking.RankingFragment
 
 class ExploreFragment : Fragment() {
 
@@ -34,7 +35,7 @@ class ExploreFragment : Fragment() {
         }
 
         binding.cardRanking.setOnClickListener {
-//            openFragment(RankingFragment())
+            openFragment(RankingFragment())
         }
     }
 

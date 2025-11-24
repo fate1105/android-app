@@ -43,10 +43,7 @@ class EditActivity : AppCompatActivity() {
         binding.btnSave.setOnClickListener { validateAndSave() }
     }
 
-    // -----------------------------------------------------
-    // LOAD USER + PROFILE
-    // -----------------------------------------------------
-    private fun loadUserData() {
+     private fun loadUserData() {
         lifecycleScope.launch {
             val user = db.userDao().getById(userId)
             val profile = db.userProfileDao().getByUserId(userId)
@@ -87,10 +84,7 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
-    // -----------------------------------------------------
-    // VALIDATE + SAVE (CÓ KIỂM TRA MẬT KHẨU HOÀN CHỈNH)
-    // -----------------------------------------------------
-    private fun validateAndSave() {
+   private fun validateAndSave() {
         val name = binding.edtName.text.toString().trim()
         val email = binding.edtEmail.text.toString().trim()
 
@@ -188,9 +182,7 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
-    // -----------------------------------------------------
-    // SAVE TO DB
-    // -----------------------------------------------------
+
     private suspend fun saveUserAndProfile(
         name: String,
         email: String,

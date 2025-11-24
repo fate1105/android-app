@@ -82,9 +82,7 @@ class MenuFragment : Fragment() {
 
                     container.addView(headerRow)
 
-                    // --------------------------------
-                    //   RECYCLERVIEW NGANG
-                    // --------------------------------
+
                     val rv = RecyclerView(requireContext()).apply {
 
                         layoutManager = LinearLayoutManager(

@@ -28,11 +28,18 @@ class MainActivity : AppCompatActivity() {
             loadFragment(HomeFragment())
             bottomNav.selectedItemId = R.id.nav_home
         }
+
+// Nếu được yêu cầu mở FoodDetail
+        val foodId = intent.getLongExtra("open_food_detail", -1)
+        if (foodId != -1L) {
+            loadFragment(FoodDetailFragment.newInstance(foodId))
+
         val fabHome = findViewById<MaterialCardView>(R.id.btn_home)
 
         fabHome.setOnClickListener {
             bottomNav.selectedItemId = R.id.nav_home   // để đồng bộ trạng thái
             loadFragment(HomeFragment())
+
         }
 
         // điều hướng bottom navigation
