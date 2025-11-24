@@ -53,7 +53,9 @@ class FoodDetailFragment : Fragment() {
     private lateinit var img: ImageView
     private lateinit var tvTitle: TextView
     private lateinit var tvDesc: TextView
+    private lateinit var btnAddToShopping: ImageView
     private lateinit var chipGroupIngredients: ChipGroup
+    private val foodIngredients = mutableListOf<String>()
     private lateinit var chipGroupTags: ChipGroup
     private lateinit var tvCategory: TextView
     private lateinit var tvCalories: TextView
@@ -84,6 +86,7 @@ class FoodDetailFragment : Fragment() {
         btnFavorite = view.findViewById(R.id.btnFavorite)
         btnCook = view.findViewById(R.id.btnCook)
         btnShare = view.findViewById(R.id.btnShare)
+        btnAddToShopping = view.findViewById(R.id.btnAddToShopping)
 
         val foodId = requireArguments().getLong(ARG_FOOD_ID)
         val dao = AppDatabase.get(requireContext()).userBehaviorDao()
@@ -151,6 +154,17 @@ class FoodDetailFragment : Fragment() {
 
         // 📤 Nút chia sẻ
         btnShare.setOnClickListener { shareFood(foodId, userId) }
+        btnAddToShopping.setOnClickListener {
+            // Lưu toàn bộ nguyên liệu vào giỏ hàng bằng SharedPreferences
+            val prefs = com.example.angiday.utils.ShoppingPrefs(requireContext())
+
+            foodIngredients.forEach { ing ->
+                prefs.addItem(ing)
+            }
+
+            Toast.makeText(requireContext(), "Đã thêm vào giỏ hàng ✔", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     // -------------------- UI helpers --------------------
@@ -213,6 +227,7 @@ class FoodDetailFragment : Fragment() {
                 isClickable = false
                 isCheckable = false
             })
+            foodIngredients.add(it.name)
         }
 
         // Tags

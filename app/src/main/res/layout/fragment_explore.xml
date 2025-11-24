@@ -36,15 +36,6 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
-        <!-- TIÊU ĐỀ -->
-        <TextView
-            android:text="Khám phá"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorOnBackground"
-            android:layout_marginBottom="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
         <!-- GRID -->
         <GridLayout
@@ -88,7 +79,40 @@
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
+            <!-- CARD: Giỏ hàng nguyên liệu -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardShopping"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_columnWeight="1"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/colorSurface"
+                app:strokeColor="@color/colorOutline">
 
+                <LinearLayout
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:src="@drawable/ic_shopping_cart"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        app:tint="@color/colorPrimary" />
+
+                    <TextView
+                        android:text="Giỏ hàng"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorOnSurface"
+                        android:layout_marginTop="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
             <!-- CARD: Chia sẻ -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardShare"
@@ -156,9 +180,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
-
         </GridLayout>
     </LinearLayout>
 </ScrollView>

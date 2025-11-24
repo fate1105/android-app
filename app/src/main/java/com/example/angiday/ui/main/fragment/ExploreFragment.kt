@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.angiday.R
 import com.example.angiday.databinding.FragmentExploreBinding
 import com.example.angiday.ui.community.CommunityFragment
+import com.example.angiday.ui.main.fragment.ShoppingListFragment
 import com.example.angiday.ui.main.fragment.WheelFragment
 
 class ExploreFragment : Fragment() {
@@ -36,6 +37,10 @@ class ExploreFragment : Fragment() {
         binding.cardRanking.setOnClickListener {
 //            openFragment(RankingFragment())
         }
+        binding.cardShopping.setOnClickListener {
+            openFragment(ShoppingListFragment())
+        }
+
     }
 
     private fun openFragment(fragment: Fragment) {

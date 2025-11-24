@@ -93,14 +93,34 @@
             android:layout_marginTop="6dp" />
 
         <!-- Nguyên liệu -->
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nguyên liệu"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:layout_marginTop="12dp"
-            android:textSize="16sp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nguyên liệu"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/btnAddToShopping"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_add_shopping"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                app:tint="@color/colorPrimary" />
+        </LinearLayout>
+
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroupIngredients"
             android:layout_width="match_parent"
