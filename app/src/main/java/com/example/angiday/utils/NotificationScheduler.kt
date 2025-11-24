@@ -74,4 +74,19 @@ object NotificationScheduler {
             }
         }
     }
+    fun cancelDailyNotifications(context: Context) {
+        val alarm = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        // Hủy toàn bộ PendingIntent cũ
+        repeat(MAX_NOTIFS) { i ->
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                i,
+                Intent(context, NotificationReceiver::class.java),
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            alarm.cancel(pendingIntent)
+        }
+    }
+
 }
