@@ -162,7 +162,7 @@ class FoodDetailFragment : Fragment() {
                 prefs.addItem(ing)
             }
 
-            Toast.makeText(requireContext(), "Đã thêm vào giỏ hàng ✔", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -181,11 +181,11 @@ class FoodDetailFragment : Fragment() {
 
     private fun updateCookButtonState(isCooked: Boolean) {
         if (isCooked) {
-            btnCook.text = "Đã hoàn thành món ✔"
+            btnCook.text = "Đã hoàn thành món"
             btnCook.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
             btnCook.setTextColor(Color.WHITE)
         } else {
-            btnCook.text = "Đã nấu 🍳"
+            btnCook.text = "Đã nấu"
             btnCook.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorBackground))
             btnCook.setTextColor(Color.BLACK)
         }

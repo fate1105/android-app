@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.angiday.R
 import com.example.angiday.databinding.FragmentShoppingListBinding
+import com.example.angiday.ui.main.MainActivity
 import com.example.angiday.ui.main.adapter.ShoppingAdapter
 import com.example.angiday.utils.ShoppingPrefs
 
@@ -46,12 +47,14 @@ class ShoppingListFragment : Fragment() {
 
         // nút khám phá món ăn
         binding.btnGoExplore.setOnClickListener {
+            // mở menu fragment
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, MenuFragment())
                 .commit()
+
+            // đổi bottom nav sang tab menu
+            (activity as? MainActivity)?.setBottomNavSelected(R.id.nav_menu)
         }
-
-
         // cập nhật UI khi mở trang
         updateEmptyState(items)
     }

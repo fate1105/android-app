@@ -40,9 +40,13 @@
             android:text="Khám phá món ăn"
             android:textAllCaps="false"
             android:layout_marginTop="12dp"
-            app:cornerRadius="12dp"/>
-    </LinearLayout>
+            android:textColor="@color/colorPrimary"
+            app:cornerRadius="12dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/colorPrimary"
+            app:backgroundTint="@color/colorBackground" />
 
+    </LinearLayout>
     <!-- Nút xóa tất cả -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnClearAll"
@@ -54,8 +58,7 @@
         app:strokeWidth="2dp"
         app:strokeColor="@color/colorPrimary"
         app:cornerRadius="12dp"
-        app:backgroundTint="@android:color/white" />
-
+        app:backgroundTint="@color/colorBackground" />
     <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvShopping"
