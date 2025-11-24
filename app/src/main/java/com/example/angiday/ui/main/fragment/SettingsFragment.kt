@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.example.angiday.R
+import com.example.angiday.utils.NotificationScheduler
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -34,10 +35,6 @@ class SettingsFragment : Fragment() {
         val edtLanguage = view.findViewById<MaterialAutoCompleteTextView>(R.id.edtLanguage)
         val btnClearCache = view.findViewById<MaterialButton>(R.id.btnClearCache)
 
-        // Back arrow
-        topAppBar.setNavigationOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
 
         // Load saved states
         swNotifications.isChecked = prefs.getBoolean("notifications", true)
@@ -54,6 +51,16 @@ class SettingsFragment : Fragment() {
         // Save listeners
         swNotifications.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean("notifications", isChecked).apply()
+
+            if (isChecked) {
+                // Bật thông báo
+                NotificationScheduler.scheduleDailyNotifications(requireContext())
+                Toast.makeText(requireContext(), "Đã bật thông báo", Toast.LENGTH_SHORT).show()
+            } else {
+                // Tắt thông báo
+                NotificationScheduler.cancelDailyNotifications(requireContext())
+                Toast.makeText(requireContext(), "Đã tắt thông báo", Toast.LENGTH_SHORT).show()
+            }
         }
 
         swDarkMode.setOnCheckedChangeListener { _, isChecked ->
