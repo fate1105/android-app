@@ -42,7 +42,7 @@ object NotificationHelper {
         )
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.chef)
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle("Gợi ý món ăn hôm nay 🍱")
             .setContentText("Hôm nay thử món '$mealName' nhé?")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
