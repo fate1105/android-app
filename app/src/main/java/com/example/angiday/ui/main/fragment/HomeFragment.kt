@@ -19,6 +19,7 @@ import com.example.angiday.db.AppDatabase
 import com.example.angiday.repository.FoodRepository
 import com.example.angiday.repository.MetaRepository
 import com.example.angiday.session.SessionManager
+import com.example.angiday.ui.main.MainActivity
 import com.example.angiday.ui.main.adapter.SuggestionAdapter
 import com.example.angiday.viewmodel.HomeViewModel
 import com.example.angiday.viewmodel.HomeViewModelFactory
@@ -246,6 +247,7 @@ class HomeFragment : Fragment() {
             .replace(R.id.fragment_container, MenuFragment())
             .addToBackStack(null)
             .commit()
+        (activity as? MainActivity)?.setBottomNavSelected(R.id.nav_menu)
     }
 
     private fun openCategoryFragment(categoryName: String) {
