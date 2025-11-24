@@ -13,6 +13,7 @@ import com.example.angiday.ui.explore.ExploreFragment
 import com.example.angiday.ui.main.fragment.*
 import com.example.angiday.utils.NotificationScheduler
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.card.MaterialCardView
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,11 +28,16 @@ class MainActivity : AppCompatActivity() {
             loadFragment(HomeFragment())
             bottomNav.selectedItemId = R.id.nav_home
         }
+        val fabHome = findViewById<MaterialCardView>(R.id.btn_home)
+
+        fabHome.setOnClickListener {
+            bottomNav.selectedItemId = R.id.nav_home   // để đồng bộ trạng thái
+            loadFragment(HomeFragment())
+        }
 
         // điều hướng bottom navigation
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_home -> loadFragment(HomeFragment())
                 R.id.nav_profile -> loadFragment(ProfileFragment())
                 R.id.nav_menu -> loadFragment(MenuFragment())
                 R.id.nav_explore -> loadFragment(ExploreFragment())
