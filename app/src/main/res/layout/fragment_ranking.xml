@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- BIG CARD -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+
+            android:elevation="6dp"
+            android:layout_margin="4dp"
+            android:clipToOutline="true"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/bg_round_16">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TOP 10 STREAK"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chuỗi ngày nấu ăn dài nhất"
+                android:textSize="14sp"
+                android:textColor="@color/colorMuted"
+                android:layout_marginTop="2dp"/>
+
+            <!-- TOP 3 ZONE -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="20dp">
+
+                <!-- TOP 2 -->
+
+
+                <FrameLayout
+                    android:id="@+id/top2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <include layout="@layout/item_top3_small" />
+
+                </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/top1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <include layout="@layout/item_top3_big" />
+
+                </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/top3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <include layout="@layout/item_top3_small" />
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+
+            <!-- LIST RANKING -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRanking"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" />
+
+        </LinearLayout>
+        <FrameLayout
+            android:id="@+id/currentUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                layout="@layout/item_current_user" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+</ScrollView>

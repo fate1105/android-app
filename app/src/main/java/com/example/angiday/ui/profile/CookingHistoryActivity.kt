@@ -1,5 +1,6 @@
 package com.example.angiday.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,8 +20,11 @@ import com.example.angiday.R
 import com.example.angiday.db.AppDatabase
 import com.example.angiday.db.dao.UserBehaviorDao
 import com.example.angiday.session.SessionManager
+import com.example.angiday.ui.main.MainActivity
 import com.example.angiday.utils.EmojiUtils
 import com.example.angiday.viewmodel.CookingHistoryViewModel
+
+import com.example.angiday.ui.main.fragment.FoodDetailFragment
 import com.google.android.material.appbar.MaterialToolbar
 import kotlin.math.max
 import kotlinx.coroutines.launch
@@ -57,13 +61,11 @@ class CookingHistoryActivity : AppCompatActivity() {
         session = SessionManager(this)
         val userId = session.getUserId().toInt()
 
-        // Nếu chưa có userId => out
         if (userId == -1) {
             finish()
             return
         }
 
-        // Animation
         bounceAnim = AnimationUtils.loadAnimation(this, R.anim.flame_bounce)
 
         // Bind View
@@ -75,14 +77,19 @@ class CookingHistoryActivity : AppCompatActivity() {
         imgBadge = findViewById(R.id.imgBadge)
 
         rvFoods = findViewById(R.id.rvCookedFoods)
-        foodAdapter = CookedFoodAdapter()
+
+        // ⭐ Adapter có click mở chi tiết
+        foodAdapter = CookedFoodAdapter { foodId ->
+            openFoodDetail(foodId)
+        }
+
         rvFoods.adapter = foodAdapter
         rvFoods.layoutManager = LinearLayoutManager(this)
 
-        // ⭐ Load đúng lịch sử món theo user
+        // Load đúng lịch sử món theo user
         loadCookedFoods(userId)
 
-        // ⭐ Load đúng streak theo user
+        // Load đúng streak theo user
         vm.loadStreak(userId)
 
         lifecycleScope.launchWhenResumed {
@@ -92,9 +99,6 @@ class CookingHistoryActivity : AppCompatActivity() {
         }
     }
 
-    // -------------------------------
-    // ⭐ Load danh sách món đã nấu
-    // -------------------------------
     private fun loadCookedFoods(userId: Int) {
         val db = AppDatabase.get(this)
         lifecycleScope.launch {
@@ -103,9 +107,14 @@ class CookingHistoryActivity : AppCompatActivity() {
         }
     }
 
-    // -------------------------------
-    // ⭐ Render streak UI
-    // -------------------------------
+    // ⭐ MỞ FOOD DETAIL
+    private fun openFoodDetail(foodId: Long) {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("open_food_detail", foodId)
+        startActivity(intent)
+    }
+
+
     private fun renderStreakUI(streak: Int, total: Int, best: Int) {
 
         flameContainer.removeAllViews()
@@ -121,7 +130,6 @@ class CookingHistoryActivity : AppCompatActivity() {
             flameContainer.addView(flame)
         }
 
-        // Icon star
         val star = ImageView(this)
         star.setImageResource(R.drawable.ic_star)
         star.layoutParams = LinearLayout.LayoutParams(50, 50).apply {
@@ -154,10 +162,16 @@ class CookingHistoryActivity : AppCompatActivity() {
     }
 }
 
-/* ---------------------------------------------------------
-   ⭐ CookedFoodAdapter — FULL CODE
----------------------------------------------------------- */
-class CookedFoodAdapter : RecyclerView.Adapter<CookedFoodAdapter.VH>() {
+
+
+
+// =====================================================================
+// ⭐ ADAPTER – FULL CODE + CLICK ITEM
+// =====================================================================
+
+class CookedFoodAdapter(
+    private val onClick: (Long) -> Unit
+) : RecyclerView.Adapter<CookedFoodAdapter.VH>() {
 
     private val items = mutableListOf<UserBehaviorDao.CookedFood>()
 
@@ -171,6 +185,7 @@ class CookedFoodAdapter : RecyclerView.Adapter<CookedFoodAdapter.VH>() {
         val img = view.findViewById<ImageView>(R.id.foodImage)
         val name = view.findViewById<TextView>(R.id.foodName)
         val cookedDate = view.findViewById<TextView>(R.id.foodCookedDate)
+        val root = view
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -189,6 +204,11 @@ class CookedFoodAdapter : RecyclerView.Adapter<CookedFoodAdapter.VH>() {
         val context = holder.itemView.context
         val resId = context.resources.getIdentifier(item.imageRes, "drawable", context.packageName)
         if (resId != 0) holder.img.setImageResource(resId)
+
+        // ⭐ CLICK → mở chi tiết món ăn
+        holder.root.setOnClickListener {
+            onClick(item.id)
+        }
     }
 
     override fun getItemCount() = items.size

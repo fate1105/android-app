@@ -42,7 +42,7 @@ class ProfileFragment : Fragment() {
         val rowMyProfile = view.findViewById<ConstraintLayout>(R.id.rowMyProfile)
         val rowLogout = view.findViewById<ConstraintLayout>(R.id.rowLogout)
 
-        // 👉 Các điều hướng
+        //  Các điều hướng
         rowNotice.setOnClickListener {
             startActivity(Intent(requireContext(), NotificationActivity::class.java))
         }
@@ -59,7 +59,7 @@ class ProfileFragment : Fragment() {
             startActivity(Intent(requireContext(), MyProfileActivity::class.java))
         }
 
-        // 👉 Đăng xuất
+        //  Đăng xuất
         rowLogout.setOnClickListener {
             val session = SessionManager(requireContext())
             session.clear()

@@ -27,6 +27,11 @@ class MainActivity : AppCompatActivity() {
             loadFragment(HomeFragment())
             bottomNav.selectedItemId = R.id.nav_home
         }
+// Nếu được yêu cầu mở FoodDetail
+        val foodId = intent.getLongExtra("open_food_detail", -1)
+        if (foodId != -1L) {
+            loadFragment(FoodDetailFragment.newInstance(foodId))
+        }
 
         // điều hướng bottom navigation
         bottomNav.setOnItemSelectedListener { item ->

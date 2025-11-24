@@ -47,9 +47,7 @@ class CookingHistoryViewModel(application: Application) : AndroidViewModel(appli
 
 
 
-    // ============================
-    //  TÍNH CURRENT STREAK – ĐẾN HÔM NAY
-    // ============================
+
     private fun calcCurrent(days: List<String>): Int {
         if (days.isEmpty()) return 0
 
@@ -72,9 +70,7 @@ class CookingHistoryViewModel(application: Application) : AndroidViewModel(appli
         return streak
     }
 
-    // ============================
-    //  TÍNH BEST STREAK – DÀI NHẤT
-    // ============================
+
     private fun calcBest(days: List<String>): Int {
         if (days.isEmpty()) return 0
 

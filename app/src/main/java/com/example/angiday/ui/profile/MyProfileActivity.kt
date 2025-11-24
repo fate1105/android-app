@@ -136,7 +136,7 @@ class MyProfileActivity : AppCompatActivity() {
 
         loadSharedPosts()
 
-        // ➕ Tạo bài chia sẻ mới
+        // Tạo bài chia sẻ mới
         btnAddPost.setOnClickListener {
             val dialogView = layoutInflater.inflate(R.layout.dialog_add_share, null)
             val edtName = dialogView.findViewById<EditText>(R.id.edtFoodName)

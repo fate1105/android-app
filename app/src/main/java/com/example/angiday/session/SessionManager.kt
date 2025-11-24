@@ -15,7 +15,7 @@ class SessionManager(context: Context) {
     fun getUserEmail(): String? = sp.getString("user_email", null)
 
     fun isRemembered(): Boolean = sp.getBoolean("remember_login", false)
-    // 🔥 Lưu user + trạng thái Remember Login
+    // Lưu user + trạng thái Remember Login
     fun saveUser(user: UserEntity, remember: Boolean) {
         sp.edit()
             .putLong("user_id", user.id)
@@ -24,7 +24,7 @@ class SessionManager(context: Context) {
             .putBoolean("remember_login", remember)
             .apply()
     }
-    // 👉 Gọi khi mới đăng ký (chưa có UserEntity đầy đủ)
+    //Gọi khi mới đăng ký (chưa có UserEntity đầy đủ)
     fun saveUserId(userId: Long, email: String) {
         sp.edit()
             .putLong("user_id", userId)
@@ -37,7 +37,7 @@ class SessionManager(context: Context) {
         sp.edit().clear().apply()
     }
 
-    // ❗ KHÔNG được xóa user_id → sẽ làm mất user khi quay lại Profile
+    // KHÔNG được xóa user_id → sẽ làm mất user khi quay lại Profile
     fun clearUserButKeepRemember() {
         sp.edit()
             .remove("user_name")
